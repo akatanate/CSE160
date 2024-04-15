@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Draw a point (1)</title>
+  </head>
+
+  <body onload="main()">
+    <canvas id="webgl" width="400" height="400">
+    Please use a browser that supports "canvas"
+    </canvas>
+
+    <script src="lib/webgl-utils.js"></script>
+    <script src="lib/webgl-debug.js"></script>
+    <script src="lib/cuon-utils.js"></script>
+
+    <script src="Point.js"></script>
+    <script src="Triangle.js"></script>
+    <script src="asg1.js"></script>
+
+    <p>
+
+    <p id="numdot"> XXX </p>
+
+    <button type ="button" id ="green">Green</button>
+    <button type ="button" id ="red">Red</button>
+
+    <button type="button" id="clear">Clear</button>
+    <p>
+    
+    <button type="button" id="pointButton">Point</button>
+    <button type="button" id="triButton">Triangle</button>
+
+    <p>
+    Red <Input type="range" min="0" max="100" value="0" class ="slider" id = "redSlide">
+    <p>
+    Green <Input type="range" min="0" max="100" value="0" class ="slider" id = "greenSlide">
+    <p>
+    Blue <Input type="range" min="0" max="100" value="0" class ="slider" id = "blueSlide">
+    <p>
+    Size <Input type="range" min="5" max="40" value="0" class ="slider" id = "sizeSlide">
+    <p>        
+
+    <!--<script src="/lib/webgl-utils.js"></script>
+    <script src="/lib/webgl-debug.js"></script>
+    <script src="/lib/cuon-utils.js"></script>-->
+    
+  </body>
+</html>
