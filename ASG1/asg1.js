@@ -1,3 +1,5 @@
+
+
 // HelloPoint1.js
 // Vertex shader program
 var VSHADER_SOURCE = `
@@ -84,8 +86,22 @@ let g_selectedSize = 5;
 let g_selectedType=POINT;
 let circle_seg = 10;
 
+let robot_go = false;
+
 //set up actions for HTML UI elements
 function addActionsForHtmlUI(){
+
+  
+  $(document).ready(function() {
+    $(document).mousemove(function(event) {
+      $("#cat").stop().animate({left: event.pageX, top: event.pageY}, 200); // Adjust the duration (200 milliseconds)
+    });
+  });
+
+  // credit to this article I found online: https://kidscodecs.com/cursor-follow-javascript/
+  
+  
+  
 
     //button events (shape type)
     document.getElementById('green').onclick = function() { g_selectedColor = [0.0,1.0,0.0,1.0]; };
@@ -95,9 +111,20 @@ function addActionsForHtmlUI(){
     document.getElementById('pointButton').onclick = function() { g_selectedType=POINT; };
     document.getElementById('triButton').onclick = function() { g_selectedType=TRIANGLE; };
     document.getElementById('circleButton').onclick = function() { g_selectedType=CIRCLE; };
-    circle_seg = parseFloat(document.getElementById('seg').value);
+
+    /*var cir_seg = parseFloat(document.getElementById('seg').value);
+    if (cir_seg == NaN) {
+      circle_seg = 10;
+    }
+    
+    console.log("html action:", circle_seg);*/
 
 
+    document.getElementById('transSlide').addEventListener('input', function() {
+      g_selectedColor[3] = parseFloat(this.value) / 100;
+    });
+    
+    // document.getElementById('robot').onclick = function() { render_robot(g_selectedColor[3] = parseFloat($(this).val()) / 100); };
 
 
     //Slider events
@@ -107,6 +134,7 @@ function addActionsForHtmlUI(){
 
     //size slider events
     document.getElementById('sizeSlide').addEventListener('mouseup', function() { g_selectedSize = this.value; } );
+    document.getElementById('segs').addEventListener('mouseup', function() { circle_seg = this.value; } );
 }
 
 
@@ -210,6 +238,37 @@ function renderAllShapes(){
   var duration = performance.now() - startTime;
   sendTextToHTML("numdot: " + len + " ms: " + Math.floor(duration) + " fps: " + Math.floor(10000/duration)/10, "numdot");
 
+}
+
+function render_robot(){
+  robot_go = true;
+  console.log("ROBOT");
+
+  p1 = new Triangle();
+  // p1.position=[-.1, 0, 0, .1, .1, 0];
+  // p1.position=[0, 0, 0, 0, 0, 0];
+  p1.color=[1.0,1.0,1.0,1.0];
+  p1.size=10;
+  g_shapesList.push(p1);
+
+
+
+  // p2 = new Triangle();
+   // p3 = new Triangle();
+
+  g_shapesList.push(p1);
+
+  //Draw every shape that is supposed to be in the canvas
+  renderAllShapes();
+
+  /*t1 = new Triangle();
+  t1.position = [0.1, 0.1, 0.1];
+  t1.color = red;
+  t1.size = 50;
+  t1.render();*/
+
+  // drawTriangle( [1, 0, 1, 0, 1, 0]);
+  robot_go = false;
 }
 
 // set the text of a HTML element

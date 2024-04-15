@@ -3,6 +3,11 @@
   <head>
     <meta charset="utf-8" />
     <title>Draw a point (1)</title>
+    <link rel="stylesheet" href="asg1.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jersey+10+Charted&family=Share+Tech+Mono&display=swap" rel="stylesheet">
   </head>
 
   <body onload="main()">
@@ -20,9 +25,14 @@
 
     <script src="asg1.js"></script>
 
+    <div id = "cat">
+    =^.^=
+    </div>
+
     <p>
 
-    <p id="numdot"> XXX </p>
+    <p id="numdot"> </p>
+    <p> Awesomeness: cat chases mouse + transparency slider </p>
 
     <button type ="button" id ="green">Green</button>
     <button type ="button" id ="red">Red</button>
@@ -33,7 +43,14 @@
     <button type="button" id="pointButton">Point</button>
     <button type="button" id="triButton">Triangle</button>
     <button type="button" id="circleButton">Circle</button> 
-    <label>Segments</label> <input type = "number" id = "seg">
+    
+
+      <p>
+    <button type="button" id="robot">Draw a robot</button> <p>
+    <img src = "robot.jpg" width = "120" height ="100">
+    <!--<label>Segments</label> 
+    <input type = "number" id = "seg">*/-->
+
 
     <p>
     Red <Input type="range" min="0" max="100" value="0" class ="slider" id = "redSlide">
@@ -42,8 +59,15 @@
     <p>
     Blue <Input type="range" min="0" max="100" value="0" class ="slider" id = "blueSlide">
     <p>
+    Transparency
+    <input type="range"  min="0" max="100" value="100" id = "transSlide">
+
+    <p>
     Size <Input type="range" min="5" max="40" value="0" class ="slider" id = "sizeSlide">
-    <p>        
+    <p>  
+    Segments <Input type="range" min="0" max="50" value="0" class ="slider" id = "segs">      
+    <p>
+
 
     <!--<script src="/lib/webgl-utils.js"></script>
     <script src="/lib/webgl-debug.js"></script>
