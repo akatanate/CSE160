@@ -1,0 +1,57 @@
+<!--Rina Munakata-->
+<!--rmunakat@ucsc.edu-->
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title>CSE160: ASG0</title>
+    </head>
+ 
+    <body onload="main()">
+        <canvas id="the_canvas" width="400" height="400"> </canvas>
+        <script src="lib/cuon-matrix-cse160.js"></script>
+        <script src="asg0.js"></script>
+    </body>
+
+    <!--input vector values-->
+    <br>
+    <!--V1-->
+    <p5>v1</p5>
+    <input type = "number" id="v1_x">
+    <input type = "number" id = "v1_y">
+    <br>
+    <!--V2-->
+    <p5>v2</p5>
+    <input type = "number" id="v2_x">
+    <input type = "number" id = "v2_y">
+
+    <!--Draw vector button-->
+    <br>
+    <button id="draw_button" onclick="handleDrawEvent()">Draw</button>
+
+    <br> <br>
+
+    <p5>Operation: </p5>
+    <!--Drop-down selection-->
+    <select name="ops" id="options">
+        <option value="add">Add</option>
+        <option value="sub">Subtract</option>
+        <option value="mul">Multiply</option>
+        <option value="div">Divide</option>
+
+        <option value="ang">Angle Between</option>
+        <option value="ang">Area</option>
+
+        <option value="mag">Magnitude</option>
+        <option value="norm">Normalize</option>
+    </select>
+    <label>Scalar</label>
+    <input type = "number" id = "scalar">
+
+    <!--Operation button-->
+    <br>
+    <button id="op_button" onclick="handleDrawOperationEvent()">Draw</button>
+
+    
+ </html>
