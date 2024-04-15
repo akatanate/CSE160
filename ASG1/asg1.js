@@ -92,11 +92,11 @@ let robot_go = false;
 function addActionsForHtmlUI(){
 
   
-  $(document).ready(function() {
+  /*$(document).ready(function() {
     $(document).mousemove(function(event) {
       $("#cat").stop().animate({left: event.pageX, top: event.pageY}, 200); // Adjust the duration (200 milliseconds)
     });
-  });
+  });*/
 
   // credit to this article I found online: https://kidscodecs.com/cursor-follow-javascript/
   
@@ -124,7 +124,7 @@ function addActionsForHtmlUI(){
       g_selectedColor[3] = parseFloat(this.value) / 100;
     });
     
-    // document.getElementById('robot').onclick = function() { render_robot(g_selectedColor[3] = parseFloat($(this).val()) / 100); };
+    document.getElementById('robot').onclick = function() { render_robot(); };
 
 
     //Slider events
@@ -244,19 +244,58 @@ function render_robot(){
   robot_go = true;
   console.log("ROBOT");
 
-  p1 = new Triangle();
-  // p1.position=[-.1, 0, 0, .1, .1, 0];
-  // p1.position=[0, 0, 0, 0, 0, 0];
-  p1.color=[1.0,1.0,1.0,1.0];
-  p1.size=10;
-  g_shapesList.push(p1);
+  face = new Triangle();
+  face.position=[.4, .2, .4, -.2, -.2, -.2];
+  face.color= [0.0, 0.0, 1.0, 1.0];
+  g_shapesList.push(face);
+
+  face2 = new Triangle();
+  face2.position=[.4, .2, -.2, .2, -.2, -.2];
+  face2.color= [0.0, 0.0, 1.0, 1.0];
+  g_shapesList.push(face2);
+
+  nose = new Triangle();
+  nose.position=[-.1, 0, 0, .1, .1, 0];
+  nose.color= [1.0, 0.0, 0.0, 1.0];
+  g_shapesList.push(nose);
+
+  hat = new Triangle();
+  hat.position = [0.2, 0.4, 0.2, 0.2, -0.1, 0.2];
+  hat.color= [1.0, 0.5, 0.0, 0.0];
+  g_shapesList.push(hat);
+
+  hat2 = new Triangle();
+  hat2.position=  [0.2, 0.4, -0.1, 0.2, 0.2, 0.2];
+  hat.color= [1.0, 0.5, 0.0, 0.0];
+  g_shapesList.push(hat2);
 
 
+/*
+  eye = new Circle();
+  eye.color= [0, 0, 0, 0];
+  eye.position=[.21, .13];
+  g_shapesList.push(eye);
+
+  tounge = new Triangle();
+  tounge.color = [1.0, 0.0, 0.0, 1.0];
+  tounge.position=[0, -.05, -.07, -.1, -.1,-.1]
+  g_shapesList.push(tounge);
+
+  toungeL = new Triangle();
+  toungeL.color = [1.0, 0.0, 0.0, 1.0];
+  toungeL.position=[0, -.05, -.07, -.1, -.1,-.1]
+  g_shapesList.push(tounge);*/
+
+
+  /*eye2 = new Circle();
+  eye2.color= [0, 0, 0, 0];
+  eye2.position=[.1, 0]
+  g_shapesList.push(eye2);*/
 
   // p2 = new Triangle();
    // p3 = new Triangle();
 
-  g_shapesList.push(p1);
+
 
   //Draw every shape that is supposed to be in the canvas
   renderAllShapes();
