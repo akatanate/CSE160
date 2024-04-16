@@ -92,11 +92,11 @@ let robot_go = false;
 function addActionsForHtmlUI(){
 
   
-  /*$(document).ready(function() {
+  $(document).ready(function() {
     $(document).mousemove(function(event) {
       $("#cat").stop().animate({left: event.pageX, top: event.pageY}, 200); // Adjust the duration (200 milliseconds)
     });
-  });*/
+  });
 
   // credit to this article I found online: https://kidscodecs.com/cursor-follow-javascript/
   
@@ -259,15 +259,31 @@ function render_robot(){
   nose.color= [1.0, 0.0, 0.0, 1.0];
   g_shapesList.push(nose);
 
+
   hat = new Triangle();
-  hat.position = [0.2, 0.4, 0.2, 0.2, -0.1, 0.2];
+  hat.position = [0.2, 0.3, 0.2, 0.2, 0, 0.2];
   hat.color= [1.0, 0.5, 0.0, 0.0];
   g_shapesList.push(hat);
 
   hat2 = new Triangle();
-  hat2.position=  [0.2, 0.4, -0.1, 0.2, 0.2, 0.2];
+  hat2.position =  [0.2, 0.3, 0, 0.3, 0, 0.2];
   hat.color= [1.0, 0.5, 0.0, 0.0];
   g_shapesList.push(hat2);
+
+  ear = new Triangle();
+  ear.position = [0.4, 0, 0.5, .2, .2, -0.1];
+  ear.color= [1.0, 0.5, 0.0, 0.0];
+  g_shapesList.push(ear);
+
+  earL = new Triangle();
+  earL.position = [-0.4, 0, -0.5, .2, -.2, 0];
+  earL.color= [1.0, 0.5, 0.0, 0.0];
+  g_shapesList.push(earL);
+
+  /*ear2 = new Triangle();
+  ear2.position = [0.4, 0, 0.5, 0, 0.4, -0.1];
+  ear.color= [1.0, 0.5, 0.0, 0.0];
+  g_shapesList.push(ear2);*/
 
 
 /*
