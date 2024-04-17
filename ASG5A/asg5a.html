@@ -11,13 +11,13 @@
   <body>
     <canvas id="c"></canvas> <!--our canvas-->
   </body>
-<!--<script type="importmap">
+<script type="importmap">
 {
   "imports": {
     "three": "../../build/three.module.js"
   }
 }
-</script>-->
+</script>
 
 
 <script type="module">
@@ -38,20 +38,64 @@ function main() {
 
 	const scene = new THREE.Scene(); //drawing a scene
 
+    // add shadow
+    {
+        const color = 0xFFFFFF;
+		const intensity = 3;
+        const light = new THREE.DirectionalLight( color, intensity );
+        light.position.set( - 1, 2, 4 );
+        scene.add( light );
+
+    }
+
     // create boxGeometry which contains data for a box
 	const boxWidth = 1;
 	const boxHeight = 1;
 	const boxDepth = 1;
 	const geometry = new THREE.BoxGeometry( boxWidth, boxHeight, boxDepth );
 
-    //create basic material and set its color
-	const material = new THREE.MeshBasicMaterial( { color: 0x44aa88 } ); // greenish blue
+    function makeInstance( geometry, color, x){
+        //create basic material and set its color
+        // const material = new THREE.MeshBasicMaterial( { color: 0x44aa88 } ); // greenish blue
+        const material = new THREE.MeshPhongMaterial({color});  // greenish blue
 
-    // create a mesh- represents the combo of 3 things- geometry, amterial, position
-	const cube = new THREE.Mesh( geometry, material );
-	scene.add( cube ); //add mesh
 
-	renderer.render( scene, camera ); //render scene
+        // create a mesh- represents the combo of 3 things- geometry, amterial, position
+        
+        const cube = new THREE.Mesh( geometry, material );
+        scene.add( cube ); //add mesh
+
+        cube.position.x = x;
+
+        return cube;
+    }
+
+    const cubes = [
+	    makeInstance( geometry, 0x44aa88, 0 ),
+		makeInstance( geometry, 0x8844aa, - 2 ),
+		makeInstance( geometry, 0xaa8844, 2 ),
+    ];
+
+  
+
+    //make it move
+    function render( time ){
+        time *= 0.001;
+
+        cubes.forEach( ( cube, ndx ) => {
+            const speed = 1 + ndx * .1;
+            const rot = time * speed;
+            cube.rotation.x = rot;
+            cube.rotation.y = rot;
+        } );
+
+        renderer.render( scene, camera ); //render scene
+
+        requestAnimationFrame( render );
+    }
+
+    requestAnimationFrame( render );
+	
 }
 
 main();
