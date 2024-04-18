@@ -1,34 +1,13 @@
-<!-- Licensed under a BSD license. See license.html for license -->
-<!--from: https://threejs.org/manual/examples/fundamentals.html-->
-<!--https://threejs.org/docs/#manual/en/introduction/Installation???????-->
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Three.js - Fundamentals</title>
-  </head>
-  <body>
-    <canvas id="c"></canvas> <!--our canvas-->
-  </body>
-<script type="importmap">
-{
-  "imports": {
-    "three": "../../build/three.module.js"
-  }
-}
-</script>
-
-
-<script type="module">
 import * as THREE from 'three'; // load three.js
+
+// import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
 
 function main() {
     // look up canvas that three.js will look up
 	const canvas = document.querySelector( '#c' );
 	const renderer = new THREE.WebGLRenderer( { antialias: true, canvas } );
 
-    //this is out camera - PerspectiveCamera
+    //this is out camera 
 	const fov = 75; //field of view
 	const aspect = 2; // the canvas default
 	const near = 0.1; //space in front of camera that will be rendered
@@ -38,7 +17,15 @@ function main() {
 
 	const scene = new THREE.Scene(); //drawing a scene
 
-    // add shadow
+  // import unique 3d object
+  /*{
+    const objLoader = new OBJLoader();
+    objLoader.load('resources/grass/grass.obj', (root) => {
+      scene.add(root);
+    });
+  }*/
+
+    // add shadow/lighting
     {
         const color = 0xFFFFFF;
 		const intensity = 3;
@@ -54,14 +41,21 @@ function main() {
 	const boxDepth = 1;
 	const geometry = new THREE.BoxGeometry( boxWidth, boxHeight, boxDepth );
 
+// Texture stuff here-------------------------------------------------------------------------->
+    const loader = new THREE.TextureLoader();
+
+    const texture = loader.load( 'wall.jpg' );
+    texture.colorSpace = THREE.SRGBColorSpace;
+// Texture stuff here-------------------------------------------------------------------------->
+
     function makeInstance( geometry, color, x){
         //create basic material and set its color
-        // const material = new THREE.MeshBasicMaterial( { color: 0x44aa88 } ); // greenish blue
-        const material = new THREE.MeshPhongMaterial({color});  // greenish blue
+        // const material = new THREE.MeshPhongMaterial({color}); //OR -------------------------------------------------------------------------->
+        const material = new THREE.MeshBasicMaterial( {
+            map: texture // change to color
+        } );
 
-
-        // create a mesh- represents the combo of 3 things- geometry, amterial, position
-        
+        // create a mesh- represents the combo of 3 things- geometry, material, position
         const cube = new THREE.Mesh( geometry, material );
         scene.add( cube ); //add mesh
 
@@ -70,15 +64,14 @@ function main() {
         return cube;
     }
 
+    // make the cube objects
     const cubes = [
 	    makeInstance( geometry, 0x44aa88, 0 ),
 		makeInstance( geometry, 0x8844aa, - 2 ),
 		makeInstance( geometry, 0xaa8844, 2 ),
     ];
 
-  
-
-    //make it move
+    // render the movement
     function render( time ){
         time *= 0.001;
 
@@ -99,5 +92,3 @@ function main() {
 }
 
 main();
-</script>
-</html>
