@@ -13,11 +13,11 @@ function main() {
 	const fov = 75; //field of view
 	const aspect = 2; // the canvas default
 	const near = 0.1; //space in front of camera that will be rendered
-	const far = 5;
+	const far = 100;
 	const camera = new THREE.PerspectiveCamera( fov, aspect, near, far );
-	camera.position.z = 2;
+	camera.position.z = 3;
 
-// change camera control
+// change camera control -------------------------------------------------------------------------->
     class MinMaxGUIHelper {
 
 		constructor( obj, minProp, maxProp, minDif ) {
@@ -66,20 +66,20 @@ function main() {
 	gui.add( minMaxGUIHelper, 'max', 0.1, 50, 0.1 ).name( 'far' ).onChange( updateCamera );
 
 	const controls = new OrbitControls( camera, canvas );
-	controls.target.set( 0, 5, 0 );
+	controls.target.set( 0, 0.5, 0 );
 	controls.update();
 
 	const scene = new THREE.Scene(); //drawing a scene
-    scene.background = new THREE.Color( 'black' );
+    // scene.background = new THREE.Color( 'black' );
 
 
-    // import unique 3d object
-    {
+    // import unique 3d object-------------------------------------------------------------------------->
+   /* {
         const objLoader = new OBJLoader();
         objLoader.load('https://threejs.org/manual/examples/resources/models/windmill/windmill.obj', (root) => {
         scene.add(root);
         });
-    }
+    }*/
 
     // add shadow/lighting
     {
@@ -100,16 +100,25 @@ function main() {
 // Texture stuff here-------------------------------------------------------------------------->
     const loader = new THREE.TextureLoader();
 
-    const texture = loader.load( 'wall.jpg' );
+    // const texture = loader.load( 'wall.jpg' );
+
+    const texture = loader.load(
+        'https://threejs.org/manual/examples/resources/images/equirectangularmaps/tears_of_steel_bridge_2k.jpg',
+        () => {
+          texture.mapping = THREE.EquirectangularReflectionMapping;
+          texture.colorSpace = THREE.SRGBColorSpace;
+          scene.background = texture;
+        });
+
     texture.colorSpace = THREE.SRGBColorSpace;
 // Texture stuff here-------------------------------------------------------------------------->
 
     function makeInstance( geometry, color, x){
         //create basic material and set its color
-        // const material = new THREE.MeshPhongMaterial({color}); //OR -------------------------------------------------------------------------->
-        const material = new THREE.MeshBasicMaterial( {
+        const material = new THREE.MeshPhongMaterial({color}); //OR -------------------------------------------------------------------------->
+        /*const material = new THREE.MeshBasicMaterial( {
             map: texture // change to color
-        } );
+        } );*/
 
         // create a mesh- represents the combo of 3 things- geometry, material, position
         const cube = new THREE.Mesh( geometry, material );
