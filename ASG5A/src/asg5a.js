@@ -1,6 +1,8 @@
 import * as THREE from 'three'; // load three.js
 
-// import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
 
 function main() {
     // look up canvas that three.js will look up
@@ -15,15 +17,69 @@ function main() {
 	const camera = new THREE.PerspectiveCamera( fov, aspect, near, far );
 	camera.position.z = 2;
 
-	const scene = new THREE.Scene(); //drawing a scene
+// change camera control
+    class MinMaxGUIHelper {
 
-  // import unique 3d object
-  /*{
-    const objLoader = new OBJLoader();
-    objLoader.load('resources/grass/grass.obj', (root) => {
-      scene.add(root);
-    });
-  }*/
+		constructor( obj, minProp, maxProp, minDif ) {
+
+			this.obj = obj;
+			this.minProp = minProp;
+			this.maxProp = maxProp;
+			this.minDif = minDif;
+
+		}
+		get min() {
+
+			return this.obj[ this.minProp ];
+
+		}
+		set min( v ) {
+
+			this.obj[ this.minProp ] = v;
+			this.obj[ this.maxProp ] = Math.max( this.obj[ this.maxProp ], v + this.minDif );
+
+		}
+		get max() {
+
+			return this.obj[ this.maxProp ];
+
+		}
+		set max( v ) {
+
+			this.obj[ this.maxProp ] = v;
+			this.min = this.min; // this will call the min setter
+
+		}
+
+	}
+
+    function updateCamera() {
+
+		camera.updateProjectionMatrix();
+
+	}
+
+	const gui = new GUI();
+	gui.add( camera, 'fov', 1, 180 ).onChange( updateCamera );
+	const minMaxGUIHelper = new MinMaxGUIHelper( camera, 'near', 'far', 0.1 );
+	gui.add( minMaxGUIHelper, 'min', 0.1, 50, 0.1 ).name( 'near' ).onChange( updateCamera );
+	gui.add( minMaxGUIHelper, 'max', 0.1, 50, 0.1 ).name( 'far' ).onChange( updateCamera );
+
+	const controls = new OrbitControls( camera, canvas );
+	controls.target.set( 0, 5, 0 );
+	controls.update();
+
+	const scene = new THREE.Scene(); //drawing a scene
+    scene.background = new THREE.Color( 'black' );
+
+
+    // import unique 3d object
+    {
+        const objLoader = new OBJLoader();
+        objLoader.load('https://threejs.org/manual/examples/resources/models/windmill/windmill.obj', (root) => {
+        scene.add(root);
+        });
+    }
 
     // add shadow/lighting
     {
