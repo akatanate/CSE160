@@ -1,159 +1,214 @@
+// FIX LIGHTING AND ZOOM/CAMERA CONTROLS
+
 import * as THREE from 'three'; // load three.js
 
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
-import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
+// import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+// import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
 
-function main() {
-    // look up canvas that three.js will look up
-	const canvas = document.querySelector( '#c' );
-	const renderer = new THREE.WebGLRenderer( { antialias: true, canvas } );
+// Set renderer
+const renderer = new THREE.WebGLRenderer();
+renderer.setSize(window.innerWidth, window.innerHeight);
+document.body.appendChild(renderer.domElement);
 
-    //this is out camera 
-	const fov = 75; //field of view
-	const aspect = 2; // the canvas default
-	const near = 0.1; //space in front of camera that will be rendered
-	const far = 100;
-	const camera = new THREE.PerspectiveCamera( fov, aspect, near, far );
-	camera.position.z = 3;
+// Create camera
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(
+    45,
+    window.innerWidth / window.innerHeight,
+    0.1,
+    1000
+);
 
-// change camera control -------------------------------------------------------------------------->
-    class MinMaxGUIHelper {
+// Sets orbit control to move the camera around
+const orbit = new OrbitControls(camera, renderer.domElement);
 
-		constructor( obj, minProp, maxProp, minDif ) {
+// Camera positioning
+camera.position.set(-90, 140, 140);
+orbit.target.set(0, 0, 0);
+orbit.update();
 
-			this.obj = obj;
-			this.minProp = minProp;
-			this.maxProp = maxProp;
-			this.minDif = minDif;
+// Lighting
+const ambientLight = new THREE.AmbientLight(0x333333);
+scene.add(ambientLight);
 
-		}
-		get min() {
+const pointLight = new THREE.PointLight(0xFFFFFF, 2, 300); 
+pointLight.position.set(0, 0, 0); 
+scene.add(pointLight);
 
-			return this.obj[ this.minProp ];
+// Textures
+const textureLoader = new THREE.TextureLoader();
+const sunTexture = textureLoader.load('sun.jpg');
+const starsTexture = textureLoader.load('stars.jpg');
+const mercuryTexture = textureLoader.load('mercury.jpg');
+const saturnTexture = textureLoader.load('saturn.jpg');
+const saturnRingTexture = textureLoader.load('saturn_ring.png');
+const venusTexture = textureLoader.load('venus.jpg');
+const earthTexture = textureLoader.load('earth.jpg');
+const marsTexture = textureLoader.load('mars.jpg');
+const jupiterTexture = textureLoader.load('jupiter.jpg');
 
-		}
-		set min( v ) {
-
-			this.obj[ this.minProp ] = v;
-			this.obj[ this.maxProp ] = Math.max( this.obj[ this.maxProp ], v + this.minDif );
-
-		}
-		get max() {
-
-			return this.obj[ this.maxProp ];
-
-		}
-		set max( v ) {
-
-			this.obj[ this.maxProp ] = v;
-			this.min = this.min; // this will call the min setter
-
-		}
-
-	}
-
-    function updateCamera() {
-
-		camera.updateProjectionMatrix();
-
-	}
-
-	const gui = new GUI();
-	gui.add( camera, 'fov', 1, 180 ).onChange( updateCamera );
-	const minMaxGUIHelper = new MinMaxGUIHelper( camera, 'near', 'far', 0.1 );
-	gui.add( minMaxGUIHelper, 'min', 0.1, 50, 0.1 ).name( 'near' ).onChange( updateCamera );
-	gui.add( minMaxGUIHelper, 'max', 0.1, 50, 0.1 ).name( 'far' ).onChange( updateCamera );
-
-	const controls = new OrbitControls( camera, canvas );
-	controls.target.set( 0, 0.5, 0 );
-	controls.update();
-
-	const scene = new THREE.Scene(); //drawing a scene
-    // scene.background = new THREE.Color( 'black' );
+const uranusTexture = textureLoader.load('uranus.jpg');
+const uranusRingTexture = textureLoader.load('uranus_ring.png');
+const neptuneTexture = textureLoader.load('neptune.jpg');
 
 
-    // import unique 3d object-------------------------------------------------------------------------->
-   /* {
-        const objLoader = new OBJLoader();
-        objLoader.load('https://threejs.org/manual/examples/resources/models/windmill/windmill.obj', (root) => {
-        scene.add(root);
-        });
-    }*/
+// Set background texture
+scene.background = starsTexture;
 
-    // add shadow/lighting
-    {
-        const color = 0xFFFFFF;
-		const intensity = 3;
-        const light = new THREE.DirectionalLight( color, intensity );
-        light.position.set( - 1, 2, 4 );
-        scene.add( light );
+// make the star background more 3d
+const cubeTextureLoader = new THREE.CubeTextureLoader();
+structuredClone.background = cubeTextureLoader.load([
+    starsTexture,
+    starsTexture,
+    starsTexture,
+    starsTexture,
+    starsTexture,
+    starsTexture
+]);
 
-    }
+// Credit on how to make a planet (I followed the first part of this tutorial): https://www.youtube.com/watch?v=XXzqSAt3UIw
 
-    // create boxGeometry which contains data for a box
-	const boxWidth = 1;
-	const boxHeight = 1;
-	const boxDepth = 1;
-	const geometry = new THREE.BoxGeometry( boxWidth, boxHeight, boxDepth );
+// Create <SUN>---------------------------------------------------------
+const sunGeometry = new THREE.SphereGeometry(16, 32, 32);
+const sunMaterial = new THREE.MeshBasicMaterial({ map: sunTexture });
+const sun = new THREE.Mesh(sunGeometry, sunMaterial);
+scene.add(sun);
 
-// Texture stuff here-------------------------------------------------------------------------->
-    const loader = new THREE.TextureLoader();
+// Create <MERCURY>---------------------------------------------------------
+const mercuryGeometry = new THREE.SphereGeometry(3.2, 32, 32);
+const mercuryMaterial = new THREE.MeshBasicMaterial({ map: mercuryTexture });
+const mercury = new THREE.Mesh(mercuryGeometry, mercuryMaterial);
 
-    // const texture = loader.load( 'wall.jpg' );
+const mercuryObj = new THREE.Object3D();
+mercuryObj.add(mercury);
+scene.add(mercuryObj)
+mercury.position.x = 28;
 
-    const texture = loader.load(
-        'https://threejs.org/manual/examples/resources/images/equirectangularmaps/tears_of_steel_bridge_2k.jpg',
-        () => {
-          texture.mapping = THREE.EquirectangularReflectionMapping;
-          texture.colorSpace = THREE.SRGBColorSpace;
-          scene.background = texture;
-        });
+// Create <VENUS>---------------------------------------------------------
+const venusGeometry = new THREE.SphereGeometry(5.8, 32, 32);
+const venusMaterial = new THREE.MeshBasicMaterial({ map: venusTexture });
+const venus = new THREE.Mesh(venusGeometry, venusMaterial);
 
-    texture.colorSpace = THREE.SRGBColorSpace;
-// Texture stuff here-------------------------------------------------------------------------->
+const venusObj = new THREE.Object3D();
+venusObj.add(venus);
+scene.add(venusObj)
+venus.position.x = 44;
 
-    function makeInstance( geometry, color, x){
-        //create basic material and set its color
-        const material = new THREE.MeshPhongMaterial({color}); //OR -------------------------------------------------------------------------->
-        /*const material = new THREE.MeshBasicMaterial( {
-            map: texture // change to color
-        } );*/
+// Create <EARTH>---------------------------------------------------------
+const earthGeometry = new THREE.SphereGeometry(6, 32, 32);
+const earthMaterial = new THREE.MeshBasicMaterial({ map: earthTexture });
+const earth = new THREE.Mesh(earthGeometry, earthMaterial);
 
-        // create a mesh- represents the combo of 3 things- geometry, material, position
-        const cube = new THREE.Mesh( geometry, material );
-        scene.add( cube ); //add mesh
+const earthObj = new THREE.Object3D();
+earthObj.add(earth);
+scene.add(earthObj)
+earth.position.x = 62;
 
-        cube.position.x = x;
+// Create <MARS>---------------------------------------------------------
+const marsGeometry = new THREE.SphereGeometry(4, 32, 32);
+const marsMaterial = new THREE.MeshBasicMaterial({ map: marsTexture });
+const mars = new THREE.Mesh(marsGeometry, marsMaterial);
 
-        return cube;
-    }
+const marsObj = new THREE.Object3D();
+marsObj.add(mars);
+scene.add(marsObj)
+mars.position.x = 78;
 
-    // make the cube objects
-    const cubes = [
-	    makeInstance( geometry, 0x44aa88, 0 ),
-		makeInstance( geometry, 0x8844aa, - 2 ),
-		makeInstance( geometry, 0xaa8844, 2 ),
-    ];
+// Create <JUPITER>---------------------------------------------------------
+const jupiterGeometry = new THREE.SphereGeometry(12, 32, 32);
+const jupiterMaterial = new THREE.MeshBasicMaterial({ map: jupiterTexture });
+const jupiter = new THREE.Mesh(jupiterGeometry, jupiterMaterial);
 
-    // render the movement
-    function render( time ){
-        time *= 0.001;
+const jupiterObj = new THREE.Object3D();
+jupiterObj.add(jupiter);
+scene.add(jupiterObj)
+jupiter.position.x = 100;
 
-        cubes.forEach( ( cube, ndx ) => {
-            const speed = 1 + ndx * .1;
-            const rot = time * speed;
-            cube.rotation.x = rot;
-            cube.rotation.y = rot;
-        } );
+// Create <SATURN>---------------------------------------------------------
+const saturnGeometry = new THREE.SphereGeometry(10, 32, 32);
+const saturnMaterial = new THREE.MeshBasicMaterial({ map: saturnTexture });
+const saturn = new THREE.Mesh(saturnGeometry, saturnMaterial);
 
-        renderer.render( scene, camera ); //render scene
+const saturnObj = new THREE.Object3D();
+saturnObj.add(saturn);
+scene.add(saturnObj)
+saturn.position.x = 138;
 
-        requestAnimationFrame( render );
-    }
+// RING
+const saturnRingGeo = new THREE.RingGeometry(10, 32, 32);
+const saturnRingMat = new THREE.MeshBasicMaterial({ 
+    map: saturnRingTexture,
+    side: THREE.DoubleSide
+});
+const saturnRing = new THREE.Mesh(saturnRingGeo, saturnRingMat);
+saturnObj.add(saturnRing);
+saturnRing.position.x = 138;
+saturnRing.rotation.x = -0.5 * Math.PI;
 
-    requestAnimationFrame( render );
-	
+// Create <URANUS>---------------------------------------------------------
+const uranusGeometry = new THREE.SphereGeometry(7, 32, 32);
+const uranusMaterial = new THREE.MeshBasicMaterial({ map: uranusTexture });
+const uranus = new THREE.Mesh(uranusGeometry, uranusMaterial);
+
+const uranusObj = new THREE.Object3D();
+uranusObj.add(uranus);
+scene.add(uranusObj)
+uranus.position.x = 176;
+
+// RING
+const uranusRingGeo = new THREE.RingGeometry(7, 12, 32);
+const uranusRingMat = new THREE.MeshBasicMaterial({ 
+    map: uranusRingTexture,
+    side: THREE.DoubleSide
+});
+const uranusRing = new THREE.Mesh(uranusRingGeo, uranusRingMat);
+uranusObj.add(uranusRing);
+uranusRing.position.x = 176
+uranusRing.rotation.x = -0.5 * Math.PI;
+
+// Create <NEPTUNE>---------------------------------------------------------
+const neptuneGeometry = new THREE.SphereGeometry(7, 32, 32);
+const neptuneMaterial = new THREE.MeshBasicMaterial({ map: neptuneTexture });
+const neptune = new THREE.Mesh(neptuneGeometry, neptuneMaterial);
+
+const neptuneObj = new THREE.Object3D();
+neptuneObj.add(neptune);
+scene.add(neptuneObj)
+neptune.position.x = 200;
+
+// Animate
+function animate() {
+    //self-rotation
+
+    sun.rotateY(0.004);
+    mercury.rotateY(0.004);
+    venus.rotateY(0.002);
+    earth.rotateY(0.02);
+    mars.rotateY(0.018);
+    jupiter.rotateY(0.04);
+    saturn.rotateY(0.038);
+    uranus.rotateY(0.03);
+    neptune.rotateY(0.032);
+    
+    // around sun
+    mercuryObj.rotateY(0.04);
+    venusObj.rotateY(0.015); 
+    earthObj.rotateY(0.01);
+    marsObj.rotateY(0.008);
+    jupiterObj.rotateY(0.002);
+    saturnObj.rotateY(0.0009);
+    uranusObj.rotateY(0.0004);
+    neptuneObj.rotateY(0.0001);
+    
+    renderer.render(scene, camera);
 }
 
-main();
+renderer.setAnimationLoop(animate);
+
+// resize camera view
+window.addEventListener('resize', function() {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+});
