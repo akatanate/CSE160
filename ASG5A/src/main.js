@@ -52,7 +52,7 @@ orbit.target.set(0, 0, 0);
 orbit.update();
 
 // Lighting
-const ambientLight = new THREE.AmbientLight(0x333333);
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
 scene.add(ambientLight);
 
 //WHY NOT WORKING
@@ -64,6 +64,15 @@ scene.add(pointLight);
 const gui = new GUI();
 // gui.add(pointLight, 'penumbra', 0, 1, 0.01);
 gui.add(pointLight, 'intensity', 0, 2, 0.01);
+
+
+const color = 0xFFFFFF;
+const intensity = 3;
+const light = new THREE.DirectionalLight( color, intensity );
+light.position.set( 5, 10, 2 );
+scene.add( light );
+scene.add( light.target );
+light.castShadow = true
 
 // Set background texture
 scene.background = starsTexture;
@@ -81,15 +90,21 @@ scene.background = starsTexture;
 ]);*/
 
 const mtlLoader = new MTLLoader();
-mtlLoader.load( 'https://threejs.org/manual/examples/resources/models/windmill/windmill.mtl', ( mtl ) => {
+mtlLoader.load( './ship.mtl', ( mtl ) => {
 
     mtl.preload();
     const objLoader = new OBJLoader();
     objLoader.setMaterials( mtl );
-    objLoader.load( 'https://threejs.org/manual/examples/resources/models/windmill/windmill.obj', ( root ) => {
+    objLoader.load( './ship.obj', ( root ) => {
         root.position.set(0,0,0);
-        scene.add( root );
+        // root.scale = new THREE.Vector3(1000, 1000, 1000);
+        //root.children[0].scale
+        root.children[0].geometry.scale = new THREE.Vector3(10000, 10000, 10000);
+        root.children[1].geometry.scale = new THREE.Vector3(10000, 10000, 10000);
 
+        scene.add( root );
+        console.log("load finished",  root.children.length); //loading, but in context of scene have to find
+    // root.getWorldPosition(),
     } );
 } );
 
@@ -100,9 +115,9 @@ const sunGeometry = new THREE.SphereGeometry(16, 32, 32);
 const sunMaterial = new THREE.MeshBasicMaterial({ map: sunTexture });
 const sun = new THREE.Mesh(sunGeometry, sunMaterial);
 scene.add(sun);
-sun.position.x = 0;
-sun.position.y = 0;
-sun.position.z = 0;
+sun.position.x = 10;
+sun.position.y = 100;
+sun.position.z = 100;
 
 
 
@@ -119,7 +134,7 @@ mercury.position.x = 28;
 
 // Create <VENUS>---------------------------------------------------------
 const venusGeometry = new THREE.SphereGeometry(5.8, 32, 32);
-const venusMaterial = new THREE.MeshBasicMaterial({ map: venusTexture });
+const venusMaterial = new THREE.MeshStandardMaterial({ map: venusTexture });
 const venus = new THREE.Mesh(venusGeometry, venusMaterial);
 
 const venusObj = new THREE.Object3D();
@@ -129,7 +144,7 @@ venus.position.x = 44;
 
 // Create <EARTH>---------------------------------------------------------
 const earthGeometry = new THREE.SphereGeometry(6, 32, 32);
-const earthMaterial = new THREE.MeshBasicMaterial({ map: earthTexture });
+const earthMaterial = new THREE.MeshStandardMaterial({ map: earthTexture });
 const earth = new THREE.Mesh(earthGeometry, earthMaterial);
 
 const earthObj = new THREE.Object3D();
@@ -139,7 +154,7 @@ earth.position.x = 62;
 
 // Create <MARS>---------------------------------------------------------
 const marsGeometry = new THREE.SphereGeometry(4, 32, 32);
-const marsMaterial = new THREE.MeshBasicMaterial({ map: marsTexture });
+const marsMaterial = new THREE.MeshStandardMaterial({ map: marsTexture });
 const mars = new THREE.Mesh(marsGeometry, marsMaterial);
 
 const marsObj = new THREE.Object3D();
@@ -149,7 +164,7 @@ mars.position.x = 78;
 
 // Create <JUPITER>---------------------------------------------------------
 const jupiterGeometry = new THREE.SphereGeometry(12, 32, 32);
-const jupiterMaterial = new THREE.MeshBasicMaterial({ map: jupiterTexture });
+const jupiterMaterial = new THREE.MeshStandardMaterial({ map: jupiterTexture });
 const jupiter = new THREE.Mesh(jupiterGeometry, jupiterMaterial);
 
 const jupiterObj = new THREE.Object3D();
@@ -218,23 +233,23 @@ function animate() {
     //self-rotation
     // sun.rotateY(0.004);
     // mercury.rotateY(0.004);
-    /*venus.rotateY(0.002);
+    venus.rotateY(0.002);
     earth.rotateY(0.02);
     mars.rotateY(0.018);
     jupiter.rotateY(0.04);
     saturn.rotateY(0.038);
     uranus.rotateY(0.03);
-    neptune.rotateY(0.032);*/
+    neptune.rotateY(0.032);
     
     // around sun
     // mercuryObj.rotateY(0.04);
-    /*venusObj.rotateY(0.015); 
+    venusObj.rotateY(0.015); 
     earthObj.rotateY(0.01);
     marsObj.rotateY(0.008);
     jupiterObj.rotateY(0.002);
     saturnObj.rotateY(0.0009);
     uranusObj.rotateY(0.0004);
-    neptuneObj.rotateY(0.0001);*/
+    neptuneObj.rotateY(0.0001);
     
     renderer.render(scene, camera);
 }
