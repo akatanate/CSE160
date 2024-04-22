@@ -1,4 +1,7 @@
+// page linking- x
+
 // FIX LIGHTING 
+
 //3d models / obj files (spaceship)
 
 // AND ZOOM/CAMERA CONTROLS?
@@ -6,8 +9,10 @@
 import * as THREE from 'three'; // load three.js
 
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-// import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
-// import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
+import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
+import { MTLLoader } from 'three/addons/loaders/MTLLoader.js';
+
 
 // Textures
 const textureLoader = new THREE.TextureLoader();
@@ -52,9 +57,13 @@ scene.add(ambientLight);
 
 //WHY NOT WORKING
 const pointLight = new THREE.PointLight(0xffffff, 2, 300); 
-pointLight.position.set(0, 0, 0); 
+pointLight.position.set(10, 50, 100); 
 
 scene.add(pointLight);
+
+const gui = new GUI();
+// gui.add(pointLight, 'penumbra', 0, 1, 0.01);
+gui.add(pointLight, 'intensity', 0, 2, 0.01);
 
 // Set background texture
 scene.background = starsTexture;
@@ -71,6 +80,19 @@ scene.background = starsTexture;
     starsTexture
 ]);*/
 
+const mtlLoader = new MTLLoader();
+mtlLoader.load( 'https://threejs.org/manual/examples/resources/models/windmill/windmill.mtl', ( mtl ) => {
+
+    mtl.preload();
+    const objLoader = new OBJLoader();
+    objLoader.setMaterials( mtl );
+    objLoader.load( 'https://threejs.org/manual/examples/resources/models/windmill/windmill.obj', ( root ) => {
+        root.position.set(0,0,0);
+        scene.add( root );
+
+    } );
+} );
+
 // Credit on how to make a planet (I followed the first part of this tutorial): https://www.youtube.com/watch?v=XXzqSAt3UIw
 
 // Create <SUN>---------------------------------------------------------
@@ -78,10 +100,16 @@ const sunGeometry = new THREE.SphereGeometry(16, 32, 32);
 const sunMaterial = new THREE.MeshBasicMaterial({ map: sunTexture });
 const sun = new THREE.Mesh(sunGeometry, sunMaterial);
 scene.add(sun);
+sun.position.x = 0;
+sun.position.y = 0;
+sun.position.z = 0;
+
+
+
 
 // Create <MERCURY>---------------------------------------------------------
 const mercuryGeometry = new THREE.SphereGeometry(3.2, 32, 32);
-const mercuryMaterial = new THREE.MeshBasicMaterial({ map: mercuryTexture });
+const mercuryMaterial = new THREE.MeshStandardMaterial({ map: mercuryTexture });
 const mercury = new THREE.Mesh(mercuryGeometry, mercuryMaterial);
 
 const mercuryObj = new THREE.Object3D();
@@ -188,19 +216,19 @@ scene.add(pointLight);*/
 // Animate
 function animate() {
     //self-rotation
-   /* sun.rotateY(0.004);
-    mercury.rotateY(0.004);
-    venus.rotateY(0.002);
+    // sun.rotateY(0.004);
+    // mercury.rotateY(0.004);
+    /*venus.rotateY(0.002);
     earth.rotateY(0.02);
     mars.rotateY(0.018);
     jupiter.rotateY(0.04);
     saturn.rotateY(0.038);
     uranus.rotateY(0.03);
-    neptune.rotateY(0.032);
+    neptune.rotateY(0.032);*/
     
     // around sun
-    mercuryObj.rotateY(0.04);
-    venusObj.rotateY(0.015); 
+    // mercuryObj.rotateY(0.04);
+    /*venusObj.rotateY(0.015); 
     earthObj.rotateY(0.01);
     marsObj.rotateY(0.008);
     jupiterObj.rotateY(0.002);
