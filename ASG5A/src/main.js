@@ -14,6 +14,7 @@ import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
 import { MTLLoader } from 'three/addons/loaders/MTLLoader.js';
 
 
+
 // Textures
 const textureLoader = new THREE.TextureLoader();
 const sunTexture = textureLoader.load('img/sun.jpg');
@@ -28,6 +29,27 @@ const jupiterTexture = textureLoader.load('img/jupiter.jpg');
 const uranusTexture = textureLoader.load('img/uranus.jpg');
 const uranusRingTexture = textureLoader.load('img/uranus_ring.png');
 const neptuneTexture = textureLoader.load('img/neptune.jpg');
+const asteroidTexture = textureLoader.load('img/asteroid.jpg');
+const planeTexture = textureLoader.load('img/plane.jpg');
+
+var listener = new THREE.AudioListener();
+var audio = new THREE.Audio(listener);
+var audioLoader = new THREE.AudioLoader(); // Define audioLoader variable
+
+// Function to start audio playback
+function startAudioPlayback(audioLoader) { // Pass audioLoader as a parameter
+    audioLoader.load("interstellar.mp3", function(buffer) {
+        audio.setBuffer(buffer);
+        audio.setLoop(true);
+        audio.setVolume(0.5);
+        audio.play();
+    });
+}
+
+// Attach event listener to a button element
+document.getElementById('playButton').addEventListener('click', function() {
+    startAudioPlayback(audioLoader); // Call startAudioPlayback with audioLoader as an argument
+});
 
 // Set renderer
 const renderer = new THREE.WebGLRenderer();
@@ -101,12 +123,57 @@ mtlLoader.load( './uploads_files_869754_space_shuttle_obj_exp(1).mtl', ( mtl ) =
         //root.children[0].scale
         root.children[0].geometry.scale = new THREE.Vector3(10000, 10000, 10000);
         // root.children[1].geometry.scale = new THREE.Vector3(10000, 10000, 10000);
-
+        root.traverse((child) => {
+            if (child instanceof THREE.Mesh) {
+                child.material.map = planeTexture;
+            }
+        });
         scene.add( root );
         console.log("load finished",  root.children.length); //loading, but in context of scene have to find
     // root.getWorldPosition(),
     } );
 } );
+
+const mtlLoader2 = new MTLLoader();
+mtlLoader2.load( './uploads_files_4462272_Astreoid-8.mtl', ( mtl ) => {
+
+    mtl.preload();
+    const objLoader2 = new OBJLoader();
+    const objLoader3 = new OBJLoader();
+    objLoader2.setMaterials( mtl );
+    objLoader3.setMaterials( mtl );
+
+    objLoader2.load( './uploads_files_4462272_Astreoid-8.obj', ( root ) => {
+        root.position.set(30,30,30);
+        root.children[0].geometry.scale = new THREE.Vector3(10000, 10000, 10000);
+        root.traverse((child) => {
+            if (child instanceof THREE.Mesh) {
+                child.material.map = asteroidTexture;
+            }
+        });
+        scene.add( root );
+        console.log("load finished",  root.children.length); //loading, but in context of scene have to find
+    // root.getWorldPosition(),
+    } );
+
+    objLoader3.load( './uploads_files_4462272_Astreoid-8.obj', ( root ) => {
+        root.position.set(15,25,30);
+        root.children[0].geometry.scale = new THREE.Vector3(10000, 10000, 10000);
+        root.traverse((child) => {
+            if (child instanceof THREE.Mesh) {
+                child.material.map = asteroidTexture;
+            }
+        });
+        scene.add( root );
+        console.log("load finished",  root.children.length); //loading, but in context of scene have to find
+    // root.getWorldPosition(),
+    } );
+
+
+
+} );
+
+
 
 // Credit on how to make a planet (I followed the first part of this tutorial): https://www.youtube.com/watch?v=XXzqSAt3UIw
 
