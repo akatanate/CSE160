@@ -37,19 +37,19 @@ var audio = new THREE.Audio(listener);
 var audioLoader = new THREE.AudioLoader(); // Define audioLoader variable
 
 // Function to start audio playback
-function startAudioPlayback(audioLoader) { // Pass audioLoader as a parameter
+//function startAudioPlayback(audioLoader) { // Pass audioLoader as a parameter
     audioLoader.load("interstellar.mp3", function(buffer) {
         audio.setBuffer(buffer);
         audio.setLoop(true);
         audio.setVolume(0.5);
         audio.play();
     });
-}
+//}
 
 // Attach event listener to a button element
-document.getElementById('playButton').addEventListener('click', function() {
+/*document.getElementById('playButton').addEventListener('click', function() {
     startAudioPlayback(audioLoader); // Call startAudioPlayback with audioLoader as an argument
-});
+});*/
 
 // Set renderer
 const renderer = new THREE.WebGLRenderer();
