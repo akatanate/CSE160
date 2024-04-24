@@ -45,6 +45,7 @@ function setupWebGL(){
         console.log('Failed to get the rendering context for WebGL');
         return;
     }
+    gl.enable(gl.DEPTH_TEST);
 }
 
 function connectVariablesToGSL(){
@@ -100,6 +101,8 @@ let g_selectedType=POINT;
 let circle_seg = 10;
 
 let g_globalAngle = 0;
+let g_yellowAngle = 0;
+let g_magentaAngle = 0;
 
 
 //set up actions for HTML UI elements
@@ -118,14 +121,14 @@ function addActionsForHtmlUI(){
   
 
     //button events (shape type)
-    document.getElementById('green').onclick = function() { g_selectedColor = [0.0,1.0,0.0,1.0]; };
+    /*document.getElementById('green').onclick = function() { g_selectedColor = [0.0,1.0,0.0,1.0]; };
     document.getElementById('red').onclick = function() { g_selectedColor = [1.0,0.0,0.0,1.0]; };
     document.getElementById('clear').onclick = function() { g_shapesList=[]; renderAllShapes(); };
 
     document.getElementById('pointButton').onclick = function() { g_selectedType=POINT; };
     document.getElementById('triButton').onclick = function() { g_selectedType=TRIANGLE; };
     document.getElementById('circleButton').onclick = function() { g_selectedType=CIRCLE; };
-
+*/
     /*var cir_seg = parseFloat(document.getElementById('seg').value);
     if (cir_seg == NaN) {
       circle_seg = 10;
@@ -134,7 +137,7 @@ function addActionsForHtmlUI(){
     console.log("html action:", circle_seg);*/
 
 
-    document.getElementById('transSlide').addEventListener('input', function() {
+    /*document.getElementById('transSlide').addEventListener('input', function() {
       g_selectedColor[3] = parseFloat(this.value) / 100;
     });
     
@@ -144,14 +147,16 @@ function addActionsForHtmlUI(){
     document.getElementById('redSlide').addEventListener('mouseup', function() { g_selectedColor[0] = this.value/100; } );
     document.getElementById('greenSlide').addEventListener('mouseup', function() { g_selectedColor[1] = this.value/100; } );
     document.getElementById('blueSlide').addEventListener('mouseup', function() { g_selectedColor[2] = this.value/100; } );
+    */
 
     //size slider events
-    document.getElementById('sizeSlide').addEventListener('mouseup', function() { g_selectedSize = this.value; } );
+    document.getElementById('yellowSlide').addEventListener('mousemove', function() { g_yellowAngle = this.value; renderAllShapes();} );
+    document.getElementById('magentaSlide').addEventListener('mousemove', function() { g_magentaAngle = this.value; renderAllShapes();} );
 
 
 
 
-    document.getElementById('angleSlider').addEventListener('mousemove', function() { g_globalAngle = this.value; renderAllShapes(); } );
+    document.getElementById('angleSlide').addEventListener('mousemove', function() { g_globalAngle = this.value; renderAllShapes(); } );
 }
 
 
@@ -240,36 +245,44 @@ function convertCoordinatesEventToGL(ev){
 
 
 function renderAllShapes(){
-    // Check the time at the start of this function
-    var startTime = performance.now();
+  // Check the time at the start of this function
+  var startTime = performance.now();
 
-    var globalRotMat=new Matrix4().rotate(g_globalAngle, 0, 1, 0);
-    gl.uniformMatrix4fv(u_GlobalRotateMatrix, false, globalRotMat.elements);
-
+  var globalRotMat=new Matrix4().rotate(g_globalAngle, 0, 1, 0);
+  gl.uniformMatrix4fv(u_GlobalRotateMatrix, false, globalRotMat.elements);
 
   // Clear <canvas>
+  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT );
   gl.clear(gl.COLOR_BUFFER_BIT);
-
-// Draw each shape in the list
-  /*var len = g_shapesList.length;
-  for(var i = 0; i < len; i++) {
-    g_shapesList[i].render();
-  }*/
-
-  drawTriangle3D( [ -1.0, 0.0, 0.0, -0.5,-1.0,0.0, 0.0,0.0,0.0 ] );
 
   var body = new Cube();
   body.color = [1.0, 0.0,0.0,1.0];
-  body.matrix.translate(-.25, -.5, 0.0);
-  body.matrix.scale(0.5, 1, .5);
+  body.matrix.translate(-.25, -.75, 0.0);
+  body.matrix.rotate(-5, 1, 0, 0);
+  body.matrix.scale(0.5, .3, .5);
   body.render();
 
   var leftArm = new Cube();
   leftArm.color = [1, 1, 0, 1];
-  leftArm.matrix.setTranslate(.7, 0, 0.0);
-  leftArm.matrix.rotate(45, 0, 0, 1);
+  leftArm.matrix.setTranslate(0, -.5, 0.0);
+  leftArm.matrix.rotate(-5, 1, 0, 1);
+  leftArm.matrix.rotate(-g_yellowAngle, 0, 0, 1);
+  var yellowCoordinatesMat = new Matrix4(leftArm.matrix);
   leftArm.matrix.scale(0.25, .7, .5);
+  leftArm.matrix.translate(-.5, 0, 0);
   leftArm.render();
+
+  var box = new Cube();
+  box.color = [1, 0, 1, 1];
+  box.matrix =  yellowCoordinatesMat;
+  box.matrix.translate(0, 0.65, 0);
+  box.matrix.rotate(g_magentaAngle, 0, 0, 1);
+  box.matrix.scale(.3, .3, .3);
+  box.matrix.translate(-.5, 0, -0.001);
+
+  /*box.matrix.rotate(-30, 1, 0, 0);
+  box.matrix.scale(.2, .4, .2);*/
+  box.render();
 
   //check time at end of function, show on pg
   var duration = performance.now() - startTime;
