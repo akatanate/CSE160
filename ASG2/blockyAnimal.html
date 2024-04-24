@@ -2,75 +2,37 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>Draw a point (1)</title>
+    <title>Blocky Animal</title>
     <link rel="stylesheet" href="blockyAnimal.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Jersey+10+Charted&family=Share+Tech+Mono&display=swap" rel="stylesheet">
   </head>
 
   <body onload="main()">
-    <canvas id="webgl" width="400" height="400">
-    Please use a browser that supports "canvas"
-    </canvas>
-
-
+    <canvas id="webgl" width="400" height="400"></canvas>
 
     <script src="lib/webgl-utils.js"></script>
     <script src="lib/webgl-debug.js"></script>
     <script src="lib/cuon-utils.js"></script>
     <script src="lib/cuon-matrix.js"></script>
 
+    <script src="blockyAnimal.js"></script>
 
     <script src="Point.js"></script>
     <script src="Triangle.js"></script>
     <script src="Circle.js"></script>
-
-    <script src="blockyAnimal.js"></script>
     <script src="Cube.js"></script>
 
-
-
-    <div id = "cat">
-    =^.^=
-    </div>
-
     <p>
-
-    <p id="numdot"> </p>
-    <p> Awesomeness: cat chases mouse + transparency slider </p>
-
-    <button type ="button" id ="green">Green</button>
-    <button type ="button" id ="red">Red</button>
-
-    <button type="button" id="clear">Clear</button>
+      Magenta <Input type="range" min="0" max="100" value="0" class ="slider" id = "magentaSlide">
+      <button type="button" id="animationMagentaOnButton">ON</button>
+      <button type="button" id="animationMagentaOffButton">OFF</button> 
     <p>
-    
-    <button type="button" id="pointButton">Point</button>
-    <button type="button" id="triButton">Triangle</button>
-    <button type="button" id="circleButton">Circle</button> 
-    
-
-      <p>
-
-    <!--<label>Segments</label> 
-    <input type = "number" id = "seg">*/-->
-
-
- 
-    <p>
-    Magenta <Input type="range" min="0" max="100" value="0" class ="slider" id = "magentaSlide">
-    <p>
-    Yellow <Input type="range" min="0" max="100" value="0" class ="slider" id = "yellowSlide">
+      Yellow <Input type="range" min="0" max="100" value="0" class ="slider" id = "yellowSlide">
+      <button type="button" id="animationYellowOnButton">ON</button>
+      <button type="button" id="animationYellowOffButton">OFF</button>   
     <p>  
-    Camera Angle <Input type="range" min="0" max="100" value="0" class ="slider" id = "angleSlide">      
+      Camera Angle <Input type="range" min="0" max="100" value="0" class ="slider" id = "angleSlide">      
     <p>
 
-
-    <!--<script src="/lib/webgl-utils.js"></script>
-    <script src="/lib/webgl-debug.js"></script>
-    <script src="/lib/cuon-utils.js"></script>-->
-    
   </body>
 </html>

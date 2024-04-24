@@ -1,6 +1,4 @@
-
-
-// HelloPoint1.js
+// blockyAnimal.js
 // Vertex shader program
 var VSHADER_SOURCE = `
     attribute vec4 a_Position;
@@ -10,9 +8,6 @@ var VSHADER_SOURCE = `
         gl_Position =  u_GlobalRotateMatrix * u_ModelMatrix * a_Position;
     }`
 
-    // Coordinates
-    // Set the point size
-
 // Fragment shader program
 var FSHADER_SOURCE = `
     precision mediump float;
@@ -20,8 +15,6 @@ var FSHADER_SOURCE = `
     void main(){
         gl_FragColor = u_FragColor;
     }`
-
-    //Set the color
 
 // Global Variables
 let canvas;
@@ -77,16 +70,15 @@ function connectVariablesToGSL(){
         return;
     }
 
-       // Get the storage location of u_FragColor variable
-       u_GlobalRotateMatrix = gl.getUniformLocation(gl.program, 'u_GlobalRotateMatrix');
-       if (!u_GlobalRotateMatrix) {
-           console.log('Fail to get the storage location of u_GlobalRotateMatrix');
-           return;
-       }
+    // Get the storage location of u_FragColor variable
+    u_GlobalRotateMatrix = gl.getUniformLocation(gl.program, 'u_GlobalRotateMatrix');
+    if (!u_GlobalRotateMatrix) {
+      console.log('Fail to get the storage location of u_GlobalRotateMatrix');
+      return;
+    }
 
      var identityM = new Matrix4();
      gl.uniformMatrix4fv(u_ModelMatrix, false, identityM.elements);
-
 }
 
 //Constants
@@ -104,58 +96,21 @@ let g_globalAngle = 0;
 let g_yellowAngle = 0;
 let g_magentaAngle = 0;
 
+let g_yellowAnimation = false;
+let g_magentaAnimation = false;
+
 
 //set up actions for HTML UI elements
 function addActionsForHtmlUI(){
+    document.getElementById('animationYellowOnButton').addEventListener('mousemove', function() { g_yellowAnimation = true } );
+    document.getElementById('animationYellowOffButton').addEventListener('mousemove', function() { g_yellowAnimation = false} );
 
-  
-  $(document).ready(function() {
-    $(document).mousemove(function(event) {
-      $("#cat").stop().animate({left: event.pageX, top: event.pageY}, 200); // Adjust the duration (200 milliseconds)
-    });
-  });
-
-  // credit to this article I found online: https://kidscodecs.com/cursor-follow-javascript/
-  
-  
-  
-
-    //button events (shape type)
-    /*document.getElementById('green').onclick = function() { g_selectedColor = [0.0,1.0,0.0,1.0]; };
-    document.getElementById('red').onclick = function() { g_selectedColor = [1.0,0.0,0.0,1.0]; };
-    document.getElementById('clear').onclick = function() { g_shapesList=[]; renderAllShapes(); };
-
-    document.getElementById('pointButton').onclick = function() { g_selectedType=POINT; };
-    document.getElementById('triButton').onclick = function() { g_selectedType=TRIANGLE; };
-    document.getElementById('circleButton').onclick = function() { g_selectedType=CIRCLE; };
-*/
-    /*var cir_seg = parseFloat(document.getElementById('seg').value);
-    if (cir_seg == NaN) {
-      circle_seg = 10;
-    }
-    
-    console.log("html action:", circle_seg);*/
-
-
-    /*document.getElementById('transSlide').addEventListener('input', function() {
-      g_selectedColor[3] = parseFloat(this.value) / 100;
-    });
-    
-
-
-    //Slider events
-    document.getElementById('redSlide').addEventListener('mouseup', function() { g_selectedColor[0] = this.value/100; } );
-    document.getElementById('greenSlide').addEventListener('mouseup', function() { g_selectedColor[1] = this.value/100; } );
-    document.getElementById('blueSlide').addEventListener('mouseup', function() { g_selectedColor[2] = this.value/100; } );
-    */
+    document.getElementById('animationMagentaOnButton').addEventListener('mousemove', function() { g_magentaAnimation = true } );
+    document.getElementById('animationMagentaOffButton').addEventListener('mousemove', function() { g_magentaAnimation = false} );
 
     //size slider events
     document.getElementById('yellowSlide').addEventListener('mousemove', function() { g_yellowAngle = this.value; renderAllShapes();} );
     document.getElementById('magentaSlide').addEventListener('mousemove', function() { g_magentaAngle = this.value; renderAllShapes();} );
-
-
-
-
     document.getElementById('angleSlide').addEventListener('mousemove', function() { g_globalAngle = this.value; renderAllShapes(); } );
 }
 
@@ -163,7 +118,9 @@ function addActionsForHtmlUI(){
 function main() {
 
     setupWebGL();
+
     connectVariablesToGSL();
+
     addActionsForHtmlUI();
 
     // Register function (event handler) to be called on a mouse press
@@ -175,17 +132,26 @@ function main() {
 
     // Clear <canvas>
     // gl.clear(gl.COLOR_BUFFER_BIT);
-    renderAllShapes();
+    // renderAllShapes();
+
+    requestAnimationFrame(tick);
 }
 
+var g_startTime = performance.now()/1000.0;
+var g_seconds = performance.now()/1000.0-g_startTime;
 
+function tick(){
+  g_seconds = performance.now()/1000.0-g_startTime;
+  // console.log(g_seconds);
 
+  updateAnimationAngles();
+
+  renderAllShapes();
+
+  requestAnimationFrame(tick);
+}
 
 var g_shapesList = [];
-
-// var g_points = []; // The array for a mouse press
-// var g_colors = []; // The array to store the color of a point
-// var g_sizes = []; // The array tp stpre the size of a point
 
 function click(ev) {
   //extract the event click and return it in WebGL coordinates
@@ -203,29 +169,10 @@ function click(ev) {
     point = new Circle(circle_seg);
   }
   
-
   point.position=[x,y];
   point.color=g_selectedColor.slice();
   point.size=g_selectedSize;
   g_shapesList.push(point);
-
-  // Store the coordinates to g_points array
-  // g_points.push([x, y]);
-
-  // Store the color to the g_colors array
-  // g_colors.push(g_selectedColor.slice());
-
-    //store the size to the g sizes array
-    // g_sizes.push(g_selectedSize);
-
-  // Store the color to g_colors array
-  /*if(x >= 0.0 && y >= 0.0) { // First quadrant
-    g_colors.push([1.0, 0.0, 0.0, 1.0]); // Red
-  } else if(x < 0.0 && y < 0.0) { // Third quadrant
-    g_colors.push([0.0, 1.0, 0.0, 1.0]); // Green
-  } else { // Others
-    g_colors.push([1.0, 1.0, 1.0, 1.0]); // White
-  }*/
 
   //Draw every shape that is supposed to be in the canvas
   renderAllShapes();
@@ -242,7 +189,14 @@ function convertCoordinatesEventToGL(ev){
     return([x, y]);
 }
 
-
+function updateAnimationAngles(){
+  if(g_yellowAnimation){
+    g_yellowAngle = (45*Math.sin(g_seconds));
+  }
+  if(g_magentaAnimation){
+    g_magentaAngle = (45*Math.sin(3*g_seconds));
+  }
+}
 
 function renderAllShapes(){
   // Check the time at the start of this function
@@ -267,6 +221,7 @@ function renderAllShapes(){
   leftArm.matrix.setTranslate(0, -.5, 0.0);
   leftArm.matrix.rotate(-5, 1, 0, 1);
   leftArm.matrix.rotate(-g_yellowAngle, 0, 0, 1);
+
   var yellowCoordinatesMat = new Matrix4(leftArm.matrix);
   leftArm.matrix.scale(0.25, .7, .5);
   leftArm.matrix.translate(-.5, 0, 0);
@@ -279,9 +234,6 @@ function renderAllShapes(){
   box.matrix.rotate(g_magentaAngle, 0, 0, 1);
   box.matrix.scale(.3, .3, .3);
   box.matrix.translate(-.5, 0, -0.001);
-
-  /*box.matrix.rotate(-30, 1, 0, 0);
-  box.matrix.scale(.2, .4, .2);*/
   box.render();
 
   //check time at end of function, show on pg
@@ -289,8 +241,6 @@ function renderAllShapes(){
   sendTextToHTML("numdot: ms: " + Math.floor(duration) + " fps: " + Math.floor(10000/duration)/10, "numdot");
 
 }
-
-
 
 // set the text of a HTML element
 function sendTextToHTML(text, htmlID){
