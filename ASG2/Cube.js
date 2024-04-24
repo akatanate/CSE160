@@ -18,6 +18,7 @@ class Cube {
 
       gl.uniformMatrix4fv(u_ModelMatrix, false, this.matrix.elements);
 
+      // front 
       drawTriangle3D( [ 0, 0, 0,      1, 1, 0,     1, 0, 0 ] );
       drawTriangle3D( [ 0, 0, 0,      0, 1, 0,     1, 1, 0] );
   
@@ -38,9 +39,22 @@ class Cube {
         let pt1 = [centerPt[0]+vec1[0], centerPt[1]+vec1[1]];
         let pt2 = [centerPt[0]+vec2[0], centerPt[1]+vec2[1]];*/
         gl.uniform4f(u_FragColor, rgba[0]*.9, rgba[1]*.9, rgba[2]*.9, rgba[3]);
-  
+        
+        // top
         drawTriangle3D( [ 0, 1, 0,    0, 1,1,    1, 1, 1 ] );
         drawTriangle3D( [ 0, 1, 0,    1, 1, 1,    1, 1, 0 ] );
+
+        // right
+        drawTriangle3D( [1, 0, 0, 1, 0, 1, 1, 1, 1 ] );
+        drawTriangle3D( [ 1, 0, 0, 1, 1, 1, 1, 1, 0 ] );
+
+        //left
+        drawTriangle3D( [0, 0, 0, 0, 1, 1, 0, 1, 0 ] );
+        drawTriangle3D( [ 0, 0, 0, 0, 1, 0, 0, 0, 1] );
+
+        //back
+        drawTriangle3D( [1, 1, 1, 0, 1, 1, 0, 0, 1] );
+        drawTriangle3D( [ 1, 1, 1, 0, 0, 1, 1, 0, 1 ] );
     }
 
   }
