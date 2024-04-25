@@ -229,45 +229,57 @@ function renderAllShapes(){
   // right arm
   var lArm = new Cube();
   lArm.color =  [0.15, 1.0, 0.15, 1.0]; //NEON GREEN
-  lArm.matrix.translate(-.25, -.4, -.25);
+  lArm.matrix.setTranslate(-.25, -.4, -.25);
   lArm.matrix.rotate(-5, 0, 1, 0); // Rotate around the y-axis
   lArm.matrix.rotate(-g_greenAngle, 0, 0, 1);
+
+  var lArmCoordinatesMat = new Matrix4(lArm.matrix)
   lArm.matrix.scale(0.1, .1, .2);
+  // lArm.matrix.setTranslate(0, 0, 0);
   lArm.render();
 
-  // Plant
+  // Plant + Shoe -------------------------------------------------------------
   var shoeBottom = new Cube();
   shoeBottom.color =  [0.6, 0.4, 0.2, 1.0]; 
-  shoeBottom.matrix.translate(-.25, -.2, -.5);
+  shoeBottom.matrix = lArmCoordinatesMat;
+  shoeBottom.matrix.translate(0, .1, 0);
   shoeBottom.matrix.rotate(-5, 0, 1, 0); // Rotate around the y-axis
   shoeBottom.matrix.rotate(-g_greenAngle, 0, 0, 1);
+  var shoeBottomCoordinatesMat = new Matrix4(shoeBottom.matrix);
   shoeBottom.matrix.scale(0.15, .1, .1);
   shoeBottom.render();
 
   var shoeTop = new Cube();
   shoeTop.color =  [0.8, 0.6, 0.4, 1.0];
-  shoeTop.matrix.translate(-.25, -.1, -.5);
-  shoeTop.matrix.rotate(-5, 0, 1, 0); // Rotate around the y-axis
-  shoeTop.matrix.rotate(-g_greenAngle, 0, 0, 1);
+  shoeTop.matrix = shoeBottomCoordinatesMat;
+  shoeTop.matrix.translate(0, .1, 0);
+  // shoeTop.matrix.translate(-.25, -.1, -.5);
+  // shoeTop.matrix.rotate(-5, 0, 1, 0); // Rotate around the y-axis
+  // shoeTop.matrix.rotate(-g_greenAngle, 0, 0, 1);
+  var shoeTopCoordinatesMat = new Matrix4(shoeTop.matrix);
   shoeTop.matrix.scale(0.07, .1, .1);
   shoeTop.render();
 
+
   var plantStem = new Cube();
   plantStem.color =  [0.0, 1.0, 1.0, 1.0];
-  plantStem.matrix.translate(-.25, 0, -.5);
-  plantStem.matrix.rotate(-5, 0, 1, 0); // Rotate around the y-axis
-  plantStem.matrix.rotate(-g_greenAngle, 0, 0, 1);
+  plantStem.matrix = shoeTopCoordinatesMat;
+  plantStem.matrix.translate(0.03, 0.1, .03);
+  // plantStem.matrix.rotate(-5, 0, 1, 0); // Rotate around the y-axis
+  // plantStem.matrix.rotate(-g_greenAngle, 0, 0, 1);
+  var plantStemLCoordinatesMat = new Matrix4(plantStem.matrix);
   plantStem.matrix.scale(0.02, .2, .03);
   plantStem.render();
 
   var plantStemL = new Cube();
   plantStemL.color =  [0.0, 0.0, 1.0, 1.0];
-  plantStemL.matrix.translate(-.3, 0.1, -.5);
-  plantStemL.matrix.rotate(-5, 0, 1, 0); // Rotate around the y-axis
-  plantStemL.matrix.rotate(-g_greenAngle, 0, 0, 1);
-  plantStemL.matrix.scale(0.1, .05, .015);
+  plantStemL.matrix = plantStemLCoordinatesMat;
+  plantStemL.matrix.translate(-0.05, 0.1, .01);
+  // plantStemL.matrix.rotate(-5, 0, 1, 0); // Rotate around the y-axis
+  // plantStemL.matrix.rotate(-g_greenAngle, 0, 0, 1);
+  plantStemL.matrix.scale(0.12, .05, .015);
   plantStemL.render();
-
+  // --------------------------------------------------------------------------------------------------------------------------
 
   // left arm
   var rArm = new Cube();

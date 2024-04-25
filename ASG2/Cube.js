@@ -44,6 +44,10 @@ class Cube {
         drawTriangle3D( [ 0, 1, 0,    0, 1,1,    1, 1, 1 ] );
         drawTriangle3D( [ 0, 1, 0,    1, 1, 1,    1, 1, 0 ] );
 
+        // bottom
+      drawTriangle3D( [ 0, 0, 0,    1, 0, 0,    1, 0, 1 ] );
+      drawTriangle3D( [ 0, 0, 0,    1, 0, 1,    0, 0, 1 ] );
+
         // right
         drawTriangle3D( [1, 0, 0, 1, 0, 1, 1, 1, 1 ] );
         drawTriangle3D( [ 1, 0, 0, 1, 1, 1, 1, 1, 0 ] );
@@ -55,6 +59,8 @@ class Cube {
         //back
         drawTriangle3D( [1, 1, 1, 0, 1, 1, 0, 0, 1] );
         drawTriangle3D( [ 1, 1, 1, 0, 0, 1, 1, 0, 1 ] );
+
+
     }
 
   }
