@@ -197,13 +197,13 @@ function convertCoordinatesEventToGL(ev){
 
 function updateAnimationAngles(){
   if(g_yellowAnimation){
-    g_yellowAngle = (45*Math.sin(g_seconds));
+    g_yellowAngle = (20*Math.sin(g_seconds));
   }
   if(g_magentaAnimation){
-    g_magentaAngle = (45*Math.sin(3*g_seconds));
+    g_magentaAngle = (20*Math.sin(3*g_seconds));
   }
   if(g_greenAnimation){
-    g_greenAngle = (45*Math.sin(3*g_seconds));
+    g_greenAngle = (30*Math.sin(3*g_seconds));
   }
 }
 
@@ -292,7 +292,7 @@ function renderAllShapes(){
   // left leg
   var lLeg = new Cube();
   lLeg.color =  [0.5, 0.8, 0.5, 1.0];
-  lLeg.matrix.translate(-.4, -.6, 0.0);
+  lLeg.matrix.translate(-.45, -.6, 0.0);
   lLeg.matrix.rotate(-5, 1, 0, 0);
   lLeg.matrix.scale(0.1, .3, .5);
   lLeg.render();
@@ -332,17 +332,18 @@ function renderAllShapes(){
    lEye.color =  [0, 0, 0, 1.0];
    lEye.matrix = yellowCoordinatesMat;
    lEye.matrix.scale(.4, .6, .3);
-   lEye.matrix.translate(.25, .25, 0);
+   lEye.matrix.translate(.25, .25, -0.1);
    lEye.render();
     
+   
       // left eye
         var lEyeBig = new Cube();
         lEyeBig.color =  [1.0, 1.0, 1.0, 1.0];
 
         lEyeBig.matrix = yellowCoordinatesMat;
         // rEye.matrix.translate(0.25, 0.25, 0);
-        lEyeBig.matrix.scale(.4 , .6 , .3);
-        lEyeBig.matrix.translate(0.3, 0.3, 0);
+        lEyeBig.matrix.scale(.4 , .4 , .3);
+        lEyeBig.matrix.translate(0.3, 1, -0.1);
         lEyeBig.render();
 
         // left eye
@@ -352,8 +353,10 @@ function renderAllShapes(){
         lEyeSmall.matrix = yellowCoordinatesMat;
         // rEye.matrix.translate(0.25, 0.25, 0);
         lEyeSmall.matrix.scale(.6 , .5 , .3);
-        lEyeSmall.matrix.translate(1.8, 0.25, 0);
+        lEyeSmall.matrix.translate(1.8, -1, -0.1);
         lEyeSmall.render();
+
+    // right eye
 
     
 
