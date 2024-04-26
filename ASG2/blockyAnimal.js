@@ -325,7 +325,32 @@ function renderAllShapes(){
   box.matrix.rotate(-g_magentaAngle, 1, 0, 0);
   box.matrix.scale(.65, .3, .3);
   box.matrix.translate(-.5, 0, -0.001);
+  var headCoordinatesMat = new Matrix4(box.matrix);
   box.render();
+
+    // tophead
+    var boxTop = new Cube();
+    boxTop.color = [1, 1, 1, 1];
+    boxTop.matrix =  headCoordinatesMat;
+    boxTop.matrix.translate(0, 1, 0);
+    boxTop.matrix.scale(1, .07, 1);
+    boxTop.render();
+
+    // right
+    var boxTopR = new Cube();
+    boxTopR.color = [1, 1, 1, 1];
+    boxTopR.matrix = headCoordinatesMat;
+    boxTopR.matrix.translate(1, -14, 0);
+    boxTopR.matrix.scale(.05, 13, 1);
+    boxTopR.render();
+
+        // right
+        var boxTopL = new Cube();
+        boxTopL.color = [1, 1, 1, 1];
+        boxTopL.matrix = headCoordinatesMat;
+        boxTopL.matrix.translate(-21.4, 0, 0);
+        boxTopL.matrix.scale(1, 1, 1);
+        boxTopL.render();
 
    // left eye----------------------------------------------------------------
    var lEye = new Cube();
@@ -335,7 +360,6 @@ function renderAllShapes(){
    lEye.matrix.translate(.25, .25, -0.1);
    lEye.render();
     
-   
       // left eye
         var lEyeBig = new Cube();
         lEyeBig.color =  [1.0, 1.0, 1.0, 1.0];
@@ -353,11 +377,56 @@ function renderAllShapes(){
         lEyeSmall.matrix = yellowCoordinatesMat;
         // rEye.matrix.translate(0.25, 0.25, 0);
         lEyeSmall.matrix.scale(.6 , .5 , .3);
-        lEyeSmall.matrix.translate(1.8, -1, -0.1);
+        lEyeSmall.matrix.translate(1.8, -1.6, -0.1);
         lEyeSmall.render();
 
-    // right eye
+    // right eye----------------------------------------------------------------
+    var rEye = new Cube();
+    rEye.color =  [0, 0, 0, 1.0];
+    rEye.matrix = yellowCoordinatesMat;
+    rEye.matrix.scale(3.5, 5, .3);
+    rEye.matrix.translate(.8, -.1, -0.1); //should only change this
+    rEye.render();
+     
+      var rEyeBig = new Cube();
+      rEyeBig.color =  [1.0, 1.0, 1.0, 1.0];
 
+      rEyeBig.matrix = yellowCoordinatesMat;
+      // rEye.matrix.translate(0.25, 0.25, 0);
+      rEyeBig.matrix.scale(.4 , .4 , .3);
+      rEyeBig.matrix.translate(0.3, 1, -0.1);
+      rEyeBig.render();
+
+      // left eye
+      var rEyeSmall = new Cube();
+      rEyeSmall.color =  [1.0, 1.0, 1.0, 1.0];
+
+      rEyeSmall.matrix = yellowCoordinatesMat;
+      // rEye.matrix.translate(0.25, 0.25, 0);
+      rEyeSmall.matrix.scale(.6 , .5 , .3);
+      rEyeSmall.matrix.translate(1.8, -1.6, -0.1);
+      rEyeSmall.render();
+
+    
+       // left eye
+         /*var lEyeBig = new Cube();
+         lEyeBig.color =  [1.0, 1.0, 1.0, 1.0];
+ 
+         lEyeBig.matrix = yellowCoordinatesMat;
+         // rEye.matrix.translate(0.25, 0.25, 0);
+         lEyeBig.matrix.scale(.4 , .4 , .3);
+         lEyeBig.matrix.translate(0.3, 1, -0.1);
+         lEyeBig.render();
+ 
+         // left eye
+         var lEyeSmall = new Cube();
+         lEyeSmall.color =  [1.0, 1.0, 1.0, 1.0];
+     
+         lEyeSmall.matrix = yellowCoordinatesMat;
+         // rEye.matrix.translate(0.25, 0.25, 0);
+         lEyeSmall.matrix.scale(.6 , .5 , .3);
+         lEyeSmall.matrix.translate(1.8, -1, -0.1);
+         lEyeSmall.render();*/
     
 
     // right eye----------------------------------------------------------------
