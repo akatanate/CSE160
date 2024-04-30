@@ -1,0 +1,26 @@
+@font-face {
+    font-family: 'Gunship';
+    src: url('gunshipcond.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Gunship2';
+    src: url('gunshiplaserital.ttf') format('truetype');
+}
+
+p {
+    font-family: 'Gunship', sans-serif;
+}
+
+button {
+    font-family: 'Gunship', sans-serif;
+}
+
+h1 {
+    font-family: 'Gunship2', serif;
+    font-size: 60px;
+}
+
+body{
+    text-align: center;
+}

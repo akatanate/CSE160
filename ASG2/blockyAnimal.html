@@ -8,6 +8,7 @@
   </head>
 
   <body onload="main()">
+    <h1>Wall-E!</h1>
     <canvas id="webgl" width="400" height="400"></canvas>
 
     <script src="lib/webgl-utils.js"></script>
@@ -21,23 +22,36 @@
     <script src="Triangle.js"></script>
     <script src="Circle.js"></script>
     <script src="Cube.js"></script>
+    <script src="Oval.js"></script>
+
+    <p>  
+      Adjust the camera angle <Input type="range" min="0" max="370" value="0" class ="slider" id = "angleSlide">      
+    <p>
+
+      <p>
+        Basic animation
+      </p>
 
     <p>
-      Green <Input type="range" min="-25" max="5" value="0" class ="slider" id = "greenSlide">
+      Shift-click for additional animation!
+    </p>
+
+    <br>
+
+    <p>
+      Shake plant <Input type="range" min="-25" max="5" value="0" class ="slider" id = "greenSlide">
       <button type="button" id="animationGreenOnButton">ON</button>
       <button type="button" id="animationGreenOffButton">OFF</button>   
     <p>  
     <p>
-      Magenta <Input type="range" min="-10" max="30" value="0" class ="slider" id = "magentaSlide">
+      Head-tilt <Input type="range" min="-10" max="30" value="0" class ="slider" id = "magentaSlide">
       <button type="button" id="animationMagentaOnButton">ON</button>
       <button type="button" id="animationMagentaOffButton">OFF</button> 
     <p>
-      Yellow <Input type="range" min="-10" max="20" value="0" class ="slider" id = "yellowSlide">
+      Neck-tilt <Input type="range" min="-10" max="20" value="0" class ="slider" id = "yellowSlide">
       <button type="button" id="animationYellowOnButton">ON</button>
       <button type="button" id="animationYellowOffButton">OFF</button>   
-    <p>  
-      Camera Angle <Input type="range" min="0" max="360" value="0" class ="slider" id = "angleSlide">      
-    <p>
+
 
   </body>
 </html>

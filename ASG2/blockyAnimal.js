@@ -118,7 +118,17 @@ function addActionsForHtmlUI(){
     document.getElementById('yellowSlide').addEventListener('mousemove', function() { g_yellowAngle = this.value; renderAllShapes();} );
     document.getElementById('magentaSlide').addEventListener('mousemove', function() { g_magentaAngle = this.value; renderAllShapes();} );
     document.getElementById('angleSlide').addEventListener('mousemove', function() { g_globalAngle = this.value; renderAllShapes(); } );
-}
+
+
+       // Special 'poke' animation triggered by shift-click event
+       document.addEventListener('click', function() {
+        if (event.shiftKey ) {
+            // Toggle the g_greenAnimation state
+    
+            g_greenAnimation = true;
+        }
+    });
+  }
 
 
 function main() {
@@ -371,20 +381,27 @@ function renderAllShapes(){
 
 
   // left leg
-  var lLeg = new Cube();
+  var lLeg = new Oval();
   lLeg.color =  [0.0, 0.0, 0.0, 1.0];
-  lLeg.matrix.translate(-.45, -.6, 0.0);
+  lLeg.matrix.translate(-.40, -.5, 0.0);
   lLeg.matrix.rotate(-5, 1, 0, 0);
-  lLeg.matrix.scale(0.1, .3, .5);
+  lLeg.matrix.scale(0.1, .4, .5);
   lLeg.render();
 
   // right leg
-  var rLeg = new Cube();
+  /*var rLeg = new Trapezoid();
   rLeg.color =  [0.0, 0.0, 0.0, 1.0];
   rLeg.matrix.translate(0.4, -.6, 0.0);
   rLeg.matrix.rotate(-5, 1, 0, 0);
   rLeg.matrix.scale(0.1, .3, .5);
-  var rLegCoordinatesMat =  new Matrix4(rLeg.matrix);
+  // var rLegCoordinatesMat =  new Matrix4(rLeg.matrix);
+  rLeg.render();*/
+  var rLeg = new Oval();
+  rLeg.color =  [0.0, 0.0, 0.0, 1.0];
+  rLeg.matrix.translate(0.45, -.5, 0.0);
+  rLeg.matrix.rotate(-5, 1, 0, 0);
+  rLeg.matrix.scale(0.1, .4, .5);
+  // var rLegCoordinatesMat =  new Matrix4(rLeg.matrix);
   rLeg.render();
 
   // neck
