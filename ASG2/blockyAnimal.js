@@ -25,6 +25,7 @@ let u_Size;
 let u_ModelMatrixl
 let u_GlobalRotateMatrix;
 
+
 function setupWebGL(){
     // Retrieve <canvas> element
     canvas = document.getElementById('webgl');
@@ -141,6 +142,12 @@ function addActionsForHtmlUI(){
 
       renderAllShapes();
     });
+
+    document.addEventListener('click', function() {
+      var music = document.getElementById("wallESong");
+      music.play();
+    });
+    
 
   }
 
