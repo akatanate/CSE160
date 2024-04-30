@@ -30,8 +30,6 @@ function setupWebGL(){
     // Retrieve <canvas> element
     canvas = document.getElementById('webgl');
 
-    //gl = getWedGLContext(canvas);
-
     // Get the rendering context for WebGL
     gl = canvas.getContext("webgl", { preserveDrawingBuffer: true });
 
@@ -124,12 +122,8 @@ function addActionsForHtmlUI(){
     document.getElementById('magentaSlide').addEventListener('mousemove', function() { g_magentaAngle = this.value; renderAllShapes();} );
     document.getElementById('angleSlide').addEventListener('mousemove', function() { g_globalAngle = this.value; renderAllShapes(); } );
 
-
-       // Special 'poke' animation triggered by shift-click event
        document.addEventListener('click', function() {
         if (event.shiftKey ) {
-            // Toggle the g_greenAnimation state
-    
             g_greenAnimation = true;
         }
     });
@@ -151,9 +145,6 @@ function addActionsForHtmlUI(){
 
   }
 
-
-
-
 function main() {
 
     setupWebGL();
@@ -168,10 +159,6 @@ function main() {
 
     // Set the color for clearing <canvas>
     gl.clearColor(0.0, 0.0, 0.5, 1.0);
-
-    // Clear <canvas>
-    // gl.clear(gl.COLOR_BUFFER_BIT);
-    // renderAllShapes();
 
     requestAnimationFrame(tick);
 }
@@ -291,41 +278,29 @@ function renderAllShapes(){
   lArm.color =  [0.9, 0.6, 0.0, 1.0]; //NEON GREEN
   lArm.matrix.setTranslate(-.45, -.25, -.22);
   lArm.matrix.rotate(-5, 1.3, 0, 0); // Rotate around the y-axis
-  // lArm.matrix.rotate(-g_greenAngle, 0, 0, 1);
-
   var lArmCoordinatesMat = new Matrix4(lArm.matrix);
   lArm.matrix.scale(0.1, .1, .55);
-  // lArm.matrix.setTranslate(0, 0, 0);
   lArm.render();
 
 
   var lFinger3 = new Cube();
   lFinger3.color =  [0.5, 0.3, 0.2, 1.0];
-
   lFinger3.matrix = lArmCoordinatesMat;
   lFinger3.matrix.translate(0, 0.03, -.12);
   lFinger3.matrix.rotate(-35, 0, 0, 1);
-  //rFinger1.matrix.rotate(-5, 0, 1, 0); // Rotate around the y-axis
-  //rFinger1.matrix.rotate(-g_greenAngle, 0, 0, 1);
   var fingerMat = new Matrix4(lFinger3.matrix);
   lFinger3.matrix.scale(0.03, .08, 0.1);
   lFinger3.matrix.rotate(-g_greenAngle, 0, 0, 1);
-
   lFinger3.render();
 
   var lFinger4 = new Cube();
   lFinger4.color =  [0.5, 0.3, 0.2, 1.0];
   lFinger4.matrix = lArmCoordinatesMat;
-
   lFinger4.matrix.translate(2, 0.3, -.09);
   lFinger4.matrix.scale(.6, .6, 1);
   lFinger4.matrix.rotate(-g_greenAngle, 0, 0, 1);
   lFinger4.render();
 
-  
-
-
- 
   // Plant + Shoe -------------------------------------------------------------
   var shoeBottom = new Cube();
   shoeBottom.color =  [0.7, 0.5, 0.3, 1.0];
@@ -341,20 +316,14 @@ function renderAllShapes(){
   shoeTop.color = [0.7, 0.5, 0.3, 1.0]
   shoeTop.matrix = shoeBottomCoordinatesMat;
   shoeTop.matrix.translate(0, .1, 0);
-  // shoeTop.matrix.translate(-.25, -.1, -.5);
-  // shoeTop.matrix.rotate(-5, 0, 1, 0); // Rotate around the y-axis
-  // shoeTop.matrix.rotate(-g_greenAngle, 0, 0, 1);
   var shoeTopCoordinatesMat = new Matrix4(shoeTop.matrix);
   shoeTop.matrix.scale(0.07, .1, .1);
   shoeTop.render();
-
 
   var plantStem = new Cube();
   plantStem.color =  [0.1, 0.5, 0.1, 1.0];
   plantStem.matrix = shoeTopCoordinatesMat;
   plantStem.matrix.translate(0.03, 0.1, .03);
-  // plantStem.matrix.rotate(-5, 0, 1, 0); // Rotate around the y-axis
-  // plantStem.matrix.rotate(-g_greenAngle, 0, 0, 1);
   var plantStemLCoordinatesMat = new Matrix4(plantStem.matrix);
   plantStem.matrix.scale(0.02, .2, .03);
   plantStem.render();
@@ -363,8 +332,6 @@ function renderAllShapes(){
   plantStemL.color =  [0.4, 0.9, 0.4, 1.0];
   plantStemL.matrix = plantStemLCoordinatesMat;
   plantStemL.matrix.translate(-0.05, 0.1, .01);
-  // plantStemL.matrix.rotate(-5, 0, 1, 0); // Rotate around the y-axis
-  // plantStemL.matrix.rotate(-g_greenAngle, 0, 0, 1);
   plantStemL.matrix.scale(0.12, .05, .015);
   plantStemL.render();
   // --------------------------------------------------------------------------------------------------------------------------
@@ -382,8 +349,6 @@ function renderAllShapes(){
   rFinger1.color =  [0.5, 0.3, 0.2, 1.0];
   rFinger1.matrix = rArmCoordinatesMat;
   rFinger1.matrix.translate(0, .1, -.12);
-  //rFinger1.matrix.rotate(-5, 0, 1, 0); // Rotate around the y-axis
-  //rFinger1.matrix.rotate(-g_greenAngle, 0, 0, 1);
   rFinger1.matrix.scale(0.3, .4, 1);
   rFinger1.render();
 
@@ -392,16 +357,8 @@ function renderAllShapes(){
   rFinger2.matrix = rArmCoordinatesMat;
   rFinger2.matrix.translate(2, .16, -.09);
   rFinger2.matrix.rotate(35, 0, 0, 1);
-
-  // Finger2.matrix.rotate(-20, 5, 20, 20);
-  //rFinger1.matrix.rotate(-5, 0, 1, 0); // Rotate around the y-axis
-  //rFinger1.matrix.rotate(-g_greenAngle, 0, 0, 1);
   rFinger2.matrix.scale(1, 2, .2);
   rFinger2.render();
-
-  
-  
-
 
   // left leg
   var lLeg = new Oval();
@@ -412,19 +369,11 @@ function renderAllShapes(){
   lLeg.render();
 
   // right leg
-  /*var rLeg = new Trapezoid();
-  rLeg.color =  [0.0, 0.0, 0.0, 1.0];
-  rLeg.matrix.translate(0.4, -.6, 0.0);
-  rLeg.matrix.rotate(-5, 1, 0, 0);
-  rLeg.matrix.scale(0.1, .3, .5);
-  // var rLegCoordinatesMat =  new Matrix4(rLeg.matrix);
-  rLeg.render();*/
   var rLeg = new Oval();
   rLeg.color =  [0.0, 0.0, 0.0, 1.0];
   rLeg.matrix.translate(0.45, -.5, 0.0);
   rLeg.matrix.rotate(-5, 1, 0, 0);
   rLeg.matrix.scale(0.1, .4, .5);
-  // var rLegCoordinatesMat =  new Matrix4(rLeg.matrix);
   rLeg.render();
 
   // neck
@@ -528,31 +477,6 @@ function renderAllShapes(){
       rEyeSmall.matrix.scale(.6 , .5 , .3);
       rEyeSmall.matrix.translate(1.8, -1.6, -0.1);
       rEyeSmall.render();
-
-    
-       // left eye
-         /*var lEyeBig = new Cube();
-         lEyeBig.color =  [1.0, 1.0, 1.0, 1.0];
- 
-         lEyeBig.matrix = yellowCoordinatesMat;
-         // rEye.matrix.translate(0.25, 0.25, 0);
-         lEyeBig.matrix.scale(.4 , .4 , .3);
-         lEyeBig.matrix.translate(0.3, 1, -0.1);
-         lEyeBig.render();
- 
-         // left eye
-         var lEyeSmall = new Cube();
-         lEyeSmall.color =  [1.0, 1.0, 1.0, 1.0];
-     
-         lEyeSmall.matrix = yellowCoordinatesMat;
-         // rEye.matrix.translate(0.25, 0.25, 0);
-         lEyeSmall.matrix.scale(.6 , .5 , .3);
-         lEyeSmall.matrix.translate(1.8, -1, -0.1);
-         lEyeSmall.render();*/
-    
-
-    // right eye----------------------------------------------------------------
-
 
   //check time at end of function, show on pg
   var duration = performance.now() - startTime;
