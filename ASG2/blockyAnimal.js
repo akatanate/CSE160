@@ -104,6 +104,10 @@ let g_greenAnimation = false;
 
 //set up actions for HTML UI elements
 function addActionsForHtmlUI(){
+  document.getElementById('basicAnimationOn').addEventListener('mousemove', function() { g_yellowAnimation = true; g_magentaAnimation = true; } );
+  document.getElementById('basicAnimationOff').addEventListener('mousemove', function() { g_yellowAnimation = false; g_magentaAnimation = false; } );
+
+
     document.getElementById('animationYellowOnButton').addEventListener('mousemove', function() { g_yellowAnimation = true } );
     document.getElementById('animationYellowOffButton').addEventListener('mousemove', function() { g_yellowAnimation = false} );
 
@@ -128,7 +132,19 @@ function addActionsForHtmlUI(){
             g_greenAnimation = true;
         }
     });
+
+    canvas.addEventListener('mousemove', function(event){
+      var frame = canvas.getBoundingClientRect();
+      var x_pos = event.clientX - frame.left;
+
+      g_globalAngle = (x_pos / canvas.width) * 360;
+
+      renderAllShapes();
+    });
+
   }
+
+
 
 
 function main() {
@@ -533,7 +549,7 @@ function renderAllShapes(){
 
   //check time at end of function, show on pg
   var duration = performance.now() - startTime;
-  sendTextToHTML("numdot: ms: " + Math.floor(duration) + " fps: " + Math.floor(10000/duration)/10, "numdot");
+  sendTextToHTML("fps: " + Math.floor(1000/duration), "numdot");
 
 }
 
