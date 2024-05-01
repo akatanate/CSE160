@@ -25,6 +25,7 @@ var FSHADER_SOURCE = `
     uniform vec4 u_FragColor;
     void main(){
         gl_FragColor = u_FragColor;
+        gl_FragColor = vec4(v_UV, 1.0, 1.0);
     }`
 
 // Global Variables
