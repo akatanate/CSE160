@@ -1,12 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>ASG3A</title>
+    <meta charset="utf-8" />
+    <title>Blocky Animal</title>
+    <link rel="stylesheet" href="blockyAnimal.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   </head>
-  <body>
-    <main>
 
-    </main>
-	<script src="ASG3.js"></script>
+  <body onload="main()">
+    <canvas id="webgl" width="400" height="400"></canvas>
+
+    <script src="lib/webgl-utils.js"></script>
+    <script src="lib/webgl-debug.js"></script>
+    <script src="lib/cuon-utils.js"></script>
+    <script src="lib/cuon-matrix.js"></script>
+
+    <script src="World.js"></script>
+
+    <script src="Point.js"></script>
+    <script src="Triangle.js"></script>
+    <script src="Circle.js"></script>
+    <script src="Cube.js"></script>
+
+    <p>
+      Magenta <Input type="range" min="0" max="100" value="0" class ="slider" id = "magentaSlide">
+      <button type="button" id="animationMagentaOnButton">ON</button>
+      <button type="button" id="animationMagentaOffButton">OFF</button> 
+    <p>
+      Yellow <Input type="range" min="0" max="100" value="0" class ="slider" id = "yellowSlide">
+      <button type="button" id="animationYellowOnButton">ON</button>
+      <button type="button" id="animationYellowOffButton">OFF</button>   
+    <p>  
+      Camera Angle <Input type="range" min="0" max="100" value="0" class ="slider" id = "angleSlide">      
+    <p>
+
   </body>
 </html>
