@@ -23,9 +23,11 @@ var FSHADER_SOURCE = `
     precision mediump float;
     varying vec2 v_UV;
     uniform vec4 u_FragColor;
+    uniform sampler2D u_Sampler0;
     void main(){
         gl_FragColor = u_FragColor;
         gl_FragColor = vec4(v_UV, 1.0, 1.0);
+        gl_FragColor = texture2D(u_Sampler0, v_UV);
     }`
 
 // Global Variables
@@ -41,6 +43,8 @@ let u_ModelMatrix;
 let u_ProjectionMatrix; //diff
 let u_ViewMatrix; //diff
 let u_GlobalRotateMatrix;
+
+let u_Sampler0;
 
 
 function setupWebGL(){
@@ -87,7 +91,6 @@ function connectVariablesToGSL(){
         return;
     }
 
-
     // Get the storage location of u_FragColor variable
     u_ModelMatrix = gl.getUniformLocation(gl.program, 'u_ModelMatrix');
     if (!u_ModelMatrix) {
@@ -108,9 +111,64 @@ function connectVariablesToGSL(){
       return;
     }
 
+    u_ProjectionMatrix = gl.getUniformLocation(gl.program, 'u_ProjectionMatrix');
+    if (!u_ProjectionMatrix) {
+      console.log('Fail to get the storage location of u_ProjectionMatrix');
+      return;
+    }
+
+       // Get the storage location of the u_Sampler
+   var u_Sampler0 = gl.getUniformLocation(gl.program, 'u_Sampler0');
+   if (!u_Sampler0) {
+    console.log('Fail to get the storage location of u_Sampler');
+    return;
+  }
+
      var identityM = new Matrix4();
      gl.uniformMatrix4fv(u_ModelMatrix, false, identityM.elements);
+    //  gl.uniformMatrix4fv(u_ViewMatrix, false, identityM.elements);
+    // gl.uniformMatrix4fv(u_ProjectionMatrix, false, identityM.elements);
 }
+
+function initTextures(){                                  
+   var image = new Image(); // Create an image object    ...
+   if (!image) {
+    console.log('Fail to create the image object');
+    return false;
+  }
+   // Register the event handler to be called on loading an image
+   image.onload = function(){ sendTextureToGLSL(image); };
+   // Tell the browser to load an image
+   image.src = 'sky.jpg';
+   // add more textures here
+    return true;
+ }
+
+ function sendTextureToGLSL(image){     
+  var texture = gl.createTexture(); // Create a texture object
+  if (!texture) {
+    console.log('Fail to get the storage location of texture');
+    return false;
+  }
+
+   gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1); // Flip the image's y axis
+   // Enable the texture unit 0
+   gl.activeTexture(gl.TEXTURE0);
+   // Bind the texture object to the target
+   gl.bindTexture(gl.TEXTURE_2D, texture);
+
+   // Set the texture parameters
+   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+   // Set the texture image
+   gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, image);
+
+   // Set the texture unit 0 to the sampler
+   gl.uniform1i(u_Sampler0, 0);
+
+   // gl.drawArrays(gl.TRIANGLE_STRIP, 0, n); // Draw a rectangle
+
+   console.log('finished loadTexture');
+ }
 
 //Constants
 const POINT = 0;
@@ -155,9 +213,10 @@ function main() {
     addActionsForHtmlUI();
 
     // Register function (event handler) to be called on a mouse press
-    canvas.onmousedown = click;
-    canvas.onmousemove = function(ev){ if(ev.buttons == 1) { click(ev) } };
+    // canvas.onmousedown = click;
+    // canvas.onmousemove = function(ev){ if(ev.buttons == 1) { click(ev) } };
 
+    initTextures();
     // Set the color for clearing <canvas>
     gl.clearColor(0.0, 0.0, 0.0, 1.0);
 
