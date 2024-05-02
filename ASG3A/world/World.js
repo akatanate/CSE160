@@ -306,14 +306,21 @@ function updateAnimationAngles(){
   }
 }
 
+// can use vectors from asg 1?
+var g_eye = [0, 0, 3];
+var g_at=[0,0,-100];
+var g_up = [0,1,0];
+
 function renderAllShapes(){
   // Check the time at the start of this function
   var startTime = performance.now();
 
   var projMat=new Matrix4();
+  projMat.setPerspective(50, 1 * canvas.width/canvas.height, 1, 100);
   gl.uniformMatrix4fv(u_ProjectionMatrix, false, projMat.elements);
 
   var viewMat=new Matrix4();
+  viewMat.setLookAt(g_eye[0], g_eye[1], g_eye[2], g_at[0], g_at[1], g_at[2], g_up[0], g_up[1], g_up[2]); //eye, at, up
   gl.uniformMatrix4fv(u_ViewMatrix, false, viewMat.elements);
 
   var globalRotMat=new Matrix4().rotate(g_globalAngle, 0, 1, 0);
@@ -333,7 +340,7 @@ function renderAllShapes(){
 
   var leftArm = new Cube();
   leftArm.color = [1, 1, 0, 1];
-  leftArm.textureNum = 0; // color
+  leftArm.textureNum = -1; // color
   leftArm.matrix.setTranslate(0, -.5, 0.0);
   leftArm.matrix.rotate(-5, 1, 0, 1);
   leftArm.matrix.rotate(-g_yellowAngle, 0, 0, 1);
