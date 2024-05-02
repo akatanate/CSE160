@@ -234,6 +234,8 @@ function main() {
     // canvas.onmousedown = click;
     // canvas.onmousemove = function(ev){ if(ev.buttons == 1) { click(ev) } };
 
+    document.onkeydown = keydown;
+
     initTextures();
     // Set the color for clearing <canvas>
     gl.clearColor(0.0, 0.0, 0.0, 1.0);
@@ -306,7 +308,19 @@ function updateAnimationAngles(){
   }
 }
 
+function keydown(ev){
+  if (ev.keyCode == 39){ //right arrow
+    g_eye[0] += 0.2;
+  } else if (ev.keyCode == 37){ //left arrow
+    g_eye[0] -= 0.2;
+  }
+
+  renderAllShapes();
+  console.log(ev.keyCode);
+}
+
 // can use vectors from asg 1?
+// have to use the vectors to implement movements?***********************
 var g_eye = [0, 0, 3];
 var g_at=[0,0,-100];
 var g_up = [0,1,0];
