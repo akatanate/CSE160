@@ -24,11 +24,28 @@ var FSHADER_SOURCE = `
     varying vec2 v_UV;
     uniform vec4 u_FragColor;
     uniform sampler2D u_Sampler0;
+    uniform int u_whichTexture;
     void main(){
-        gl_FragColor = u_FragColor;
+
+      if(u_whichTexture == -2){
+        gl_FragColor = u_FragColor;  
+
+      } else if (u_whichTexture == -1){
         gl_FragColor = vec4(v_UV, 1.0, 1.0);
+
+      } else if (u_whichTexture == 0){
         gl_FragColor = texture2D(u_Sampler0, v_UV);
+
+      } else{
+        gl_FragColor = vec4(1, .2, .2, 1);
+      }
+
     }`
+
+    //use color
+    //use UV debug color
+    //use texture0
+    //error put redish
 
 // Global Variables
 let canvas;
@@ -45,6 +62,7 @@ let u_ViewMatrix; //diff
 let u_GlobalRotateMatrix;
 
 let u_Sampler0;
+let u_whichTexture;
 
 
 function setupWebGL(){
@@ -126,8 +144,8 @@ function connectVariablesToGSL(){
 
      var identityM = new Matrix4();
      gl.uniformMatrix4fv(u_ModelMatrix, false, identityM.elements);
-    //  gl.uniformMatrix4fv(u_ViewMatrix, false, identityM.elements);
-    // gl.uniformMatrix4fv(u_ProjectionMatrix, false, identityM.elements);
+    gl.uniformMatrix4fv(u_ViewMatrix, false, identityM.elements);
+    gl.uniformMatrix4fv(u_ProjectionMatrix, false, identityM.elements);
 }
 
 function initTextures(){                                  
@@ -147,7 +165,7 @@ function initTextures(){
  function sendTextureToGLSL(image){     
   var texture = gl.createTexture(); // Create a texture object
   if (!texture) {
-    console.log('Fail to get the storage location of texture');
+    console.log('Fail to creaye texture object');
     return false;
   }
 
@@ -301,6 +319,7 @@ function renderAllShapes(){
 
   var body = new Cube();
   body.color = [1.0, 0.0,0.0,1.0];
+  body.textureNum = 0; // color
   body.matrix.translate(-.25, -.75, 0.0);
   body.matrix.rotate(-5, 1, 0, 0);
   body.matrix.scale(0.5, .3, .5);
@@ -308,6 +327,7 @@ function renderAllShapes(){
 
   var leftArm = new Cube();
   leftArm.color = [1, 1, 0, 1];
+  leftArm.textureNum = 0; // color
   leftArm.matrix.setTranslate(0, -.5, 0.0);
   leftArm.matrix.rotate(-5, 1, 0, 1);
   leftArm.matrix.rotate(-g_yellowAngle, 0, 0, 1);
@@ -336,7 +356,7 @@ function renderAllShapes(){
 function sendTextToHTML(text, htmlID){
     var htmlElm = document.getElementById(htmlID);
     if(!htmlElm){
-        console.log("Failed to get " + htmlID + " from HTML");
+        // console.log("Failed to get " + htmlID + " from HTML");
         return;
     }
     htmlElm.innerHTML = text;
