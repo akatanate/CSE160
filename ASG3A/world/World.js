@@ -325,6 +325,48 @@ var g_eye = [0, 0, 3];
 var g_at=[0,0,-100];
 var g_up = [0,1,0];
 
+// var g_camera=new Camera();
+
+var g_map=[
+  [1, 1, 1, 1, 1, 1, 1, 1],
+  [1, 0, 0, 0, 0, 0, 0, 1],
+  [1, 0, 0, 0, 0, 0, 0, 1],
+  [1, 0, 0, 1, 1, 0, 0, 1],
+  [1, 0, 0, 0, 0, 0, 0, 1],
+  [1, 0, 0, 0, 0, 0, 0, 1],
+  [1, 0, 0, 0, 1, 0, 0, 1],
+  [1, 0, 0, 0, 0, 0, 0, 1],
+];
+
+/*function drawMap(){
+  for (x=0;x<8;x++){
+    for(y=0;y<8;y++){
+      if(g_map[x][y]==1){
+        var body = new Cube();
+        body.color = [1.0, 1.0, 1.0, 1.0];
+        body.matrix.translate(x-4, -.75, y-4);
+        body.render();
+      }
+    }
+  }
+}*/
+
+function drawMap(){
+  for (x=0;x<32;x++){
+    for(y=0;y<32;y++){
+      if(x==0 || x==31 || y==0 || y==31){
+        var body = new Cube();
+        body.color = [.8, 1.0, 1.0, 1.0];
+        // body.matrix.translate(x-4, -.75, y-4);
+        body.matrix.translate(0, -.75, 0);
+        body.matrix.scale(.4,.4,.4);
+        body.matrix.translate(x-16, 0, y-16);
+        body.render();
+      }
+    }
+  }
+}
+
 function renderAllShapes(){
   // Check the time at the start of this function
   var startTime = performance.now();
@@ -343,6 +385,25 @@ function renderAllShapes(){
   // Clear <canvas>
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT );
   gl.clear(gl.COLOR_BUFFER_BIT);
+
+  drawMap();
+
+  // DRAW the floor
+  var body = new Cube();
+  body.color = [1.0, 0.0, 0.0, 1.0];
+  body.textureNum = 0;
+  body.matrix.translate(0, -0.75, 0.0);
+  body.matrix.scale(10, 0, 10);
+  body.matrix.translate(-.5, 0, -.5);
+  body.render(); 
+
+    // DRAW the sky
+    var sky = new Cube();
+    sky.color = [1.0, 0.0, 0.0, 1.0];
+    sky.textureNum=1;
+    sky.matrix.scale(50, 50, 50);
+    sky.matrix.translate(-.5, -.5, -.5);
+    sky.render(); 
 
   var body = new Cube();
   body.color = [1.0, 0.0,0.0,1.0];
