@@ -81,7 +81,7 @@ function drawTriangle(vertices){
 }  
   
 function drawTriangle3D(vertices){
-  var n = 3; //number of vertices
+  var n = vertices.length / 3; //number of vertices
   // console.log("vertices", vertices);
 
   //create buffer object
