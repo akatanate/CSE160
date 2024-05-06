@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>Blocky Animal</title>
+    <title>Blocky World</title>
     <!--<link rel="stylesheet" href="blockyAnimal.css">-->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   </head>
@@ -15,13 +15,23 @@
     <script src="lib/cuon-utils.js"></script>
     <script src="lib/cuon-matrix.js"></script>
 
-    <script src="World.js"></script>
+    <script src="Vector.js"></script>
+    <script src="Camera.js"></script>
 
     <script src="Point.js"></script>
     <script src="Triangle.js"></script>
     <script src="Circle.js"></script>
     <script src="Cube.js"></script>
 
+    <script src="World.js"></script>
+    <p>
+      Camera/Movement Keys: <br>
+      Q- Rotate Right <br>
+      E- Rotate Left <br>
+        Camera Angle <Input type="range" min="0" max="360" value="0" class ="slider" id = "angleSlide">      
+      <br>
+      Arrow Keys- Move Forward, Back, Left, and Right <br>
+      Can use the rotate camera with mouse movement
     <p>
       Magenta <Input type="range" min="0" max="100" value="0" class ="slider" id = "magentaSlide">
       <button type="button" id="animationMagentaOnButton">ON</button>
@@ -30,9 +40,7 @@
       Yellow <Input type="range" min="0" max="100" value="0" class ="slider" id = "yellowSlide">
       <button type="button" id="animationYellowOnButton">ON</button>
       <button type="button" id="animationYellowOffButton">OFF</button>   
-    <p>  
-      Camera Angle <Input type="range" min="0" max="100" value="0" class ="slider" id = "angleSlide">      
-    <p>
+
 <br>
       <!--<p id="numdot"> </p>-->
 

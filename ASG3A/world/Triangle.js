@@ -79,20 +79,35 @@ function drawTriangle(vertices){
     gl.drawArrays(gl.TRIANGLES, 0, n);
     //return n;
 }  
-  
-function drawTriangle3D(vertices){
-  var n = vertices.length / 3; //number of vertices
-  // console.log("vertices", vertices);
 
-  //create buffer object
-  var vertexBuffer = gl.createBuffer();
+var g_vertexBuffer = null;
+function initTriangle3D(){
+    var vertexBuffer = gl.createBuffer();
   if(!vertexBuffer){
       console.log('Failed to create the buffer object');
       return -1;
   }
 
-  //bind the buffer object to the target
   gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+
+    //assign the buffer object to a_position variable
+  gl.vertexAttribPointer(a_Position, 3, gl.FLOAT, false, 0, 0);
+
+  //enable the assignment to a_Position variable
+  gl.enableVertexAttribArray(a_Position);
+}
+  
+function drawTriangle3D(vertices){
+  var n = vertices.length / 3; //number of vertices
+  // console.log("vertices", vertices);
+
+  if(g_vertexBuffer==null){
+    initTriangle3D();
+  }
+
+  //create buffer object
+
+  //bind the buffer object to the target
 
   //write date into the buffer object
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.DYNAMIC_DRAW);
@@ -102,12 +117,6 @@ function drawTriangle3D(vertices){
       console.log('Failed to get the storage location of a_Position');
       return -1;
   }*/
-
-  //assign the buffer object to a_position variable
-  gl.vertexAttribPointer(a_Position, 3, gl.FLOAT, false, 0, 0);
-
-  //enable the assignment to a_Position variable
-  gl.enableVertexAttribArray(a_Position);
 
   gl.drawArrays(gl.TRIANGLES, 0, n);
   //return n;
@@ -157,6 +166,8 @@ function drawTriangle3DUV(vertices, uv){
 
 
   gl.drawArrays(gl.TRIANGLES, 0, n);
+
+  g_vertexBuffer=null;
   //return n;
 }  
  
