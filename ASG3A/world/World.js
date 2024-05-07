@@ -2,7 +2,7 @@
 // Vertex shader program
 
 // EDITED*************************************************
-var VSHADER_SOURCE = `
+/*var VSHADER_SOURCE = `
     precision mediump float;
     attribute vec4 a_Position;
     attribute vec2 a_UV;
@@ -16,16 +16,85 @@ var VSHADER_SOURCE = `
     void main(){
         gl_Position =  u_ProjectionMatrix * u_ViewMatrix * u_GlobalRotateMatrix * u_ModelMatrix * a_Position;
         v_UV = a_UV;
-    }`
+    }`*/
+
+    // Vertex shader program
+var VSHADER_SOURCE = `
+precision mediump float;
+attribute vec4 a_Position;
+attribute vec2 a_UV;
+varying vec2 v_UV;
+varying vec4 v_Position; 
+
+uniform mat4 u_ModelMatrix; 
+uniform mat4 u_GlobalRotateMatrix;
+uniform mat4 u_ViewMatrix;
+uniform mat4 u_ProjectionMatrix;
+
+void main(){
+    gl_Position =  u_ProjectionMatrix * u_ViewMatrix * u_GlobalRotateMatrix * u_ModelMatrix * a_Position;
+    v_UV = a_UV;
+    v_Position = u_ModelMatrix * a_Position; // Calculate world space position
+}
+`;
+
 
 // Fragment shader program
+
+// Fragment shader program
+// Fragment shader program
 var FSHADER_SOURCE = `
+    precision mediump float;
+    varying vec2 v_UV;
+    varying vec4 v_Position; 
+    uniform vec4 u_FragColor;
+    uniform sampler2D u_Sampler0;
+    uniform sampler2D u_Sampler1;
+    uniform int u_whichTexture;
+
+    uniform float u_dustDensity; 
+    uniform vec3 u_dustColor;    
+    uniform vec3 u_ReferencePoint; // Reference point in world space for clustering the dust
+
+    void main() {
+        vec4 texColor;
+
+        // Choose texture
+        if (u_whichTexture == 0) {
+            texColor = texture2D(u_Sampler0, v_UV);
+        } else if (u_whichTexture == 1) {
+            texColor = texture2D(u_Sampler1, v_UV);
+        } 
+        else if (u_whichTexture == -2) {
+            texColor = u_FragColor;
+        } else if (u_whichTexture == -1) {
+            texColor = vec4(v_UV, 1.0, 1.0);
+        } else if (u_whichTexture == 5){
+          texColor = vec4(0.05, 0.025, 0.025, 1);
+  
+        } 
+        else {
+            texColor = vec4(1, .2, .2, 1);
+        }
+        
+        // Calculate dust stuff
+        float distance = length(v_Position.xyz - u_ReferencePoint);
+        float dustFactor = exp(-u_dustDensity * distance * distance);
+        dustFactor = clamp(dustFactor, 0.0, 1.0); 
+        vec3 finalColor = mix(texColor.rgb, u_dustColor, dustFactor);
+        gl_FragColor = vec4(finalColor, texColor.a);
+    }
+`;
+
+
+/*var FSHADER_SOURCE = `
     precision mediump float;
     varying vec2 v_UV;
     uniform vec4 u_FragColor;
     uniform sampler2D u_Sampler0;
     uniform sampler2D u_Sampler1;
     uniform int u_whichTexture;
+
     void main(){
 
       if(u_whichTexture == -2){
@@ -49,7 +118,7 @@ var FSHADER_SOURCE = `
         gl_FragColor = vec4(1, .2, .2, 1);
       }
 
-    }`
+    }`*/
 
     //use color
     //use UV debug color
@@ -73,6 +142,11 @@ let u_GlobalRotateMatrix;
 let u_Sampler0;
 let u_Sampler1;
 let u_whichTexture;
+
+// Set dust density and color
+let u_dustDensity;
+let u_dustColor;
+
 
 
 function setupWebGL(){
@@ -164,6 +238,14 @@ function connectVariablesToGSL(){
     return;
    }
 
+   u_dustDensity = gl.getUniformLocation(gl.program, 'u_dustDensity');
+   u_dustColor = gl.getUniformLocation(gl.program, 'u_dustColor');
+   gl.uniform3f(u_dustColor, 0.8, 0.6, 0.4); 
+   
+   // Set reference point for dust clustering
+  let u_ReferencePoint = gl.getUniformLocation(gl.program, 'u_ReferencePoint');
+  gl.uniform3f(u_ReferencePoint, 0.0, -2.7, 0.0); //adjust 
+  gl.uniform1f(u_dustDensity, 0.1); 
 
 
      var identityM = new Matrix4();
@@ -407,7 +489,7 @@ function keydown(ev){
 //var g_at=[0,0,-100];
 //var g_up = [0,1,0];
 
-var g_map=[
+/*var g_map=[
   [1, 1, 1, 1, 1, 1, 1, 1],
   [1, 0, 0, 0, 0, 0, 0, 1],
   [1, 0, 0, 0, 0, 0, 0, 1],
@@ -416,7 +498,41 @@ var g_map=[
   [1, 0, 0, 0, 0, 0, 0, 1],
   [1, 0, 0, 0, 0, 0, 0, 1],
   [1, 0, 0, 0, 0, 0, 0, 1],
+];*/
+
+var g_map=[
+  [0, 0, 0, 0, 0, 0, 0, 2],
+  [0, 0, 0, 0, 0, 0, 0, 3],
+  [0, 0, 0, 0, 0, 0, 0, 1],
+  [1, 0, 0, 0, 0, 0, 0, 1],
+  [1, 0, 0, 0, 0, 0, 0, 1],
+  [1, 2, 3, 0, 0, 0, 0, 0],
+  [1, 0, 2, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0],
 ];
+
+function drawMap(){
+  // Loop through each position in the map
+  for (let x = 0; x < 8; x++){
+    for(let y = 0; y < 8; y++){
+      let stackHeight = g_map[x][y]; //how many cubes upwards
+
+      for (let z = 0; z < stackHeight; z++) {
+        let cubeX = x - 4;
+        let cubeY = z - 0.75; // Start at ground level
+        let cubeZ = y - 4;
+        
+        // Create and render the cube
+        let cube = new Cube();
+        cube.textureNum = 1;
+        cube.color = [1.0, 1.0, 1.0, 1.0];
+        cube.matrix.translate(cubeX, cubeY, cubeZ);
+        cube.render();
+      }
+    }
+  }
+}
+
 
 
 /*function drawMap(){
@@ -424,7 +540,7 @@ var g_map=[
     for(y=0;y<8;y++){
       if(g_map[x][y]==1){
         var body = new Cube();
-        body.textureNum = -2;
+        body.textureNum = 1;
         body.color = [1.0, 1.0, 1.0, 1.0];
         body.matrix.translate(x-4, -.75, y-4);
         body.render();
@@ -433,7 +549,7 @@ var g_map=[
   }
 }*/
 
-function drawMap(){
+/*function drawMap(){
   var body = new Cube();
   for (x=0;x<32;x++){
     for(y=0;y<32;y++){
@@ -448,7 +564,7 @@ function drawMap(){
       }
     }
   }
-}
+}*/
 
 function renderAllShapes(){
   // Check the time at the start of this function
@@ -590,7 +706,7 @@ function renderAllShapes(){
   lFinger4.render();
 
   // Plant + Shoe -------------------------------------------------------------
-  var shoeBottom = new Cube();
+  /*var shoeBottom = new Cube();
   shoeBottom.color =  [0.7, 0.5, 0.3, 1.0];
   shoeBottom.matrix = fingerMat;
   shoeBottom.matrix.translate(0, 0.05, 0);
@@ -621,7 +737,7 @@ function renderAllShapes(){
   plantStemL.matrix = plantStemLCoordinatesMat;
   plantStemL.matrix.translate(-0.05, 0.1, .01);
   plantStemL.matrix.scale(0.12, .05, .015);
-  plantStemL.render();
+  plantStemL.render();*/
   // --------------------------------------------------------------------------------------------------------------------------
   // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   // left arm
