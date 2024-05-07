@@ -50,6 +50,7 @@ var FSHADER_SOURCE = `
     uniform vec4 u_FragColor;
     uniform sampler2D u_Sampler0;
     uniform sampler2D u_Sampler1;
+    uniform sampler2D u_Sampler2;
     uniform int u_whichTexture;
 
     uniform float u_dustDensity; 
@@ -64,7 +65,9 @@ var FSHADER_SOURCE = `
             texColor = texture2D(u_Sampler0, v_UV);
         } else if (u_whichTexture == 1) {
             texColor = texture2D(u_Sampler1, v_UV);
-        } 
+        } else if (u_whichTexture == 3){
+          texColor = texture2D(u_Sampler2, v_UV);
+        }
         else if (u_whichTexture == -2) {
             texColor = u_FragColor;
         } else if (u_whichTexture == -1) {
@@ -141,6 +144,7 @@ let u_GlobalRotateMatrix;
 
 let u_Sampler0;
 let u_Sampler1;
+let u_Sampler2;
 let u_whichTexture;
 
 // Set dust density and color
@@ -238,6 +242,12 @@ function connectVariablesToGSL(){
     return;
    }
 
+   u_Sampler2 = gl.getUniformLocation(gl.program, 'u_Sampler2');
+   if (!u_Sampler2) {
+    console.log('Fail to get the storage location of u_Sampler2');
+    return;
+   }
+
    u_dustDensity = gl.getUniformLocation(gl.program, 'u_dustDensity');
    u_dustColor = gl.getUniformLocation(gl.program, 'u_dustColor');
    gl.uniform3f(u_dustColor, 0.8, 0.6, 0.4); 
@@ -258,8 +268,9 @@ function connectVariablesToGSL(){
 function initTextures(){                                  
   var image1 = new Image(); // Create the first image object
   var image2 = new Image(); // Create the second image object
+  var image3 = new Image(); 
 
-  if (!image1 || !image2) {
+  if (!image1 || !image2 || !image3 ) {
       console.log('Fail to create the image objects');
       return false;
   }
@@ -267,10 +278,12 @@ function initTextures(){
   // Register the event handlers to be called on loading images
   image1.onload = function() { sendTextureToTEXTURE0(image1); };
   image2.onload = function() { sendTextureToTEXTURE1(image2); };
+  image3.onload = function() { sendTextureToTEXTURE2(image3); };
 
   // Tell the browser to load images
   image1.src = 'dusk_1.jpeg';
   image2.src = 'dirt.jpeg'; // Provide the path to your second texture image
+  image3.src = 'red.jpeg';
 
   return true;
 }
@@ -328,6 +341,32 @@ function initTextures(){
    console.log('finished loadTexture1');
  }
 
+ function sendTextureToTEXTURE2(image3){     
+  var texture2 = gl.createTexture(); // Create a texture object
+  if (!texture2) {
+    console.log('Fail to creaye texture object');
+    return false;
+  }
+
+   gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1); // Flip the image's y axis
+   // Enable the texture unit 0
+   gl.activeTexture(gl.TEXTURE2);
+   // Bind the texture object to the target
+   gl.bindTexture(gl.TEXTURE_2D, texture2);
+
+   // Set the texture parameters
+   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+   // Set the texture image
+   gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, image3);
+
+   // Set the texture unit 0 to the sampler
+   gl.uniform1i(u_Sampler2, 2);
+
+   // gl.drawArrays(gl.TRIANGLE_STRIP, 0, n); // Draw a rectangle
+
+   console.log('finished loadTexture3');
+ }
+
 //Constants
 const POINT = 0;
 const TRIANGLE = 1;
@@ -351,15 +390,15 @@ let g_magentaAnimation = false;
 
 //set up actions for HTML UI elements
 function addActionsForHtmlUI(){
-    document.getElementById('animationYellowOnButton').addEventListener('mousemove', function() { g_yellowAnimation = true } );
+    /*document.getElementById('animationYellowOnButton').addEventListener('mousemove', function() { g_yellowAnimation = true } );
     document.getElementById('animationYellowOffButton').addEventListener('mousemove', function() { g_yellowAnimation = false} );
 
     document.getElementById('animationMagentaOnButton').addEventListener('mousemove', function() { g_magentaAnimation = true } );
     document.getElementById('animationMagentaOffButton').addEventListener('mousemove', function() { g_magentaAnimation = false} );
-
+*/
     //size slider events
-    document.getElementById('yellowSlide').addEventListener('mousemove', function() { g_yellowAngle = this.value; renderAllShapes();} );
-    document.getElementById('magentaSlide').addEventListener('mousemove', function() { g_magentaAngle = this.value; renderAllShapes();} );
+    //document.getElementById('yellowSlide').addEventListener('mousemove', function() { g_yellowAngle = this.value; renderAllShapes();} );
+    //document.getElementById('magentaSlide').addEventListener('mousemove', function() { g_magentaAngle = this.value; renderAllShapes();} );
     document.getElementById('angleSlide').addEventListener('mousemove', function() { g_globalAngle = this.value; renderAllShapes(); } );
 
     canvas.addEventListener('mousemove', function(event){
@@ -513,6 +552,7 @@ var g_map=[
 
 function drawMap(){
   // Loop through each position in the map
+  var count = 0;
   for (let x = 0; x < 8; x++){
     for(let y = 0; y < 8; y++){
       let stackHeight = g_map[x][y]; //how many cubes upwards
@@ -524,7 +564,12 @@ function drawMap(){
         
         // Create and render the cube
         let cube = new Cube();
-        cube.textureNum = 1;
+        count ++;
+        if (count % 2 == 0){
+          cube.textureNum = 3;
+        } else{
+          cube.textureNum = 1;
+        }
         cube.color = [1.0, 1.0, 1.0, 1.0];
         cube.matrix.translate(cubeX, cubeY, cubeZ);
         cube.render();
