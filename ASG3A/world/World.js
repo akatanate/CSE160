@@ -76,7 +76,7 @@ function setupWebGL(){
     // Retrieve <canvas> element
     canvas = document.getElementById('webgl');
 
-    //gl = getWedGLContext(canvas);
+    // gl = getWebGLContext(canvas);
 
     // Get the rendering context for WebGL
     gl = canvas.getContext("webgl", { preserveDrawingBuffer: true });
@@ -413,7 +413,7 @@ var g_map=[
   [1, 0, 0, 0, 0, 0, 0, 1],
 ];
 
-function drawMap(){
+/*function drawMap(){
   for (x=0;x<8;x++){
     for(y=0;y<8;y++){
       if(g_map[x][y]==1){
@@ -425,9 +425,9 @@ function drawMap(){
       }
     }
   }
-}
+}*/
 
-/*function drawMap(){
+function drawMap(){
   var body = new Cube();
   for (x=0;x<32;x++){
     for(y=0;y<32;y++){
@@ -442,7 +442,7 @@ function drawMap(){
       }
     }
   }
-}*/
+}
 
 function renderAllShapes(){
   // Check the time at the start of this function
