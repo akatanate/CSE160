@@ -75,7 +75,14 @@ var FSHADER_SOURCE = `
         } else if (u_whichTexture == 5){
           texColor = vec4(0.05, 0.025, 0.025, 1);
   
-        } 
+        } else if (u_whichTexture == 11){
+          texColor = vec4(1.0, 1.0, 1.0, 1.0);
+        } else if (u_whichTexture == 12){
+          texColor = vec4(0.0, 0.0, 0.0, 1.0);
+        }
+        else if (u_whichTexture == 13){
+          texColor = vec4(0.0, 0.0, 1.0, 1.0);
+        }
         else {
             texColor = vec4(1, .2, .2, 1);
         }
@@ -539,22 +546,31 @@ function keydown(ev){
   [1, 0, 0, 0, 0, 0, 0, 1],
 ];*/
 
+// does not render more than 10 blocks
 var g_map=[
-  [0, 0, 0, 0, 0, 0, 0, 2],
-  [0, 0, 0, 0, 0, 0, 0, 3],
-  [0, 0, 0, 0, 0, 0, 0, 1],
-  [1, 0, 0, 0, 0, 0, 0, 1],
-  [1, 0, 0, 0, 0, 0, 0, 1],
-  [1, 2, 3, 0, 0, 0, 0, 0],
-  [1, 0, 2, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0],
+  [1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0],
+  [1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0],
+  [1, 2, 3, 0, 0, 0, 0, 0, 0, 0, 0],
+  [1, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], 
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  //[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  //[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],  
 ];
 
 function drawMap(){
   // Loop through each position in the map
   var count = 0;
-  for (let x = 0; x < 8; x++){
-    for(let y = 0; y < 8; y++){
+  // let cube = new Cube();
+  for (let x = 0; x < 11; x++){
+    for(let y = 0; y < 11; y++){
       let stackHeight = g_map[x][y]; //how many cubes upwards
 
       for (let z = 0; z < stackHeight; z++) {
@@ -684,6 +700,35 @@ function renderAllShapes(){
   box.matrix.translate(-.5, 0, -0.001);
   box.render();*/
 
+  // right leg
+  var eveBody = new Oval();
+  eveBody.textureNum = 11;
+  eveBody.matrix.translate(-1, 0.0, 0.0);
+  eveBody.matrix.scale(.9, 1.3, .70);
+  eveBody.render();
+  eveCoordinatesMat = new Matrix4(eveBody.matrix);
+
+  var eyeBaseEVE = new Oval();
+  eyeBaseEVE.textureNum = 12;
+  eyeBaseEVE.matrix = eveCoordinatesMat;
+  eyeBaseEVE.matrix.scale(0.8, .2, .3);
+  eyeBaseEVE.matrix.translate(0, 1, -0.1);
+  eyeBaseEVE.render();
+  eyeBaseCoordinatesMat = new Matrix4(eyeBaseEVE.matrix);
+
+  /*var eyeLEVE = new Oval();
+  eyeLEVE.textureNum = 13;
+  eyeLEVE.matrix = eyeBaseCoordinatesMat;
+  eyeLEVE.matrix.scale(.5, .5, .3);
+  eyeLEVE.matrix.translate(.7, .25, -0.1);
+  eyeLEVE.render();
+
+  var eyeREVE = new Oval();
+  eyeREVE.textureNum = 13;
+  eyeREVE.matrix = eyeBaseCoordinatesMat;
+  eyeREVE.matrix.scale(.7, .7, .3);
+  eyeREVE.matrix.translate(-1, 0, -0.1);
+  eyeREVE.render();*/
 
 
   //-------------------------------------------------------------------------------------------------------------
