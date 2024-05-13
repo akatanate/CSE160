@@ -32,3 +32,10 @@ body{
     padding: 20px;
     border-radius: 10px;
 }
+
+#obj{
+        background-color: #159ea3;
+        color: white;
+        padding: 20px;
+        border-radius: 10px;
+}
