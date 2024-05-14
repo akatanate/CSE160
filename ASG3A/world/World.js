@@ -73,7 +73,7 @@ var FSHADER_SOURCE = `
         } else if (u_whichTexture == -1) {
             texColor = vec4(v_UV, 1.0, 1.0);
         } else if (u_whichTexture == 5){
-          texColor = vec4(0.05, 0.025, 0.025, 1);
+          texColor = vec4(0.3, 0.0, 0.0, 1.0);
   
         } else if (u_whichTexture == 11){
           texColor = vec4(1.0, 1.0, 1.0, 1.0);
@@ -386,6 +386,8 @@ let g_selectedType=POINT;
 let circle_seg = 10;
 
 let g_globalAngle = 0;
+let vertical_globalAngle = 0;
+
 let g_yellowAngle = 0;
 let g_magentaAngle = 0;
 let g_greenAngle = 0;
@@ -408,16 +410,35 @@ function addActionsForHtmlUI(){
     //document.getElementById('magentaSlide').addEventListener('mousemove', function() { g_magentaAngle = this.value; renderAllShapes();} );
     document.getElementById('angleSlide').addEventListener('mousemove', function() { g_globalAngle = this.value; renderAllShapes(); } );
 
+
+
     canvas.addEventListener('mousemove', function(event){
       var frame = canvas.getBoundingClientRect();
-      var x_pos = event.clientX - frame.left;
+  
+      const x_pos = event.clientX - frame.left;
+      const y_pos = event.clientY - frame.top;
 
-      g_globalAngle = (x_pos / canvas.width) * 360;
+      const x_normalized = x_pos / canvas.width;
+     const y_normalized = y_pos / canvas.height;
+
+      g_globalAngle = x_normalized * 360;
+
+      const verticalMovement = y_normalized - 0.5;
+      vertical_globalAngle = verticalMovement * 90;
+
+
 
       renderAllShapes();
     });
 
+
+
   }
+
+ 
+
+
+
 
 
 function main() {
@@ -509,24 +530,25 @@ function updateAnimationAngles(){
 var g_camera = new Camera();
 
 function keydown(ev){
-  if (ev.keyCode == 39){ //right arrow
+  if (ev.keyCode == 68){ // 'D' key or right arrow
     g_camera.right();
-  } else if (ev.keyCode == 37){ //left arrow
+  } else if (ev.keyCode == 65){ // 'A' key or left arrow
     g_camera.left(); 
-  } else if (ev.keyCode == 38){ // up arrow
+  } else if (ev.keyCode == 87){ // 'W' key or up arrow
     g_camera.forward();
-  } else if (ev.keyCode == 40){ // down arrow
+  } else if (ev.keyCode == 83){ // 'S' key or down arrow
     g_camera.back();
-  } else if (ev.keyCode == 81){ // Q key
-    g_globalAngle -= 5; 
-  } else if (ev.keyCode == 69){ // E key
+  } else if (ev.keyCode == 81 || ev.keyCode == 37){ // Q key or left arrow
     g_globalAngle += 5; 
+  } else if (ev.keyCode == 69 || ev.keyCode == 39){ // E key or right arrow
+    g_globalAngle -= 5; 
+  } else if (ev.keyCode == 38){ // Up arrow
+    g_camera.upward();
+  } else if (ev.keyCode == 40){ // Down arrow
+    g_camera.down();
   }
-
-
-  renderAllShapes();
-  console.log(ev.keyCode);
 }
+
 
 
 // can use vectors from asg 1?
@@ -700,7 +722,7 @@ function renderAllShapes(){
   );
   gl.uniformMatrix4fv(u_ViewMatrix, false, viewMat.elements);
 
-  var globalRotMat=new Matrix4().rotate(g_globalAngle, 0, 1, 0);
+  var globalRotMat=new Matrix4().rotate(g_globalAngle, vertical_globalAngle , 1, 0);
   gl.uniformMatrix4fv(u_GlobalRotateMatrix, false, globalRotMat.elements);
 
   // Clear <canvas>
@@ -732,9 +754,9 @@ function renderAllShapes(){
     sky.matrix.translate(-1,0,-1);
 
     sky.textureNum = 5;
-    sky.matrix.scale(50, 50, 50);
+    sky.matrix.scale(60, 60, 60);
     sky.matrix.translate(-.5, -.5, -.5);
-    //sky.render(); 
+    sky.render(); 
 
   /*var body = new Cube();
   body.color = [1.0, 0.0,0.0,1.0];
