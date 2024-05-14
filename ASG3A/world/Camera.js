@@ -37,4 +37,16 @@ class Camera {
         this.eye = this.eye.add(right);
         this.at = this.at.add(right);
     }
+
+    upward() {
+        this.eye.y += 1;
+        this.at.y += 1;
+    }
+    
+    down() {
+        this.eye.y -= 1;
+        this.at.y -= 1;
+    }
+    
+    
 }

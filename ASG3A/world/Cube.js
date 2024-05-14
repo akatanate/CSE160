@@ -162,7 +162,7 @@ class Cube {
       // Pass the matrix to u_ModelMatrix attribute 
       gl.uniformMatrix4fv(u_ModelMatrix, false, this.matrix.elements);
       
-      drawTriangle3DUV(this.verticess, this.UVVertices);
+      drawTriangle3DUV(this.vertices, this.UVVertices);
     }
   
   
