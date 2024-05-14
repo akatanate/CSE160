@@ -9,7 +9,7 @@
 
   <body onload="main()">
     <h1>Earth 3000</h1>
-    <canvas id="webgl" width="450" height="450"></canvas>
+
 
     <script src="lib/webgl-utils.js"></script>
     <script src="lib/webgl-debug.js"></script>
@@ -27,9 +27,6 @@
 
     <script src="World.js"></script>
 
-    <p id = "obj">
-      Eve was forcibly shut down and hidden. <br> Find her so she can re-activate and save WALL-E!
-    </p>
 
     <p id = "intro">
       What if WALL-E never found the plant, and thus, never left Earth? 
@@ -38,15 +35,35 @@
       operational as the years flow by.
     </p>
 
-    <p>
-      Camera/Movement Keys: <br>
-      Q- Rotate Right <br>
-      E- Rotate Left <br>
-        Camera Angle <Input type="range" min="0" max="360" value="0" class ="slider" id = "angleSlide">      
-      <br>
-      W, A, S, D Keys- Move Forward, Back, Left, and Right <br>
-      <br> Use up and down to fly or dive <br>
-      Can use the rotate camera with mouse movement
+
+
+    <div class = "info">
+      <canvas id="webgl" width="500" height="500"></canvas>
+
+      <div class = "text">
+        Movement: <br><br>
+        W- Forward <br>
+        S- Backward<br>
+        D- Right<br>
+        A- Left<br>
+        E- Rotate Right <br>
+        Q- Rotate Left <br>
+        Up / down arrow <br>
+        Camera rotates via moving mouse
+        <br><br>
+        <div id = "obj">
+          Mission Brief: <br>
+          Eve was forcibly shut down and hidden. <br> Find her so she can re-activate and save WALL-E!
+        </div>
+        <br>
+        <img src = "eve.jpeg" width="300" height="200">
+      </div>
+    </div>
+
+        <!--Camera Angle <Input type="range" min="0" max="360" value="0" class ="slider" id = "angleSlide">-->      
+
+       
+
     <!--<p>
       Magenta <Input type="range" min="0" max="100" value="0" class ="slider" id = "magentaSlide">
       <button type="button" id="animationMagentaOnButton">ON</button>

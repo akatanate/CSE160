@@ -385,7 +385,7 @@ let g_selectedSize = 5;
 let g_selectedType=POINT;
 let circle_seg = 10;
 
-let g_globalAngle = 0;
+let g_globalAngle = 140;
 let vertical_globalAngle = 0;
 
 let g_yellowAngle = 0;
@@ -408,7 +408,7 @@ function addActionsForHtmlUI(){
     //size slider events
     //document.getElementById('yellowSlide').addEventListener('mousemove', function() { g_yellowAngle = this.value; renderAllShapes();} );
     //document.getElementById('magentaSlide').addEventListener('mousemove', function() { g_magentaAngle = this.value; renderAllShapes();} );
-    document.getElementById('angleSlide').addEventListener('mousemove', function() { g_globalAngle = this.value; renderAllShapes(); } );
+    //document.getElementById('angleSlide').addEventListener('mousemove', function() { g_globalAngle = this.value; renderAllShapes(); } );
 
 
 
@@ -432,13 +432,7 @@ function addActionsForHtmlUI(){
     });
 
 
-
   }
-
- 
-
-
-
 
 
 function main() {
@@ -448,6 +442,10 @@ function main() {
     connectVariablesToGSL();
 
     addActionsForHtmlUI();
+
+    // canvas.addEventListener('click', onClick);
+
+
 
     // Register function (event handler) to be called on a mouse press
     // canvas.onmousedown = click;
@@ -538,9 +536,9 @@ function keydown(ev){
     g_camera.forward();
   } else if (ev.keyCode == 83){ // 'S' key or down arrow
     g_camera.back();
-  } else if (ev.keyCode == 81 || ev.keyCode == 37){ // Q key or left arrow
+  } else if (ev.keyCode == 69 || ev.keyCode == 37){ // Q key or left arrow
     g_globalAngle += 5; 
-  } else if (ev.keyCode == 69 || ev.keyCode == 39){ // E key or right arrow
+  } else if (ev.keyCode == 81 || ev.keyCode == 39){ // E key or right arrow
     g_globalAngle -= 5; 
   } else if (ev.keyCode == 38){ // Up arrow
     g_camera.upward();

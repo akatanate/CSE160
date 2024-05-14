@@ -39,3 +39,16 @@ body{
         padding: 20px;
         border-radius: 10px;
 }
+
+.info{
+    display: flex;
+    justify-content: space-evenly;
+
+}
+
+.text{
+    padding: 13px;
+    font-family: 'Gunship', sans-serif;
+    background-color: #d9d1d0;
+    border-radius: 10px;
+}
