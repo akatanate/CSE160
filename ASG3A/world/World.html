@@ -10,6 +10,15 @@
   <body onload="main()">
     <h1>Earth 3000</h1>
 
+    <audio id="wallESong" loop>
+      <source src="wallE.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+      var audio = document.getElementById("wallESong");
+      audio.volume = 0.15; 
+  </script>
+
 
     <script src="lib/webgl-utils.js"></script>
     <script src="lib/webgl-debug.js"></script>
@@ -49,7 +58,8 @@
         E- Rotate Right <br>
         Q- Rotate Left <br>
         Up / down arrow <br>
-        Camera rotates via moving mouse
+        Camera rotates via moving mouse <br>
+        Note: Click for music!
         <br><br>
         <div id = "obj">
           Mission Brief: <br>

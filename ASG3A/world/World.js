@@ -399,6 +399,10 @@ let g_magentaAnimation = false;
 
 //set up actions for HTML UI elements
 function addActionsForHtmlUI(){
+  document.addEventListener('click', function() {
+    var music = document.getElementById("wallESong");
+    music.play();
+  });
     /*document.getElementById('animationYellowOnButton').addEventListener('mousemove', function() { g_yellowAnimation = true } );
     document.getElementById('animationYellowOffButton').addEventListener('mousemove', function() { g_yellowAnimation = false} );
 
