@@ -1,19 +1,9 @@
-// page linking- x
-
-// FIX LIGHTING 
-
-//3d models / obj files (spaceship)
-
-// AND ZOOM/CAMERA CONTROLS?
-
 import * as THREE from 'three'; // load three.js
 
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
 import { MTLLoader } from 'three/addons/loaders/MTLLoader.js';
-
-
 
 // Textures
 const textureLoader = new THREE.TextureLoader();
@@ -32,24 +22,17 @@ const neptuneTexture = textureLoader.load('img/neptune.jpg');
 const asteroidTexture = textureLoader.load('img/asteroid.jpg');
 const planeTexture = textureLoader.load('img/plane.jpg');
 
+// For background music
 var listener = new THREE.AudioListener();
 var audio = new THREE.Audio(listener);
-var audioLoader = new THREE.AudioLoader(); // Define audioLoader variable
+var audioLoader = new THREE.AudioLoader(); 
 
-// Function to start audio playback
-//function startAudioPlayback(audioLoader) { // Pass audioLoader as a parameter
     audioLoader.load("interstellar.mp3", function(buffer) {
         audio.setBuffer(buffer);
         audio.setLoop(true);
-        audio.setVolume(0.5);
+        audio.setVolume(0.2);
         audio.play();
     });
-//}
-
-// Attach event listener to a button element
-/*document.getElementById('playButton').addEventListener('click', function() {
-    startAudioPlayback(audioLoader); // Call startAudioPlayback with audioLoader as an argument
-});*/
 
 // Set renderer
 const renderer = new THREE.WebGLRenderer();
@@ -77,40 +60,33 @@ orbit.update();
 const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
 scene.add(ambientLight);
 
-//WHY NOT WORKING
-const pointLight = new THREE.PointLight(0xffffff, 2, 300); 
-pointLight.position.set(10, 50, 100); 
-
-scene.add(pointLight);
-
-const gui = new GUI();
-// gui.add(pointLight, 'penumbra', 0, 1, 0.01);
-gui.add(pointLight, 'intensity', 0, 2, 0.01);
-
-
 const color = 0xFFFFFF;
 const intensity = 3;
+
 const light = new THREE.DirectionalLight( color, intensity );
 light.position.set( -5, 0, 0 );
 scene.add( light );
 scene.add( light.target );
 light.castShadow = true
 
+const light2 = new THREE.PointLight( 0x0000ff, 1000, 150 );
+light2.position.set( 30, 32, 30 );
+scene.add( light2 );
+scene.add( light2.target );
+
 // Set background texture
 scene.background = starsTexture;
 
-// make the star background more 3d
-// const cubeTextureLoader = new THREE.CubeTextureLoader();
+const loader = new THREE.TextureLoader();
+const texture = loader.load(
+    'img/stars.jpg',
+  () => {
+    texture.mapping = THREE.EquirectangularReflectionMapping;
+    texture.colorSpace = THREE.SRGBColorSpace;
+    scene.background = texture;
+  });
 
-/*structuredClone.background = cubeTextureLoader.load([
-    starsTexture,
-    starsTexture,
-    starsTexture,
-    starsTexture,
-    starsTexture,
-    starsTexture
-]);*/
-
+// special objects (need to fix .mtl/texturing)
 const mtlLoader = new MTLLoader();
 mtlLoader.load( './uploads_files_869754_space_shuttle_obj_exp(1).mtl', ( mtl ) => {
 
@@ -140,8 +116,10 @@ mtlLoader2.load( './uploads_files_4462272_Astreoid-8.mtl', ( mtl ) => {
     mtl.preload();
     const objLoader2 = new OBJLoader();
     const objLoader3 = new OBJLoader();
+    const objLoader4 = new OBJLoader();
     objLoader2.setMaterials( mtl );
     objLoader3.setMaterials( mtl );
+    objLoader4.setMaterials( mtl );
 
     objLoader2.load( './uploads_files_4462272_Astreoid-8.obj', ( root ) => {
         root.position.set(30,30,30);
@@ -157,7 +135,7 @@ mtlLoader2.load( './uploads_files_4462272_Astreoid-8.mtl', ( mtl ) => {
     } );
 
     objLoader3.load( './uploads_files_4462272_Astreoid-8.obj', ( root ) => {
-        root.position.set(15,25,30);
+        root.position.set(20,25,30);
         root.children[0].geometry.scale = new THREE.Vector3(10000, 10000, 10000);
         root.traverse((child) => {
             if (child instanceof THREE.Mesh) {
@@ -169,8 +147,18 @@ mtlLoader2.load( './uploads_files_4462272_Astreoid-8.mtl', ( mtl ) => {
     // root.getWorldPosition(),
     } );
 
-
-
+    objLoader4.load( './uploads_files_4462272_Astreoid-8.obj', ( root ) => {
+        root.position.set(10,20,30);
+        root.children[0].geometry.scale = new THREE.Vector3(10000, 10000, 10000);
+        root.traverse((child) => {
+            if (child instanceof THREE.Mesh) {
+                child.material.map = asteroidTexture;
+            }
+        });
+        scene.add( root );
+        console.log("load finished",  root.children.length); //loading, but in context of scene have to find
+    // root.getWorldPosition(),
+    } );
 } );
 
 
@@ -185,9 +173,6 @@ scene.add(sun);
 /*sun.position.x = 10;
 sun.position.y = 100;
 sun.position.z = 100;*/
-
-
-
 
 // Create <MERCURY>---------------------------------------------------------
 const mercuryGeometry = new THREE.SphereGeometry(3.2, 32, 32);
@@ -290,10 +275,6 @@ const neptuneObj = new THREE.Object3D();
 neptuneObj.add(neptune);
 scene.add(neptuneObj)
 neptune.position.x = 200;
-
-/*const pointLight = new THREE.PointLight(0xFFFFFF, 2, 300);
-pointLight.position.set(0, 0, 0);
-scene.add(pointLight);*/
 
 // Animate
 function animate() {
