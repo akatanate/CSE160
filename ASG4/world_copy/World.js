@@ -8,6 +8,7 @@
     varying vec2 v_UV;
 
     varying vec3 v_Normal;
+    varying vec4 v_vertPos;
     varying vec4 v_Position; 
     
     uniform mat4 u_ModelMatrix; 
@@ -20,6 +21,7 @@
         v_UV = a_UV;
         v_Position = u_ModelMatrix * a_Position; 
         v_Normal = a_Normal;
+        v_vertPos = u_ModelMatrix * a_Position;
     }
     `;
     
@@ -35,6 +37,8 @@
         uniform sampler2D u_Sampler1;
         uniform sampler2D u_Sampler2;
         uniform int u_whichTexture;
+        uniform vec3 u_lightPos;
+        varying vec4 v_VertPos;
     
         void main() {
             vec4 texColor;
@@ -69,8 +73,17 @@
             else {
                 texColor = vec4(1, .2, .2, 1);
             }
-            
+
             gl_FragColor = texColor;
+
+            vec3 lightVector = vec3(v_VertPos)-u_lightPos;
+            float r = length(lightVector);
+            if(r<1.0){
+              gl_FragColor = vec4(1, 0, 0, 1);
+            } else if (r<2.0){
+              gl_FragColor= vec4(0, 1, 0, 1);
+            }
+            
         }
     `;
     
@@ -92,6 +105,7 @@
     let u_Sampler1;
     let u_Sampler2;
     let u_whichTexture;
+    let u_lightPos;
     
     function setupWebGL(){
         // Retrieve <canvas> element
@@ -148,6 +162,13 @@
             console.log('Fail to get the storage location of u_FragColor');
             return;
         }
+
+        u_lightPos= gl.getUniformLocation(gl.program, 'u_lightPos');
+        if (!u_lightPos) {
+            console.log('Fail to get the storage location of u_lightPos');
+            return;
+        }
+    
     
         // Get the storage location of u_FragColor variable
         u_ModelMatrix = gl.getUniformLocation(gl.program, 'u_ModelMatrix');
@@ -325,12 +346,16 @@
     let g_magentaAnimation = false;
 
     let g_normalOn=false;
+    let g_lightPos=[0, 1, -2];
     
     //set up actions for HTML UI elements
     function addActionsForHtmlUI(){
         document.getElementById('normalOn').onclick = function() { g_normalOn=true; } ;
         document.getElementById('normalOff').onclick = function() { g_normalOn=false; } ;
       
+        document.getElementById('lightSlideX').addEventListener('mousemove', function(ev) { if(ev.buttons == 1){ g_lightPos[0] = this.value/100; renderAllShapes();}});
+        document.getElementById('lightSlideY').addEventListener('mousemove', function(ev) { if(ev.buttons == 1){ g_lightPos[1] = this.value/100; renderAllShapes();}});
+        document.getElementById('lightSlideZ').addEventListener('mousemove', function(ev) { if(ev.buttons == 1){ g_lightPos[2] = this.value/100; renderAllShapes();}});
 
 
       /*document.addEventListener('click', function() {
@@ -667,6 +692,17 @@
       floor.matrix.scale(20, 0, 20);
       floor.matrix.translate(-.5, 0, -.5);
       floor.render(); */
+
+      //pass light position to GLSL (DEFINE u_ligjht)
+      gl.uniform3f(u_lightPos, g_lightPos[0], g_lightPos[1], g_lightPos[2]);
+
+      //drwa the light
+      var light=new Cube();
+      light.color= [2, 2, 0, 1];
+      light.matrix.translate(g_lightPos[0], g_lightPos[1], g_lightPos[2]);
+      light.matrix.scale(.1, .1, .1);
+      light.matrix.translate(-.5, -.5, -.5);
+      light.render();
 
       var body = new Cube();
       body.color = [1.0, 0.0,0.0,1.0];
