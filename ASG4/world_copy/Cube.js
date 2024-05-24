@@ -42,82 +42,33 @@ class Cube {
 
       gl.uniformMatrix4fv(u_ModelMatrix, false, this.matrix.elements);
 
-      // front 
-      //drawTriangle3DUV( [ 0, 0, 0,      1, 1, 0,     1, 0, 0 ], [ 1, 0,   0, 1,   1, 1] );
-      //drawTriangle3DUV( [ 0, 0, 0,      0, 1, 0,     1, 1, 0 ], [ 0, 0,   0, 1,   1, 1] );
-  
         gl.uniform4f(u_FragColor, rgba[0]*.9, rgba[1]*.9, rgba[2]*.9, rgba[3]);
 
-         // Top
-      drawTriangle3D([0.0,1.0,0.0, 1.0,1.0,0.0, 1.0,1.0,1.0 ]);
-      drawTriangle3D([0.0,1.0,1.0, 0.0,1.0,0.0, 1.0,1.0,1.0 ]);
-      // Bottom
-      drawTriangle3D([0.0,0.0,0.0, 0.0,0.0,1.0, 1.0,0.0,0.0 ]);
-      drawTriangle3D([1.0,0.0,0.0, 1.0,0.0,1.0, 0.0,0.0,1.0 ]);
-
-      //UPDATE REST OF UV COORD****************************
-      // Top
-      //drawTriangle3DUV([0, 1, 0,   0, 1, 1,   1, 1, 1], [1, 0,  0, 1,  1, 1]);
-      //drawTriangle3DUV([0, 1, 0,   1, 1, 1,   1, 1, 0], [0, 0,  1, 1,  1, 0]);
-
-
-// Bottom
-
-//drawTriangle3DUV([0, 0, 0,   1, 0, 0,   1, 0, 1], [1, 1,  0, 1,  0, 0]);
-//drawTriangle3DUV([0, 0, 0,   1, 0, 1,   0, 0, 1], [1, 1,  0, 0,  1, 0]);
-
+// front
+        drawTriangle3DUVNormal([0,0,0, 1,1,0, 1,0,0],[0,0, 1,1, 1,0], [0,0,-1, 0,0,-1, 0,0,-1]);
+        drawTriangle3DUVNormal([0,0,0, 0,1,0, 1,1,0],[0,0, 0,1, 1,1], [0,0,-1, 0,0,-1, 0,0,-1]);
+  
+// Top
+        drawTriangle3DUVNormal([1,1,0, 1,1,1, 0,1,0],[1,0, 1,1, 0,0], [0,1,0, 0,1,0, 0,1,0]);
+        drawTriangle3DUVNormal([0,1,1, 1,1,1, 0,1,0],[0,1, 1,1, 0,0], [0,1,0, 0,1,0, 0,1,0]);
+  
 // Right
-//drawTriangle3DUV([1, 0, 0,   1, 0, 1,   1, 1, 1], [0, 0,  1, 0,  1, 1]);
-//drawTriangle3DUV([1, 0, 0,   1, 1, 1,   1, 1, 0], [0, 0,  1, 1,  0, 1]);
-
+        drawTriangle3DUVNormal([1,0,0, 1,1,0, 1,1,1],[0,0, 0,1, 1,1], [1,0,0, 1,0,0, 1,0,0]);
+        drawTriangle3DUVNormal([1,0,0, 1,0,1, 1,1,1],[0,0, 1,0, 1,1], [1,0,0, 1,0,0, 1,0,0]);
+  
 // Left
-// Left
-// Left
-//drawTriangle3DUV([0, 0, 0,   0, 1, 1,   0, 1, 0], [0, 0,  1, 1,  0, 1]);
-//drawTriangle3DUV([0, 0, 0,   0, 1, 0,   0, 0, 1], [0, 0,  0, 1,  1, 1]);
-
-
-
+        drawTriangle3DUVNormal([0,0,0, 0,0,1, 0,1,1],[1,0, 0,0, 0,1], [-1,0,0, -1,0,0, -1,0,0]);
+        drawTriangle3DUVNormal([0,0,0, 0,1,0, 0,1,1],[1,0, 1,1, 0,1], [-1,0,0, -1,0,0, -1,0,0]);
+  
+// Bottom
+        drawTriangle3DUVNormal([0,0,0, 1,0,1, 1,0,0],[0,1, 1,0, 1,1], [0,-1,0, 0,-1,0, 0,-1,0]);
+        drawTriangle3DUVNormal([0,0,0, 0,0,1, 1,0,1],[0,1, 0,0, 1,0], [0,-1,0, 0,-1,0, 0,-1,0]);
+  
 // Back
-//drawTriangle3DUV([1, 1, 1,   0, 1, 1,   0, 0, 1], [1, 0,  0, 1,  0, 0]);
-//drawTriangle3DUV([1, 1, 1,   0, 0, 1,   1, 0, 1], [1, 0,  0, 0,  1, 1]);
-
-/*
-        // bottom
-        drawTriangle3D( [ 0, 0, 0,    1, 0, 0,    1, 0, 1 ] );
-        drawTriangle3D( [ 0, 0, 0,    1, 0, 1,    0, 0, 1 ] );
-
-        // right
-        drawTriangle3D( [ 1, 0, 0,    1, 0, 1,    1, 1, 1 ] );
-        drawTriangle3D( [ 1, 0, 0,   1, 1, 1,    1, 1, 0 ] );
-
-        //left
-        drawTriangle3D( [0, 0, 0,    0, 1, 1,    0, 1, 0 ] );
-        drawTriangle3D( [ 0, 0, 0,   0, 1, 0,    0, 0, 1] );
-
-        //back
-        drawTriangle3D( [1, 1, 1,    0, 1, 1,    0, 0, 1] );
-        drawTriangle3D( [ 1, 1, 1,   0, 0, 1,    1, 0, 1 ] );
-      */  
-
-          // Front of Cube
-      drawTriangle3DUV([0.0,1.0,0.0, 1.0,1.0,0.0, 0.0,0.0,0.0 ], [0,0, 1,0, 1,1]);
-      drawTriangle3DUV([0.0,0.0,0.0, 1.0,0.0,0.0, 1.0,1.0,0.0 ], [0,1, 1,1, 0,0]);
-      // Back
-      drawTriangle3DUV([0.0,1.0,1.0, 1.0,1.0,1.0, 0.0,0.0,1.0 ],[0,0, 1,0, 1,1]);
-      drawTriangle3DUV([0.0,0.0,1.0, 1.0,0.0,1.0, 1.0,1.0,1.0 ],[0,1, 1,1, 0,0]);
-
-      // Left
-      drawTriangle3D([0.0,0.0,0.0, 0.0,1.0,0.0, 0.0,1.0,1.0 ],[0,0, 1,0, 1,1]);
-      drawTriangle3D([0.0,1.0,1.0, 0.0,0.0,0.0, 0.0,0.0,1.0 ],[0,1, 1,1, 0,0]);
-      // Right
-      drawTriangle3D([1.0,0.0,0.0, 1.0,1.0,0.0, 1.0,1.0,1.0 ],[0,0, 1,0, 1,1]);
-      drawTriangle3D([1.0,1.0,1.0, 1.0,0.0,0.0, 1.0,0.0,1.0 ],[0,1, 1,1, 0,0]);
-
-
+        drawTriangle3DUVNormal([1,0,1, 0,0,1, 0,1,1],[0,0, 1,0, 1,1], [0,0,1, 0,0,1, 0,0,1]);
+        drawTriangle3DUVNormal([1,0,1, 1,1,1, 0,1,1],[0,1, 0,1, 1,1], [0,0,1, 0,0,1, 0,0,1]);
     }
-
-
+  
     renderFast() {
       var rgba = this.color;
 
@@ -164,8 +115,7 @@ class Cube {
       
       drawTriangle3DUV(this.vertices, this.UVVertices);
     }
-  
-  
+
   }
   
   

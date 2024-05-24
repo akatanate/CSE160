@@ -2,24 +2,12 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>Blocky World</title>
-   <!-- <link rel="stylesheet" href="World.css">-->
+    <title>Lighting</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   </head>
 
   <body onload="main()">
-    <h1>Earth 3000</h1>
-
-    <audio id="wallESong" loop>
-      <source src="wallE.mp3" type="audio/mpeg">
-    </audio>
-
-    <script>
-      var audio = document.getElementById("wallESong");
-      audio.volume = 0.15; 
-  </script>
-
-
+    <!--Library and file includes-->
     <script src="lib/webgl-utils.js"></script>
     <script src="lib/webgl-debug.js"></script>
     <script src="lib/cuon-utils.js"></script>
@@ -36,39 +24,12 @@
 
     <script src="World.js"></script>
 
+    <canvas id="webgl" width="500" height="500"></canvas>
 
+    <button type="button" id ="normalOn">Normal ON</button>
+    <button type="button" id ="normalOff">Normal OFF</button>
 
-    Camera Angle <Input type="range" min="0" max="360" value="0" class ="slider" id = "angleSlide">      
-
-
-    <div class = "info">
-      <canvas id="webgl" width="500" height="500"></canvas>
-
-      <div class = "text">
-        Movement: <br><br>
-        W- Forward <br>
-        S- Backward<br>
-        D- Right<br>
-        A- Left<br>
-        E- Rotate Right <br>
-        Q- Rotate Left <br>
-        Up / down arrow <br>
-        Camera rotates via moving mouse <br>
-        Note: Reload to re-center. Click for music!
-        <br><br>
-        <div id = "obj">
-          Mission Brief: <br>
-          Eve was forcibly shut down and hidden. <br> Find her so she can re-activate and save WALL-E!
-        </div>
-        <br>
-        <img src = "eve.jpeg" width="300" height="200">
-      </div>
-    </div>
-
-        <!--Camera Angle <Input type="range" min="0" max="360" value="0" class ="slider" id = "angleSlide">-->      
-
-       
-
+    <!--Camera Angle <Input type="range" min="0" max="360" value="0" class ="slider" id = "angleSlide">-->      
     <!--<p>
       Magenta <Input type="range" min="0" max="100" value="0" class ="slider" id = "magentaSlide">
       <button type="button" id="animationMagentaOnButton">ON</button>
@@ -78,9 +39,6 @@
       <button type="button" id="animationYellowOnButton">ON</button>
       <button type="button" id="animationYellowOffButton">OFF</button>   -->
 
-<br>
-      <p id="numdot"> </p>
-
-
+      <!--<p id="numdot"> </p>-->
   </body>
 </html>
