@@ -707,6 +707,11 @@
       body.matrix.rotate(-5, 1, 0, 0);
       body.matrix.scale(0.5, .3, .5);
       body.render();
+
+      var sphere = new Sphere();
+      if(g_normalOn) sphere.textureNum = -3;
+      sphere.matrix.scale(1, 1, 1);
+      sphere.render();
     
     /*
     
