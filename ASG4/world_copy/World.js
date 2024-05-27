@@ -3,14 +3,10 @@
     precision mediump float;
     attribute vec4 a_Position;
     attribute vec2 a_UV;
-
     attribute vec3 a_Normal;
     varying vec2 v_UV;
-
     varying vec3 v_Normal;
     varying vec4 v_VertPos;
-    varying vec4 v_Position; 
-    
     uniform mat4 u_ModelMatrix; 
     uniform mat4 u_NormalMatrix;
     uniform mat4 u_GlobalRotateMatrix;
@@ -18,11 +14,10 @@
     uniform mat4 u_ProjectionMatrix;
     
     void main(){
-        gl_Position =  u_ProjectionMatrix * u_ViewMatrix * u_GlobalRotateMatrix * u_ModelMatrix * a_Position;
-        v_UV = a_UV;
-        v_Position = u_ModelMatrix * a_Position; 
-        v_Normal = normalize(vec3(u_NormalMatrix * vec4(a_Normal,1)));
-        v_VertPos = u_ModelMatrix * a_Position;
+      gl_Position = u_ProjectionMatrix * u_ViewMatrix * u_GlobalRotateMatrix * u_ModelMatrix * a_Position;
+      v_UV = a_UV;
+      v_Normal = normalize(vec3(u_NormalMatrix * vec4(a_Normal,1)));
+      v_VertPos = u_ModelMatrix * a_Position;
     }
     `;
     
@@ -31,8 +26,6 @@
         precision mediump float;
         varying vec2 v_UV;
         varying vec3 v_Normal;
-
-        varying vec4 v_Position; 
         uniform vec4 u_FragColor;
         uniform sampler2D u_Sampler0;
         uniform sampler2D u_Sampler1;
@@ -40,83 +33,65 @@
         uniform int u_whichTexture;
         uniform vec3 u_lightPos;
         uniform vec3 u_cameraPos;
-
         varying vec4 v_VertPos;
         uniform bool u_lightOn;
     
         void main() {
-            vec4 texColor;
+          if(u_whichTexture == -3){
+            gl_FragColor = vec4((v_Normal+1.0)/2.0, 1.0); // normal
+         } else if(u_whichTexture == -2){
+            gl_FragColor = u_FragColor;                  // color
+         } else if (u_whichTexture == -1){
+            gl_FragColor = vec4(v_UV, 1.0, 1.0);         // UV debug color
+         } else if(u_whichTexture == 0){
+            gl_FragColor = texture2D(u_Sampler0, v_UV);  // texture0
+         } else if(u_whichTexture == 1){
+            gl_FragColor = texture2D(u_Sampler1, v_UV);  // texture1
+         } else if(u_whichTexture == 2){
+          gl_FragColor = texture2D(u_Sampler2, v_UV);  // texture2
+       } 
+         else {
+            gl_FragColor = vec4(1,.2,.2,1);              // Error -> Red
+         }
+   
+         vec3 lightVector = u_lightPos-vec3(v_VertPos);
+         float r = length(lightVector);
+   
+         // Red/Green Distance Visualization
+         // if(r<1.0){
+         //    gl_FragColor = vec4(1,0,0,1);
+         // } else if (r<2.0){
+         //    gl_FragColor = vec4(0,1,0,1);
+         // }
+   
+         // Light Falloff Visualization 1/r^2
+         // gl_FragColor = vec4(vec3(gl_FragColor)/(r*r),1);
+   
+         // N dot L
+         vec3 L = normalize(lightVector);
+         vec3 N = normalize(v_Normal);
+         float nDotL = max(dot(N,L), 0.0);
+   
+         // Reflection
+         vec3 R = reflect(-L,N);
+   
+         // eye
+         vec3 E = normalize(u_cameraPos-vec3(v_VertPos));
+   
+         // Specular
+         float specular = pow(max(dot(E,R), 0.0), 64.0)* 0.8;
+   
+         vec3 diffuse = vec3(1.0, 1.0, 0.0) * vec3(gl_FragColor) * nDotL * 0.7;
+          vec3 ambient = vec3(gl_FragColor) * 0.2;
 
-            if (u_whichTexture == -3) {
-              texColor = vec4((v_Normal+1.0)/2.0, 1.0);
-            }
-        
-            // Choose texture
-            else if (u_whichTexture == 0) {
-                texColor = texture2D(u_Sampler0, v_UV);
-            } else if (u_whichTexture == 1) {
-                texColor = texture2D(u_Sampler1, v_UV);
-            } else if (u_whichTexture == 3){
-              texColor = texture2D(u_Sampler2, v_UV);
-            }
-            else if (u_whichTexture == -2) {
-                texColor = u_FragColor;
-            } else if (u_whichTexture == -1) {
-                texColor = vec4(v_UV, 1.0, 1.0);
-            } else if (u_whichTexture == 5){
-              texColor = vec4(0.3, 0.0, 0.0, 1.0);
-      
-            } else if (u_whichTexture == 11){
-              texColor = vec4(1.0, 1.0, 1.0, 1.0);
-            } else if (u_whichTexture == 12){
-              texColor = vec4(0.0, 0.0, 0.0, 1.0);
-            }
-            else if (u_whichTexture == 13){
-              texColor = vec4(0.0, 0.0, 1.0, 1.0);
-            }
-            else {
-                texColor = vec4(1, .2, .2, 1);
-            }
+          if (u_lightOn) {
+              gl_FragColor = vec4(specular + diffuse + ambient, 1.0);
+          } else {
+              gl_FragColor = vec4(diffuse + ambient, 1.0);
+          }
 
-            gl_FragColor = texColor;
+         
 
-            vec3 lightVector = u_lightPos - vec3(v_VertPos);
-            float r = length(lightVector);
-
-            // if(r<1.0){
-            //  gl_FragColor = vec4(1, 0, 0, 1);
-            // } else if (r<2.0){
-            //  gl_FragColor= vec4(0, 1, 0, 1);
-            // }
-            
-            // light falloff
-            gl_FragColor = vec4(vec3(gl_FragColor)/(r*r),1);
-            
-            // N dot L
-            vec3 L = normalize(lightVector);
-            vec3 N = normalize(v_Normal);
-            float nDotL = max(dot(N,L), 0.0);
-
-            // reflection
-            vec3 R = reflect(-L, N);
-
-            //eye
-            vec3 E = normalize(u_cameraPos-vec3(v_VertPos));
-
-            //specular 
-            float specular = pow(max(dot(E,R), 0.0), 64.0) * 0.8;
-
-            vec3 diffuse = vec3(1.0, 1.0, 0, 0.9) * vec3(gl_FragColor) * nDotL * 0.7;
-            vec3 ambient = vec3(gl_FragColor) * 0.2;
-            
-            if(u_lightOn){
-              if(u_whichTexture == 0){
-                gl_FragColor = vec4(specular+diffuse+ambient, 1.0);
-              }
-              else{
-                gl_FragColor = vec4(diffuse+ambient, 1.0);
-              }
-            }
         }
     `;
     
@@ -174,13 +149,12 @@
             return;
         }
 
-        u_cameraPos = gl.getAttribLocation(gl.program, 'u_cameraPos');
-        if (u_cameraPos < 0) {
+        var u_cameraPos = gl.getUniformLocation(gl.program, 'u_cameraPos');
+        if (!u_cameraPos) {
             console.log('Fail to get the storage location of u_cameraPos');
             return;
         }
-
-    
+        
         // Get the storage location of a_Position variable
         a_UV = gl.getAttribLocation(gl.program, 'a_UV');
         if (a_UV < 0) {
@@ -557,47 +531,6 @@
       }
     }
     
-    
-    
-    // can use vectors from asg 1?
-    // have to use the vectors to implement movements?***********************
-    //var g_eye = [0, 0, 3];
-    //var g_at=[0,0,-100];
-    //var g_up = [0,1,0];
-    
-    /*var g_map=[
-      [1, 1, 1, 1, 1, 1, 1, 1],
-      [1, 0, 0, 0, 0, 0, 0, 1],
-      [1, 0, 0, 0, 0, 0, 0, 1],
-      [1, 0, 0, 0, 0, 0, 0, 1],
-      [1, 0, 0, 0, 0, 0, 0, 1],
-      [1, 0, 0, 0, 0, 0, 0, 1],
-      [1, 0, 0, 0, 0, 0, 0, 1],
-      [1, 0, 0, 0, 0, 0, 0, 1],
-    ];*/
-    
-    // does not render more than 10 blocks
-    /*var g_map=[
-      [0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0],
-      [1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0],
-      [1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0],
-      [1, 2, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [1, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], 
-      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-      //[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-      //[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],  
-    ];*/
     var g_map=[
       [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
       [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -633,37 +566,7 @@
       [1, 0, 0, 0, 1, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 7, 7, 1],
       [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
     ]
-    
-    
-    /*function drawMap(){
-      // Loop through each position in the map
-      var count = 0;
-      // let cube = new Cube();
-      for (let x = 0; x < 32; x++){
-        for(let y = 0; y < 32; y++){
-          let stackHeight = g_map[x][y]; //how many cubes upwards
-    
-          for (let z = 0; z < stackHeight; z++) {
-            let cubeX = x;
-            let cubeY = z - 0.75; // Start at ground level
-            let cubeZ = y;
-            
-            // Create and render the cube
-            let cube = new Cube();
-            count ++;
-            if (count % 2 == 0){
-              cube.textureNum = 3;
-            } else{
-              cube.textureNum = 1;
-            }
-            cube.color = [1.0, 1.0, 1.0, 1.0];
-            cube.matrix.translate(cubeX, cubeY, cubeZ);
-            cube.render();
-          }
-        }
-      }
-    }*/
-    
+     
     function drawMap(){
       // var c = new Cube();
       for(x=0; x<32; x++){
@@ -696,23 +599,7 @@
           }
       }
     }
-    
-    /*function drawMap(){
-      for (x=0;x<8;x++){
-        for(y=0;y<8;y++){
-          if(g_map[x][y]==1){
-            var body = new Cube();
-            body.textureNum = 1;
-            body.color = [1.0, 1.0, 1.0, 1.0];
-            body.matrix.translate(x-4, -.75, y-4);
-            body.render();
-          }
-        }
-      }
-    }*/
-    
-    
-    
+   
     function renderAllShapes(){
       // Check the time at the start of this function
       var startTime = performance.now();
@@ -788,10 +675,7 @@
         if(g_normalOn == true){
           sky.textureNum = -3;
         }
-          
-    
-        // sky.textureNum = 5;
-        sky.matrix.scale(-5, -5, -5);
+        sky.matrix.scale(-10, -10, -10);
         sky.matrix.translate(-.5, -.5, -.5);
         sky.render(); 
 
@@ -816,47 +700,7 @@
       sphere.matrix.scale(1, 1, 1);
       sphere.render();
     
-    /*
-    
-      // right arm
-      var lArm = new Cube();
-      lArm.color =  [0.9, 0.6, 0.0, 1.0]; //NEON GREEN
-      lArm.matrix.setTranslate(-.45, -.25, -.22);
-      lArm.matrix.rotate(-5, 1.3, 0, 0); // Rotate around the y-axis
-      var lArmCoordinatesMat = new Matrix4(lArm.matrix);
-      lArm.matrix.scale(0.1, .1, .55);
-      lArm.render();
-    
-      var rArm = new Cube();
-      rArm.color =  [0.9, 0.6, 0.0, 1.0];
-      rArm.matrix.translate(0.4, -.25, -.22);
-      rArm.matrix.rotate(-5, 1.3, 0, 0);
-      rArm.matrix.scale(0.1, .1, .55);
-      var rArmCoordinatesMat = new Matrix4(rArm.matrix);
-      rArm.render();
-    
-      // neck
-      var leftArm = new Cube();
-      leftArm.color = [0.6, 0.6, 0.6, 1.0];
-      leftArm.matrix.setTranslate(0, -.5, .2);
-      leftArm.matrix.rotate(-5, 1, 0, 0);
-      leftArm.matrix.rotate(-g_yellowAngle, 1, 0, 0);
-      // yellow
-      var yellowCoordinatesMat = new Matrix4(leftArm.matrix);
-      leftArm.matrix.scale(0.1, .23, .1);
-      leftArm.matrix.translate(-.5, 2, 0);
-      leftArm.render();
-    
-      // head
-      var box = new Cube();
-      box.color = [0.8, 0.8, 0.8, 1.0];
-      box.matrix =  yellowCoordinatesMat;
-      box.matrix.translate(0, 0.65, -0.1);
-      box.matrix.rotate(-g_magentaAngle, 1, 0, 0);
-      box.matrix.scale(.65, .3, .3);
-      box.matrix.translate(-.5, 0, -0.001);
-      var headCoordinatesMat = new Matrix4(box.matrix);
-      box.render();*/
+  
     
     
       //check time at end of function, show on pg
