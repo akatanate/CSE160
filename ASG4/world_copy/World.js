@@ -154,7 +154,7 @@
             console.log('Fail to get the storage location of u_cameraPos');
             return;
         }
-        
+
         // Get the storage location of a_Position variable
         a_UV = gl.getAttribLocation(gl.program, 'a_UV');
         if (a_UV < 0) {
@@ -385,7 +385,7 @@
         document.getElementById('normalOff').onclick = function() { g_normalOn=false; } ;
       
         document.getElementById('lightOn').onclick = function() { g_lightOn=true; } ;
-        document.getElementById('lightOff').onclick = function() { g_lightOff=false; } ;
+        document.getElementById('lightOff').onclick = function() { g_lightOn=false; } ;
       
 
         document.getElementById('lightSlideX').addEventListener('mousemove', function(ev) { if(ev.buttons == 1){ g_lightPos[0] = this.value/100; renderAllShapes();}});
@@ -506,7 +506,11 @@
         g_magentaAngle = (45*Math.sin(3*g_seconds));
       }
 
-      g_lightPos[0] = 2.3*Math.cos(g_seconds);
+      // g_lightPos[0] = 2.3*Math.cos(g_seconds);
+
+      if(!document.getElementById('lightSlideX').classList.contains('active')) {
+        g_lightPos[0] = 2.3 * Math.cos(g_seconds);
+      }
     }
     
     var g_camera = new Camera();
@@ -677,6 +681,7 @@
         }
         sky.matrix.scale(-10, -10, -10);
         sky.matrix.translate(-.5, -.5, -.5);
+        // sky.normalMatrix.setInverseOf(sky.matrix).transpose();
         sky.render(); 
 
 
@@ -693,11 +698,15 @@
       body.matrix.translate(-.25, -.75, 0.0);
       body.matrix.rotate(-5, 1, 0, 0);
       body.matrix.scale(0.5, .3, .5);
+      body.normalMatrix.setInverseOf(body.matrix).transpose();
+
       body.render();
 
       var sphere = new Sphere();
       if(g_normalOn) sphere.textureNum = -3;
       sphere.matrix.scale(1, 1, 1);
+      //sphere.normalMatrix.setInverseOf(sphere.matrix).transpose();
+
       sphere.render();
     
   
