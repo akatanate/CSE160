@@ -8,7 +8,7 @@
     varying vec2 v_UV;
 
     varying vec3 v_Normal;
-    varying vec4 v_vertPos;
+    varying vec4 v_VertPos;
     varying vec4 v_Position; 
     
     uniform mat4 u_ModelMatrix; 
@@ -21,7 +21,7 @@
         v_UV = a_UV;
         v_Position = u_ModelMatrix * a_Position; 
         v_Normal = a_Normal;
-        v_vertPos = u_ModelMatrix * a_Position;
+        v_VertPos = u_ModelMatrix * a_Position;
     }
     `;
     
@@ -83,6 +83,7 @@
             } else if (r<2.0){
               gl_FragColor= vec4(0, 1, 0, 1);
             }
+            //gl_fragColor = vec4(vec3(gl_FragColor)/(r*r),1);
             
         }
     `;
@@ -163,7 +164,7 @@
             return;
         }
 
-        u_lightPos= gl.getUniformLocation(gl.program, 'u_lightPos');
+        u_lightPos = gl.getUniformLocation(gl.program, 'u_lightPos');
         if (!u_lightPos) {
             console.log('Fail to get the storage location of u_lightPos');
             return;
@@ -371,7 +372,7 @@
         //size slider events
         //document.getElementById('yellowSlide').addEventListener('mousemove', function() { g_yellowAngle = this.value; renderAllShapes();} );
         //document.getElementById('magentaSlide').addEventListener('mousemove', function() { g_magentaAngle = this.value; renderAllShapes();} );
-        //document.getElementById('angleSlide').addEventListener('mousemove', function() { g_globalAngle = this.value; renderAllShapes(); } );
+        document.getElementById('angleSlide').addEventListener('mousemove', function() { g_globalAngle = this.value; renderAllShapes(); } );
     
         
         /*canvas.addEventListener('mousemove', function(event){
@@ -470,6 +471,8 @@
       if(g_magentaAnimation){
         g_magentaAngle = (45*Math.sin(3*g_seconds));
       }
+
+      g_lightPos[0] = cos(g_seconds);
     }
     
     var g_camera = new Camera();
