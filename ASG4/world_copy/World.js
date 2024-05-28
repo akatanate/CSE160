@@ -698,8 +698,6 @@ var VSHADER_SOURCE =`
         // sky.normalMatrix.setInverseOf(sky.matrix).transpose();
         sky.render(); 
 
-
-  
       var box = new Cube();
       box.color = [1.0, 0.0,0.0,1.0];
       // color
@@ -726,9 +724,9 @@ var VSHADER_SOURCE =`
       // sphere.normalMatrix.setInverseOf(sphere.matrix).transpose();
 
       sphere.render();
-
-      //----------------------------------------------------------
-      /*var body = new Cube();
+// WALL-E>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+      // body--------------------------------------------------------------------------------------------------------------------------------
+      var body = new Cube();
       body.color = [1.0, 0.7, 0.0, 1.0];
       if(g_normalOn){
         body.textureNum = -3;
@@ -784,9 +782,8 @@ var VSHADER_SOURCE =`
       bodyPlateR.matrix.scale(.85, 1, .1);
       bodyPlateR.normalMatrix.setInverseOf(bodyPlateR.matrix).transpose();
       bodyPlateR.render();
-    */
-     /*
-      // right arm
+     
+      // right arm--------------------------------------------------------------------------------------------------------------------------------
       var lArm = new Cube();
       lArm.color =  [0.9, 0.6, 0.0, 1.0]; //NEON GREEN
       if(g_normalOn){
@@ -830,11 +827,9 @@ var VSHADER_SOURCE =`
       lFinger4.matrix.rotate(-g_greenAngle, 0, 0, 1);
       lFinger4.normalMatrix.setInverseOf(lFinger4.matrix).transpose();
       lFinger4.render();
-*/
-      // --------------------------------------------------------------------------------------------------------------------------
-      // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-      // left arm
-      /*var rArm = new Cube();
+
+      // left arm--------------------------------------------------------------------------------------------------------------------------------
+      var rArm = new Cube();
       rArm.color =  [0.9, 0.6, 0.0, 1.0];
       if(g_normalOn){
         rArm.textureNum = -3;
@@ -873,7 +868,7 @@ var VSHADER_SOURCE =`
       rFinger2.matrix.rotate(35, 0, 0, 1);
       rFinger2.matrix.scale(1, 2, .2);
       rFinger2.normalMatrix.setInverseOf(rFinger2.matrix).transpose();
-      rFinger2.render();*/
+      rFinger2.render();
     
       /*
       // left leg
@@ -895,23 +890,14 @@ var VSHADER_SOURCE =`
       rLeg.render();
       */
       
+      // neck
+      var leftArm = new Cube();
+      leftArm.color = [0.6, 0.6, 0.6, 1.0];
       if(g_normalOn){
         leftArm.textureNum = -3;
-        box.textureNum = -3;
-        boxTop.textureNum = -3;
-        boxTopR.textureNum = -3;
-        boxTopL.textureNum = -3;
       } else{
         leftArm.textureNum = 0;
-        box.textureNum = 0;
-        boxTop.textureNum = 0;
-        boxTopR.textureNum = 0;
-        boxTopL.textureNum = 0;
       }
-
-      // neck
-      /*var leftArm = new Cube();
-      leftArm.color = [0.6, 0.6, 0.6, 1.0];
       leftArm.matrix.setTranslate(0, -.5, .2);
       leftArm.matrix.rotate(-5, 1, 0, 0);
       leftArm.matrix.rotate(-g_yellowAngle, 1, 0, 0);
@@ -920,11 +906,16 @@ var VSHADER_SOURCE =`
       leftArm.matrix.scale(0.1, .23, .1);
       leftArm.matrix.translate(-.5, 2, 0);
       leftArm.normalMatrix.setInverseOf(leftArm.matrix).transpose();
-      leftArm.renderfast();
+      leftArm.render();
     
-      // head
+      // head--------------------------------------------------------------------------------------------------------------------------------
       var box = new Cube();
       box.color = [0.8, 0.8, 0.8, 1.0];
+      if(g_normalOn){
+        box.textureNum = -3;
+      } else{
+        box.textureNum = 0;
+      }
       box.matrix =  yellowCoordinatesMat;
       box.matrix.translate(0, 0.65, -0.1);
       box.matrix.rotate(-g_magentaAngle, 1, 0, 0);
@@ -932,94 +923,130 @@ var VSHADER_SOURCE =`
       box.matrix.translate(-.5, 0, -0.001);
       var headCoordinatesMat = new Matrix4(box.matrix);
       box.normalMatrix.setInverseOf(box.matrix).transpose();
-      box.renderfast();
+      box.render();
     
-        // tophead
         var boxTop = new Cube();
         boxTop.color = [0.6, 0.6, 0.6, 1.0];
+        if(g_normalOn){
+          boxTop.textureNum = -3;
+        } else{
+          boxTop.textureNum = 0;
+        }
         boxTop.matrix =  headCoordinatesMat;
         boxTop.matrix.translate(0.01, 1, 0);
         boxTop.matrix.scale(1, .07, 1);
         boxTop.normalMatrix.setInverseOf(boxTop.matrix).transpose();
-        boxTop.renderfast();
+        boxTop.render();
     
-        // right
         var boxTopR = new Cube();
         boxTopR.color = [0.6, 0.6, 0.6, 1.0];
+        if(g_normalOn){
+          boxTopR.textureNum = -3;
+        } else{
+          boxTopR.textureNum = 0;
+        }
         boxTopR.matrix = headCoordinatesMat;
         boxTopR.matrix.translate(1, -14, 0);
         boxTopR.matrix.scale(.05, 13, 1);
         boxTopR.normalMatrix.setInverseOf(boxTopR.matrix).transpose();
-        boxTopR.renderfast();
+        boxTopR.render();
     
             // right
             var boxTopL = new Cube();
             boxTopL.color = [0.6, 0.6, 0.6, 1.0];
+            if(g_normalOn){
+              boxTopL.textureNum = -3;
+            } else{
+              boxTopL.textureNum = 0;
+            }
             boxTopL.matrix = headCoordinatesMat;
             boxTopL.matrix.translate(-21.4, 0, 0);
             boxTopL.matrix.scale(1, 1, 1);
             boxTopL.normalMatrix.setInverseOf(boxTopL.matrix).transpose();
-            boxTopL.renderfast();
-    */
-            /*
-       // left eye----------------------------------------------------------------
+            boxTopL.render();
+    
+       // left eye--------------------------------------------------------------------------------------------------------------------------------
        var lEye = new Cube();
        lEye.color =  [0, 0, 0, 1.0];
+       if(g_normalOn){
+        lEye.textureNum = -3;
+        } else{
+          lEye.textureNum = 0;
+        }
        lEye.matrix = yellowCoordinatesMat;
        lEye.matrix.scale(.4, .6, .3);
        lEye.matrix.translate(.25, .25, -0.1);
+       lEye.normalMatrix.setInverseOf(lEye.matrix).transpose();
        lEye.render();
         
-          // left eye
             var lEyeBig = new Cube();
             lEyeBig.color =  [1.0, 1.0, 1.0, 1.0];
-    
+            if(g_normalOn){
+              lEyeBig.textureNum = -3;
+              } else{
+                lEyeBig.textureNum = 0;
+              }
             lEyeBig.matrix = yellowCoordinatesMat;
-            // rEye.matrix.translate(0.25, 0.25, 0);
             lEyeBig.matrix.scale(.4 , .4 , .3);
             lEyeBig.matrix.translate(0.3, 1, -0.1);
+            lEyeBig.normalMatrix.setInverseOf(lEyeBig.matrix).transpose();
             lEyeBig.render();
     
-            // left eye
             var lEyeSmall = new Cube();
             lEyeSmall.color =  [1.0, 1.0, 1.0, 1.0];
-        
+            if(g_normalOn){
+              lEyeSmall.textureNum = -3;
+              } else{
+                lEyeSmall.textureNum = 0;
+              }
             lEyeSmall.matrix = yellowCoordinatesMat;
-            // rEye.matrix.translate(0.25, 0.25, 0);
             lEyeSmall.matrix.scale(.6 , .5 , .3);
             lEyeSmall.matrix.translate(1.8, -1.6, -0.1);
+            lEyeSmall.normalMatrix.setInverseOf(lEyeSmall.matrix).transpose();
             lEyeSmall.render();
     
-        // right eye----------------------------------------------------------------
+        // right eye--------------------------------------------------------------------------------------------------------------------------------
         var rEye = new Cube();
         rEye.color =  [0, 0, 0, 1.0];
+        if(g_normalOn){
+          rEye.textureNum = -3;
+          } else{
+            rEye.textureNum = 0;
+          }
         rEye.matrix = yellowCoordinatesMat;
         rEye.matrix.scale(3.5, 5, .3);
         rEye.matrix.translate(.8, -.1, -0.1); //should only change this
+        rEye.normalMatrix.setInverseOf(rEye.matrix).transpose();
         rEye.render();
          
           var rEyeBig = new Cube();
           rEyeBig.color =  [1.0, 1.0, 1.0, 1.0];
-    
+          if(g_normalOn){
+            rEyeBig.textureNum = -3;
+            } else{
+              rEyeBig.textureNum = 0;
+            }
           rEyeBig.matrix = yellowCoordinatesMat;
-          // rEye.matrix.translate(0.25, 0.25, 0);
           rEyeBig.matrix.scale(.4 , .4 , .3);
           rEyeBig.matrix.translate(0.3, 1, -0.1);
+          rEyeBig.normalMatrix.setInverseOf(rEyeBig.matrix).transpose();
           rEyeBig.render();
     
-          // left eye
           var rEyeSmall = new Cube();
           rEyeSmall.color =  [1.0, 1.0, 1.0, 1.0];
-    
+          if(g_normalOn){
+            rEyeSmall.textureNum = -3;
+            } else{
+              rEyeSmall.textureNum = 0;
+            }
           rEyeSmall.matrix = yellowCoordinatesMat;
-          // rEye.matrix.translate(0.25, 0.25, 0);
           rEyeSmall.matrix.scale(.6 , .5 , .3);
           rEyeSmall.matrix.translate(1.8, -1.6, -0.1);
+          rEyeSmall.normalMatrix.setInverseOf(rEyeSmall.matrix).transpose();
           rEyeSmall.render();
-          */
-  
-      //----------------------------------------------------------
-    
+      //--------------------------------------------------------------------------------------------------------------------------
+// WALL-E>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
       //check time at end of function, show on pg
       var duration = performance.now() - startTime;
       sendTextToHTML("numdot: ms: " + Math.floor(duration) + " fps: " + Math.floor(10000/duration)/10, "numdot");
