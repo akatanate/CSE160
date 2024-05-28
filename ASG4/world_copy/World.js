@@ -1,25 +1,25 @@
 // Vertex shader program
-    var VSHADER_SOURCE = `
-    precision mediump float;
-    attribute vec4 a_Position;
-    attribute vec2 a_UV;
-    attribute vec3 a_Normal;
-    varying vec2 v_UV;
-    varying vec3 v_Normal;
-    varying vec4 v_VertPos;
-    uniform mat4 u_ModelMatrix; 
-    uniform mat4 u_NormalMatrix;
-    uniform mat4 u_GlobalRotateMatrix;
-    uniform mat4 u_ViewMatrix;
-    uniform mat4 u_ProjectionMatrix;
-    
-    void main(){
+
+var VSHADER_SOURCE =`
+   precision mediump float;
+   attribute vec4 a_Position;
+   attribute vec2 a_UV;
+   attribute vec3 a_Normal;
+   varying vec2 v_UV;
+   varying vec3 v_Normal;
+   varying vec4 v_VertPos;
+   uniform mat4 u_ModelMatrix;
+   uniform mat4 u_NormalMatrix;
+   uniform mat4 u_GlobalRotateMatrix;
+   uniform mat4 u_ViewMatrix;
+   uniform mat4 u_ProjectionMatrix;
+   void main() {
       gl_Position = u_ProjectionMatrix * u_ViewMatrix * u_GlobalRotateMatrix * u_ModelMatrix * a_Position;
       v_UV = a_UV;
       v_Normal = normalize(vec3(u_NormalMatrix * vec4(a_Normal,1)));
       v_VertPos = u_ModelMatrix * a_Position;
-    }
-    `;
+   }`
+
     
 // Fragment shader program
     var FSHADER_SOURCE = `
@@ -73,16 +73,17 @@
          float nDotL = max(dot(N,L), 0.0);
    
          // Reflection
-         vec3 R = reflect(-L,N);
+         vec3 R = reflect(L,N);
    
          // eye
          vec3 E = normalize(u_cameraPos-vec3(v_VertPos));
    
          // Specular
-         float specular = pow(max(dot(E,R), 0.0), 64.0)* 0.8;
-   
-         vec3 diffuse = vec3(1.0, 1.0, 0.0) * vec3(gl_FragColor) * nDotL * 0.7;
-          vec3 ambient = vec3(gl_FragColor) * 0.2;
+         float specular = pow(max(dot(E, R), 0.0), 64.0) * 0.8;
+
+          // vec3(1.0, 1.0, 0.0) * 
+         vec3 diffuse = vec3(gl_FragColor) * nDotL * 0.7;
+          vec3 ambient = vec3(gl_FragColor) * 0.3;
 
           if (u_lightOn) {
               gl_FragColor = vec4(specular + diffuse + ambient, 1.0);
