@@ -38,6 +38,8 @@ var VSHADER_SOURCE =`
 
         uniform vec3 u_LightColor;
 
+        
+
         void main() {
           if(u_whichTexture == -3){
             gl_FragColor = vec4((v_Normal+1.0)/2.0, 1.0); // normal
@@ -97,7 +99,7 @@ var VSHADER_SOURCE =`
           vec3 diffuse = vec3(gl_FragColor) * nDotL * 0.7;
           vec3 ambient = vec3(gl_FragColor) * 0.3;
 
-          diffuse *= lightColor;
+          // diffuse *= lightColor;
           ambient *= lightColor;
 
           if (u_lightOn) {
@@ -784,7 +786,7 @@ var VSHADER_SOURCE =`
       if(g_normalOn){
         body.textureNum = -3;
       } else{
-        body.textureNum = 0;
+        body.textureNum = -2;
       }
       body.matrix.translate(-.35, -.5, 0.0);
       body.matrix.rotate(-5, 1, 0, 0);
@@ -798,7 +800,7 @@ var VSHADER_SOURCE =`
       if(g_normalOn){
         bodyPlate.textureNum = -3;
       } else{
-        bodyPlate.textureNum = 0;
+        bodyPlate.textureNum = -2;
       }
       bodyPlate.matrix =  bodyCoordinatesMat;
       bodyPlate.matrix.rotate(0, 90, 90, 90);
@@ -813,7 +815,7 @@ var VSHADER_SOURCE =`
       if(g_normalOn){
         bodyPlateL.textureNum = -3;
       } else{
-        bodyPlateL.textureNum = 0;
+        bodyPlateL.textureNum = -2;
       }
       bodyPlateL.matrix =  bodyPlateCoordinatesMat;
       bodyPlateL.matrix.rotate(0, 90, 90, 90);
@@ -827,7 +829,7 @@ var VSHADER_SOURCE =`
       if(g_normalOn){
         bodyPlateR.textureNum = -3;
       } else{
-        bodyPlateR.textureNum = 0;
+        bodyPlateR.textureNum = -2;
       }
       bodyPlateR.matrix =  bodyPlateCoordinatesMat;
       bodyPlateR.matrix.rotate(0, 90, 90, 90);
@@ -842,7 +844,7 @@ var VSHADER_SOURCE =`
       if(g_normalOn){
         lArm.textureNum = -3;
       } else{
-        lArm.textureNum = 0;
+        lArm.textureNum =  -2;
       }
       lArm.matrix.setTranslate(-.45, -.25, -.22);
       lArm.matrix.rotate(-5, 1.3, 0, 0); // Rotate around the y-axis
@@ -856,7 +858,7 @@ var VSHADER_SOURCE =`
       if(g_normalOn){
         lFinger3.textureNum = -3;
       } else{
-        lFinger3.textureNum = 0;
+        lFinger3.textureNum =  -2;
       }
       lFinger3.matrix = lArmCoordinatesMat;
       lFinger3.matrix.translate(0, 0.03, -.12);
@@ -872,7 +874,7 @@ var VSHADER_SOURCE =`
       if(g_normalOn){
         lFinger4.textureNum = -3;
       } else{
-        lFinger4.textureNum = 0;
+        lFinger4.textureNum =  -2;
       }
       lFinger4.matrix = lArmCoordinatesMat;
       lFinger4.matrix.translate(2, 0.3, -.09);
@@ -887,7 +889,7 @@ var VSHADER_SOURCE =`
       if(g_normalOn){
         rArm.textureNum = -3;
       } else{
-        rArm.textureNum = 0;
+        rArm.textureNum =  -2;
       }
       rArm.matrix.translate(0.4, -.25, -.22);
       rArm.matrix.rotate(-5, 1.3, 0, 0);
@@ -901,7 +903,7 @@ var VSHADER_SOURCE =`
       if(g_normalOn){
         rFinger1.textureNum = -3;
       } else{
-        rFinger1.textureNum = 0;
+        rFinger1.textureNum =  -2;
       }
       rFinger1.matrix = rArmCoordinatesMat;
       rFinger1.matrix.translate(0, .1, -.12);
@@ -914,7 +916,7 @@ var VSHADER_SOURCE =`
       if(g_normalOn){
         rFinger2.textureNum = -3;
       } else{
-        rFinger2.textureNum = 0;
+        rFinger2.textureNum =  -2;
       }
       rFinger2.matrix = rArmCoordinatesMat;
       rFinger2.matrix.translate(2, .16, -.09);
@@ -929,7 +931,7 @@ var VSHADER_SOURCE =`
       if(g_normalOn){
         lLeg.textureNum = -3;
       } else{
-        lLeg.textureNum = 0;
+        lLeg.textureNum =  -2;
       }
       lLeg.matrix.translate(-.40, -.70, 0.0);
       lLeg.matrix.rotate(-5, 1, 0, 0);
@@ -943,7 +945,7 @@ var VSHADER_SOURCE =`
       if(g_normalOn){
         rLeg.textureNum = -3;
       } else{
-        rLeg.textureNum = 0;
+        rLeg.textureNum =  -2;
       }
       rLeg.matrix.translate(0.35, -.70, 0.0);
       rLeg.matrix.rotate(-5, 1, 0, 0);
@@ -957,7 +959,7 @@ var VSHADER_SOURCE =`
       if(g_normalOn){
         leftArm.textureNum = -3;
       } else{
-        leftArm.textureNum = 0;
+        leftArm.textureNum =  -2;
       }
       leftArm.matrix.setTranslate(0, -.5, .2);
       leftArm.matrix.rotate(-5, 1, 0, 0);
@@ -975,7 +977,7 @@ var VSHADER_SOURCE =`
       if(g_normalOn){
         box.textureNum = -3;
       } else{
-        box.textureNum = 0;
+        box.textureNum =  -2;
       }
       box.matrix =  yellowCoordinatesMat;
       box.matrix.translate(0, 0.65, -0.1);
@@ -991,7 +993,7 @@ var VSHADER_SOURCE =`
         if(g_normalOn){
           boxTop.textureNum = -3;
         } else{
-          boxTop.textureNum = 0;
+          boxTop.textureNum =  -2;
         }
         boxTop.matrix =  headCoordinatesMat;
         boxTop.matrix.translate(0.01, 1, 0);
@@ -1004,7 +1006,7 @@ var VSHADER_SOURCE =`
         if(g_normalOn){
           boxTopR.textureNum = -3;
         } else{
-          boxTopR.textureNum = 0;
+          boxTopR.textureNum =  -2;
         }
         boxTopR.matrix = headCoordinatesMat;
         boxTopR.matrix.translate(1, -14, 0);
@@ -1018,7 +1020,7 @@ var VSHADER_SOURCE =`
             if(g_normalOn){
               boxTopL.textureNum = -3;
             } else{
-              boxTopL.textureNum = 0;
+              boxTopL.textureNum =  -2;
             }
             boxTopL.matrix = headCoordinatesMat;
             boxTopL.matrix.translate(-21.4, 0, 0);
@@ -1032,7 +1034,7 @@ var VSHADER_SOURCE =`
        if(g_normalOn){
         lEye.textureNum = -3;
         } else{
-          lEye.textureNum = 0;
+          lEye.textureNum =  -2;
         }
        lEye.matrix = yellowCoordinatesMat;
        lEye.matrix.scale(.4, .6, .3);
@@ -1045,7 +1047,7 @@ var VSHADER_SOURCE =`
             if(g_normalOn){
               lEyeBig.textureNum = -3;
               } else{
-                lEyeBig.textureNum = 0;
+                lEyeBig.textureNum =  -2;
               }
             lEyeBig.matrix = yellowCoordinatesMat;
             lEyeBig.matrix.scale(.4 , .4 , .3);
@@ -1058,7 +1060,7 @@ var VSHADER_SOURCE =`
             if(g_normalOn){
               lEyeSmall.textureNum = -3;
               } else{
-                lEyeSmall.textureNum = 0;
+                lEyeSmall.textureNum =  -2;
               }
             lEyeSmall.matrix = yellowCoordinatesMat;
             lEyeSmall.matrix.scale(.6 , .5 , .3);
@@ -1072,7 +1074,7 @@ var VSHADER_SOURCE =`
         if(g_normalOn){
           rEye.textureNum = -3;
           } else{
-            rEye.textureNum = 0;
+            rEye.textureNum =  -2;
           }
         rEye.matrix = yellowCoordinatesMat;
         rEye.matrix.scale(3.5, 5, .3);
@@ -1085,7 +1087,7 @@ var VSHADER_SOURCE =`
           if(g_normalOn){
             rEyeBig.textureNum = -3;
             } else{
-              rEyeBig.textureNum = 0;
+              rEyeBig.textureNum =  -2;
             }
           rEyeBig.matrix = yellowCoordinatesMat;
           rEyeBig.matrix.scale(.4 , .4 , .3);
@@ -1098,7 +1100,7 @@ var VSHADER_SOURCE =`
           if(g_normalOn){
             rEyeSmall.textureNum = -3;
             } else{
-              rEyeSmall.textureNum = 0;
+              rEyeSmall.textureNum =  -2;
             }
           rEyeSmall.matrix = yellowCoordinatesMat;
           rEyeSmall.matrix.scale(.6 , .5 , .3);
