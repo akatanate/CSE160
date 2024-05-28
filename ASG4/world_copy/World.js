@@ -730,6 +730,11 @@ var VSHADER_SOURCE =`
       //----------------------------------------------------------
       /*var body = new Cube();
       body.color = [1.0, 0.7, 0.0, 1.0];
+      if(g_normalOn){
+        body.textureNum = -3;
+      } else{
+        body.textureNum = 0;
+      }
       body.matrix.translate(-.35, -.5, 0.0);
       body.matrix.rotate(-5, 1, 0, 0);
       body.matrix.scale(.75, .45, .5);
@@ -739,6 +744,11 @@ var VSHADER_SOURCE =`
       
       var bodyPlate = new Cube();
       bodyPlate.color = [0.8, 0.8, 0.8, 1.0];
+      if(g_normalOn){
+        bodyPlate.textureNum = -3;
+      } else{
+        bodyPlate.textureNum = 0;
+      }
       bodyPlate.matrix =  bodyCoordinatesMat;
       bodyPlate.matrix.rotate(0, 90, 90, 90);
       bodyPlate.matrix.translate(0, 0.7, -.1);
@@ -749,6 +759,11 @@ var VSHADER_SOURCE =`
     
       var bodyPlateL = new Cube();
       bodyPlateL.color = [0.0, 0.0, 0.0, 1.0];
+      if(g_normalOn){
+        bodyPlateL.textureNum = -3;
+      } else{
+        bodyPlateL.textureNum = 0;
+      }
       bodyPlateL.matrix =  bodyPlateCoordinatesMat;
       bodyPlateL.matrix.rotate(0, 90, 90, 90);
       bodyPlateL.matrix.translate(0.5, 0, -.1);
@@ -758,25 +773,41 @@ var VSHADER_SOURCE =`
     
       var bodyPlateR = new Cube();
       bodyPlateR.color = [0.6, 0.6, 0.6, 1.0];
+      if(g_normalOn){
+        bodyPlateR.textureNum = -3;
+      } else{
+        bodyPlateR.textureNum = 0;
+      }
       bodyPlateR.matrix =  bodyPlateCoordinatesMat;
       bodyPlateR.matrix.rotate(0, 90, 90, 90);
       bodyPlateR.matrix.translate(-0.7, 0, -.1);
       bodyPlateR.matrix.scale(.85, 1, .1);
       bodyPlateR.normalMatrix.setInverseOf(bodyPlateR.matrix).transpose();
       bodyPlateR.render();
-    
+    */
+     /*
       // right arm
       var lArm = new Cube();
       lArm.color =  [0.9, 0.6, 0.0, 1.0]; //NEON GREEN
+      if(g_normalOn){
+        lArm.textureNum = -3;
+      } else{
+        lArm.textureNum = 0;
+      }
       lArm.matrix.setTranslate(-.45, -.25, -.22);
       lArm.matrix.rotate(-5, 1.3, 0, 0); // Rotate around the y-axis
       var lArmCoordinatesMat = new Matrix4(lArm.matrix);
       lArm.matrix.scale(0.1, .1, .55);
       lArm.normalMatrix.setInverseOf(lArm.matrix).transpose();
       lArm.render();
-    
+  
       var lFinger3 = new Cube();
       lFinger3.color =  [0.5, 0.3, 0.2, 1.0];
+      if(g_normalOn){
+        lFinger3.textureNum = -3;
+      } else{
+        lFinger3.textureNum = 0;
+      }
       lFinger3.matrix = lArmCoordinatesMat;
       lFinger3.matrix.translate(0, 0.03, -.12);
       lFinger3.matrix.rotate(-35, 0, 0, 1);
@@ -788,18 +819,28 @@ var VSHADER_SOURCE =`
     
       var lFinger4 = new Cube();
       lFinger4.color =  [0.5, 0.3, 0.2, 1.0];
+      if(g_normalOn){
+        lFinger4.textureNum = -3;
+      } else{
+        lFinger4.textureNum = 0;
+      }
       lFinger4.matrix = lArmCoordinatesMat;
       lFinger4.matrix.translate(2, 0.3, -.09);
       lFinger4.matrix.scale(.6, .6, 1);
       lFinger4.matrix.rotate(-g_greenAngle, 0, 0, 1);
       lFinger4.normalMatrix.setInverseOf(lFinger4.matrix).transpose();
       lFinger4.render();
-     
+*/
       // --------------------------------------------------------------------------------------------------------------------------
       // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       // left arm
-      var rArm = new Cube();
+      /*var rArm = new Cube();
       rArm.color =  [0.9, 0.6, 0.0, 1.0];
+      if(g_normalOn){
+        rArm.textureNum = -3;
+      } else{
+        rArm.textureNum = 0;
+      }
       rArm.matrix.translate(0.4, -.25, -.22);
       rArm.matrix.rotate(-5, 1.3, 0, 0);
       rArm.matrix.scale(0.1, .1, .55);
@@ -809,6 +850,11 @@ var VSHADER_SOURCE =`
     
       var rFinger1 = new Cube();
       rFinger1.color =  [0.5, 0.3, 0.2, 1.0];
+      if(g_normalOn){
+        rFinger1.textureNum = -3;
+      } else{
+        rFinger1.textureNum = 0;
+      }
       rFinger1.matrix = rArmCoordinatesMat;
       rFinger1.matrix.translate(0, .1, -.12);
       rFinger1.matrix.scale(0.3, .4, 1);
@@ -817,13 +863,19 @@ var VSHADER_SOURCE =`
     
       var rFinger2 = new Cube();
       rFinger2.color =  [0.5, 0.3, 0.2, 1.0];
+      if(g_normalOn){
+        rFinger2.textureNum = -3;
+      } else{
+        rFinger2.textureNum = 0;
+      }
       rFinger2.matrix = rArmCoordinatesMat;
       rFinger2.matrix.translate(2, .16, -.09);
       rFinger2.matrix.rotate(35, 0, 0, 1);
       rFinger2.matrix.scale(1, 2, .2);
       rFinger2.normalMatrix.setInverseOf(rFinger2.matrix).transpose();
-      rFinger2.render();
+      rFinger2.render();*/
     
+      /*
       // left leg
       var lLeg = new Oval();
       lLeg.color =  [0.0, 0.0, 0.0, 1.0];
@@ -841,9 +893,24 @@ var VSHADER_SOURCE =`
       rLeg.matrix.scale(0.1, .4, .5);
       //rLeg.normalMatrix.setInverseOf(rLeg.matrix).transpose();
       rLeg.render();
-    
+      */
+      
+      if(g_normalOn){
+        leftArm.textureNum = -3;
+        box.textureNum = -3;
+        boxTop.textureNum = -3;
+        boxTopR.textureNum = -3;
+        boxTopL.textureNum = -3;
+      } else{
+        leftArm.textureNum = 0;
+        box.textureNum = 0;
+        boxTop.textureNum = 0;
+        boxTopR.textureNum = 0;
+        boxTopL.textureNum = 0;
+      }
+
       // neck
-      var leftArm = new Cube();
+      /*var leftArm = new Cube();
       leftArm.color = [0.6, 0.6, 0.6, 1.0];
       leftArm.matrix.setTranslate(0, -.5, .2);
       leftArm.matrix.rotate(-5, 1, 0, 0);
@@ -853,7 +920,7 @@ var VSHADER_SOURCE =`
       leftArm.matrix.scale(0.1, .23, .1);
       leftArm.matrix.translate(-.5, 2, 0);
       leftArm.normalMatrix.setInverseOf(leftArm.matrix).transpose();
-      leftArm.render();
+      leftArm.renderfast();
     
       // head
       var box = new Cube();
@@ -865,7 +932,7 @@ var VSHADER_SOURCE =`
       box.matrix.translate(-.5, 0, -0.001);
       var headCoordinatesMat = new Matrix4(box.matrix);
       box.normalMatrix.setInverseOf(box.matrix).transpose();
-      box.render();
+      box.renderfast();
     
         // tophead
         var boxTop = new Cube();
@@ -874,7 +941,7 @@ var VSHADER_SOURCE =`
         boxTop.matrix.translate(0.01, 1, 0);
         boxTop.matrix.scale(1, .07, 1);
         boxTop.normalMatrix.setInverseOf(boxTop.matrix).transpose();
-        boxTop.render();
+        boxTop.renderfast();
     
         // right
         var boxTopR = new Cube();
@@ -883,7 +950,7 @@ var VSHADER_SOURCE =`
         boxTopR.matrix.translate(1, -14, 0);
         boxTopR.matrix.scale(.05, 13, 1);
         boxTopR.normalMatrix.setInverseOf(boxTopR.matrix).transpose();
-        boxTopR.render();
+        boxTopR.renderfast();
     
             // right
             var boxTopL = new Cube();
@@ -892,8 +959,9 @@ var VSHADER_SOURCE =`
             boxTopL.matrix.translate(-21.4, 0, 0);
             boxTopL.matrix.scale(1, 1, 1);
             boxTopL.normalMatrix.setInverseOf(boxTopL.matrix).transpose();
-            boxTopL.render();
-    
+            boxTopL.renderfast();
+    */
+            /*
        // left eye----------------------------------------------------------------
        var lEye = new Cube();
        lEye.color =  [0, 0, 0, 1.0];
