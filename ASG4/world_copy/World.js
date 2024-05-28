@@ -36,6 +36,8 @@ var VSHADER_SOURCE =`
         varying vec4 v_VertPos;
         uniform bool u_lightOn;
 
+        uniform vec3 u_LightColor;
+
         void main() {
           if(u_whichTexture == -3){
             gl_FragColor = vec4((v_Normal+1.0)/2.0, 1.0); // normal
@@ -87,9 +89,16 @@ var VSHADER_SOURCE =`
          //     specular = pow(max(dot(E, R), 0.0), 64.0) * 0.8;
           // }
 
+          // gl_FragColor = u_FragColor;
+          vec3 lightColor = u_LightColor;
+
+
           // vec3(1.0, 1.0, 0.0) * 
           vec3 diffuse = vec3(gl_FragColor) * nDotL * 0.7;
-           vec3 ambient = vec3(gl_FragColor) * 0.3;
+          vec3 ambient = vec3(gl_FragColor) * 0.3;
+
+          diffuse *= lightColor;
+          ambient *= lightColor;
 
           if (u_lightOn) {
                gl_FragColor = vec4(specular + diffuse + ambient, 1.0);
@@ -400,11 +409,28 @@ var VSHADER_SOURCE =`
         document.getElementById('lightSlideX').addEventListener('mousemove', function(ev) { if(ev.buttons == 1){ g_lightPos[0] = this.value/100; renderAllShapes();}});
         document.getElementById('lightSlideY').addEventListener('mousemove', function(ev) { if(ev.buttons == 1){ g_lightPos[1] = this.value/100; renderAllShapes();}});
         document.getElementById('lightSlideZ').addEventListener('mousemove', function(ev) { if(ev.buttons == 1){ g_lightPos[2] = this.value/100; renderAllShapes();}});
+        
+        document.getElementById('redSlider').addEventListener('input', updateLightColor);
+        document.getElementById('greenSlider').addEventListener('input', updateLightColor);
+        document.getElementById('blueSlider').addEventListener('input', updateLightColor);
 
-        //document.getElementById('redSlider').oninput = updateLightColor;
-       //document.getElementById('greenSlider').oninput = updateLightColor;
-        //document.getElementById('blueSlider').oninput = updateLightColor;
+        updateLightColor();
 
+        function updateLightColor() {
+          // Get RGB slider values
+          var red = parseFloat(document.getElementById('redSlider').value) / 255.0;
+          var green = parseFloat(document.getElementById('greenSlider').value) /  255.0;
+          var blue = parseFloat(document.getElementById('blueSlider').value) /  255.0;
+
+          // Update light color uniform in the fragment shader
+          var lightColorLocation = gl.getUniformLocation(gl.program, 'u_LightColor');
+          gl.uniform3f(lightColorLocation, red, green, blue);
+
+          // Render again to apply the new light color
+          renderAllShapes();
+        }
+
+      
 
    
 
