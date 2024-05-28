@@ -36,8 +36,6 @@ var VSHADER_SOURCE =`
         varying vec4 v_VertPos;
         uniform bool u_lightOn;
 
-    
-    
         void main() {
           if(u_whichTexture == -3){
             gl_FragColor = vec4((v_Normal+1.0)/2.0, 1.0); // normal
@@ -81,18 +79,23 @@ var VSHADER_SOURCE =`
          vec3 E = normalize(u_cameraPos-vec3(v_VertPos));
    
          // Specular
-         float specular = pow(max(dot(E, R), 0.0), 64.0) * 0.8;
+          float specular = pow(max(dot(E, R), 0.0), 64.0) * 0.8;
+        
+         // fixes back light
+         // float specular = 0.0;
+         // if (nDotL > 0.0) {
+         //     specular = pow(max(dot(E, R), 0.0), 64.0) * 0.8;
+          // }
 
           // vec3(1.0, 1.0, 0.0) * 
-         vec3 diffuse = vec3(gl_FragColor) * nDotL * 0.7;
-          vec3 ambient = vec3(gl_FragColor) * 0.3;
+          vec3 diffuse = vec3(gl_FragColor) * nDotL * 0.7;
+           vec3 ambient = vec3(gl_FragColor) * 0.3;
 
           if (u_lightOn) {
-              gl_FragColor = vec4(specular + diffuse + ambient, 1.0);
-          }
+               gl_FragColor = vec4(specular + diffuse + ambient, 1.0);
+         }
 
-         
-
+  
         }
     `;
     
@@ -119,6 +122,7 @@ var VSHADER_SOURCE =`
     let u_cameraPos;
     let u_lightOn;
     let a_Normal;
+
     
     function setupWebGL(){
         // Retrieve <canvas> element
@@ -620,7 +624,7 @@ var VSHADER_SOURCE =`
       var startTime = performance.now();
     
       var projMat=new Matrix4();
-      projMat.setPerspective(90, 1 * canvas.width/canvas.height, .1, 100);
+      projMat.setPerspective(110, 1 * canvas.width/canvas.height, .1, 100);
       gl.uniformMatrix4fv(u_ProjectionMatrix, false, projMat.elements);
     
       var viewMat=new Matrix4();
@@ -673,6 +677,14 @@ var VSHADER_SOURCE =`
       light.matrix.translate(-.5, -.5, -.5);
       light.renderfast();
 
+
+      /*var spotlight=new Cube();
+      spotlight.color= [2, 2, 0, 1];
+      spotlight.matrix.translate(0, 1, -2);
+      spotlight.matrix.scale(-.1, -.1, -.1);
+      spotlight.matrix.translate(-.5, -.5, -.5);
+      spotlight.renderfast();*/
+
       var body1 = new Cube();
       body1.color = [1.0, 0.0,0.0,1.0];
       if(g_normalOn == true){
@@ -706,12 +718,27 @@ var VSHADER_SOURCE =`
       } else{
         box.textureNum = -2;
       }
-      box.matrix.translate(1, 1, 0.0);
+      box.matrix.translate(0, -5, 0.0);
       box.matrix.rotate(-5, 1, 0, 0);
-      box.matrix.scale(0.5, .3, .5);
+      box.matrix.scale(2, 2.4, 2);
       box.normalMatrix.setInverseOf(box.matrix).transpose();
-
       box.render();
+
+      var boxB = new Cube();
+      boxB.color = [1.0, 0.0,0.0,1.0];
+      // color
+      if(g_normalOn == true){
+        boxB.textureNum = -3; 
+      } else{
+        boxB.textureNum = -2;
+      }
+      boxB.matrix.translate(-2, -5, 1);
+      boxB.matrix.rotate(-5, 1, 0, 0);
+      boxB.matrix.scale(2, 2.4, 2);
+      boxB.normalMatrix.setInverseOf(box.matrix).transpose();
+      boxB.render();
+
+
 
       var sphere = new Sphere();
       if(g_normalOn){
@@ -720,7 +747,7 @@ var VSHADER_SOURCE =`
         sphere.textureNum = -2;
       }
       sphere.matrix.scale(1, 1, 1);
-      sphere.matrix.translate(0, -2, 0);
+      sphere.matrix.translate(0, -1.6, .3);
       // sphere.normalMatrix.setInverseOf(sphere.matrix).transpose();
 
       sphere.render();
@@ -870,25 +897,33 @@ var VSHADER_SOURCE =`
       rFinger2.normalMatrix.setInverseOf(rFinger2.matrix).transpose();
       rFinger2.render();
     
-      /*
       // left leg
-      var lLeg = new Oval();
+      var lLeg = new Cube();
       lLeg.color =  [0.0, 0.0, 0.0, 1.0];
-      lLeg.matrix.translate(-.40, -.5, 0.0);
+      if(g_normalOn){
+        lLeg.textureNum = -3;
+      } else{
+        lLeg.textureNum = 0;
+      }
+      lLeg.matrix.translate(-.40, -.70, 0.0);
       lLeg.matrix.rotate(-5, 1, 0, 0);
       lLeg.matrix.scale(0.1, .4, .5);
-      //lLeg.normalMatrix.setInverseOf(lLeg.matrix).transpose();
+      lLeg.normalMatrix.setInverseOf(lLeg.matrix).transpose();
       lLeg.render();
     
       // right leg
-      var rLeg = new Oval();
+      var rLeg = new Cube();
       rLeg.color =  [0.0, 0.0, 0.0, 1.0];
-      rLeg.matrix.translate(0.45, -.5, 0.0);
+      if(g_normalOn){
+        rLeg.textureNum = -3;
+      } else{
+        rLeg.textureNum = 0;
+      }
+      rLeg.matrix.translate(0.35, -.70, 0.0);
       rLeg.matrix.rotate(-5, 1, 0, 0);
       rLeg.matrix.scale(0.1, .4, .5);
-      //rLeg.normalMatrix.setInverseOf(rLeg.matrix).transpose();
+      rLeg.normalMatrix.setInverseOf(rLeg.matrix).transpose();
       rLeg.render();
-      */
       
       // neck
       var leftArm = new Cube();
