@@ -73,40 +73,74 @@ class Cube {
         gl.uniform4f(u_FragColor, rgba[0], rgba[1], rgba[2], rgba[3]);
 
     }
+
+    renderfast() {
+        var rgba = this.color;
+
+        //console.log("Before: texttue var in render: which + num", u_whichTexture, this.textureNum)
+        gl.uniform1i(u_whichTexture, this.textureNum);
+        //console.log("After: texttue var in render: which + num", u_whichTexture, this.textureNum)
   
-    renderFast() {
-      var rgba = this.color;
-
-     gl.uniform1i(u_whichTexture, this.textureNum);
+    
+        // Pass the color of a point to u_FragColor variable
+        gl.uniform4f(u_FragColor, rgba[0], rgba[1], rgba[2], rgba[3]);
   
-      // Pass the color of a point to u_FragColor variable
-      gl.uniform4f(u_FragColor, rgba[0], rgba[1], rgba[2], rgba[3]);
+        gl.uniformMatrix4fv(u_ModelMatrix, false, this.matrix.elements);
+  
+        var allverts = [];
+        // Front 
+        allverts = allverts.concat([0.0,0.0,0.0, 1.0,1.0,0.0, 1.0,0.0,0.0 ]);
+        allverts = allverts.concat([0.0,0.0,0.0, 0.0,1.0,0.0, 1.0,1.0,0.0 ]);
+        // Back
+        allverts = allverts.concat([0.0,0.0,1.0, 1.0,1.0,1.0, 1.0,0.0,1.0 ]);
+        allverts = allverts.concat([0.0,0.0,1.0, 0.0,1.0,1.0, 1.0,1.0,1.0 ]);
+        // Top
+        allverts = allverts.concat([0.0,1.0,0.0, 1.0,1.0,0.0, 1.0,1.0,1.0 ]);
+        allverts = allverts.concat([0.0,1.0,1.0, 0.0,1.0,0.0, 1.0,1.0,1.0 ]);
+        // Bottom
+        allverts = allverts.concat([0.0,0.0,0.0, 0.0,0.0,1.0, 1.0,0.0,0.0 ]);
+        allverts = allverts.concat([1.0,0.0,0.0, 1.0,0.0,1.0, 0.0,0.0,1.0 ]);
 
-      gl.uniformMatrix4fv(u_ModelMatrix, false, this.matrix.elements);
+        // Left
+        allverts = allverts.concat([0.0,0.0,0.0, 0.0,1.0,0.0, 0.0,1.0,1.0 ]);
+        allverts = allverts.concat([0.0,1.0,1.0, 0.0,0.0,0.0, 0.0,0.0,1.0 ]);
+        // Right
+        allverts = allverts.concat([1.0,0.0,0.0, 1.0,1.0,0.0, 1.0,1.0,1.0 ]);
+        allverts = allverts.concat([1.0,1.0,1.0, 1.0,0.0,0.0, 1.0,0.0,1.0 ]);
 
-      var allverts = [];
-      // Front 
-      allverts = allverts.concat([0.0,0.0,0.0, 1.0,1.0,0.0, 1.0,0.0,0.0 ]);
-      allverts = allverts.concat([0.0,0.0,0.0, 0.0,1.0,0.0, 1.0,1.0,0.0 ]);
-      // Back
-      allverts = allverts.concat([0.0,0.0,1.0, 1.0,1.0,1.0, 1.0,0.0,1.0 ]);
-      allverts = allverts.concat([0.0,0.0,1.0, 0.0,1.0,1.0, 1.0,1.0,1.0 ]);
-      // Top
-      allverts = allverts.concat([0.0,1.0,0.0, 1.0,1.0,0.0, 1.0,1.0,1.0 ]);
-      allverts = allverts.concat([0.0,1.0,1.0, 0.0,1.0,0.0, 1.0,1.0,1.0 ]);
-      // Bottom
-      allverts = allverts.concat([0.0,0.0,0.0, 0.0,0.0,1.0, 1.0,0.0,0.0 ]);
-      allverts = allverts.concat([1.0,0.0,0.0, 1.0,0.0,1.0, 0.0,0.0,1.0 ]);
-      // Left
-      allverts = allverts.concat([0.0,0.0,0.0, 0.0,1.0,0.0, 0.0,1.0,1.0 ]);
-      allverts = allverts.concat([0.0,1.0,1.0, 0.0,0.0,0.0, 0.0,0.0,1.0 ]);
-      // Right
-      allverts = allverts.concat([1.0,0.0,0.0, 1.0,1.0,0.0, 1.0,1.0,1.0 ]);
-      allverts = allverts.concat([1.0,1.0,1.0, 1.0,0.0,0.0, 1.0,0.0,1.0 ]);
+        var alluvs=[
+           0,0, 1,1, 1,0,
+           0,0, 0,1, 1,1,
+           1,0, 1,1, 0,0,
+           0,1, 1,1, 0,0,
+           0,0, 0,1, 1,1,
+           0,0, 1,0, 1,1,
+           1,0, 0,0, 0,1,
+           1,0, 1,1, 0,1,
+           0,1, 1,0, 1,1,
+           0,1, 0,0, 1,0,
+           0,0, 1,0, 1,1,
+           0,1, 0,1, 1,1
+        ];
 
-      drawTriangle3D(allverts);
-   
-    }
+        var allnorms = [
+           0,0,-1, 0,0,-1, 0,0,-1,
+           0,0,-1, 0,0,-1, 0,0,-1,
+           0,1,0, 0,1,0, 0,1,0,
+           0,1,0, 0,1,0, 0,1,0,
+           1,0,0, 1,0,0, 1,0,0,
+           1,0,0, 1,0,0, 1,0,0,
+           -1,0,0, -1,0,0, -1,0,0,
+           -1,0,0, -1,0,0, -1,0,0,
+           0,-1,0, 0,-1,0, 0,-1,0,
+           0,-1,0, 0,-1,0, 0,-1,0,
+           0,0,1, 0,0,1, 0,0,1,
+           0,0,1, 0,0,1, 0,0,1
+        ];
+
+        drawTriangle3DUVNormal(allverts, alluvs, allnorms);
+        }
+
     
     renderfaster(){
       var rgba = this.color;                                   

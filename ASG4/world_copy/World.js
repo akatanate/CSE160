@@ -89,8 +89,6 @@ var VSHADER_SOURCE =`
 
           if (u_lightOn) {
               gl_FragColor = vec4(specular + diffuse + ambient, 1.0);
-          } else {
-              gl_FragColor = vec4(diffuse + ambient, 1.0);
           }
 
          
@@ -678,7 +676,7 @@ var VSHADER_SOURCE =`
       var body1 = new Cube();
       body1.color = [1.0, 0.0,0.0,1.0];
       if(g_normalOn == true){
-          body.textureNum = -3;
+          body1.textureNum = -3;
         }
      
       body1.matrix.scale(10, 0, 10);
@@ -689,8 +687,11 @@ var VSHADER_SOURCE =`
         var sky = new Cube();
         sky.color = [1.0, 0.0, 0.0, 1.0];
         sky.matrix.translate(-1,0,-1);
+   
         if(g_normalOn == true){
           sky.textureNum = -3;
+        } else{
+          sky.textureNum = 1;
         }
         sky.matrix.scale(-10, -10, -10);
         sky.matrix.translate(-.5, -.5, -.5);
@@ -698,15 +699,14 @@ var VSHADER_SOURCE =`
         sky.render(); 
 
 
-        if(g_normalOn == true){
-          body.textureNum = -3;
-        }
-    
+  
       var box = new Cube();
       box.color = [1.0, 0.0,0.0,1.0];
-      box.textureNum = -2; // color
+      // color
       if(g_normalOn == true){
-        box.textureNum = -3;
+        box.textureNum = -3; 
+      } else{
+        box.textureNum = -2;
       }
       box.matrix.translate(1, 1, 0.0);
       box.matrix.rotate(-5, 1, 0, 0);
@@ -716,7 +716,11 @@ var VSHADER_SOURCE =`
       box.render();
 
       var sphere = new Sphere();
-      if(g_normalOn) sphere.textureNum = -3;
+      if(g_normalOn){
+        sphere.textureNum = -3;
+      } else{
+        sphere.textureNum = -2;
+      }
       sphere.matrix.scale(1, 1, 1);
       sphere.matrix.translate(0, -2, 0);
       // sphere.normalMatrix.setInverseOf(sphere.matrix).transpose();
@@ -724,7 +728,7 @@ var VSHADER_SOURCE =`
       sphere.render();
 
       //----------------------------------------------------------
-      var body = new Cube();
+      /*var body = new Cube();
       body.color = [1.0, 0.7, 0.0, 1.0];
       body.matrix.translate(-.35, -.5, 0.0);
       body.matrix.rotate(-5, 1, 0, 0);
@@ -944,6 +948,7 @@ var VSHADER_SOURCE =`
           rEyeSmall.matrix.scale(.6 , .5 , .3);
           rEyeSmall.matrix.translate(1.8, -1.6, -0.1);
           rEyeSmall.render();
+          */
   
       //----------------------------------------------------------
     
