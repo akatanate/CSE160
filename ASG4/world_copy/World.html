@@ -4,6 +4,13 @@
     <meta charset="utf-8" />
     <title>Lighting</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="World.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Butterfly+Kids&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Butterfly+Kids&family=Gochi+Hand&display=swap" rel="stylesheet">
   </head>
 
   <body onload="main()">
@@ -24,6 +31,8 @@
     <script src="Sphere.js"></script>
 
     <script src="World.js"></script>
+
+    <h1>Welcome to the Playpen! </h1>
 
     <canvas id="webgl" width="500" height="500"></canvas>
 
@@ -54,8 +63,10 @@
       Light Y <input type="range" min="-250" max="250" value="100" class="slider" id="lightSlideY">
       Light Z <input type="range" min="-250" max="250" value="-250" class="slider" id="lightSlideZ">
     </p>
+    <p>
 
     Camera Angle <Input type="range" min="0" max="360" value="0" class ="slider" id = "angleSlide"> 
+      </p>
     <!--<p>
       Magenta <Input type="range" min="0" max="100" value="0" class ="slider" id = "magentaSlide">
       <button type="button" id="animationMagentaOnButton">ON</button>

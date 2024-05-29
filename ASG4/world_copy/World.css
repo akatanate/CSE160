@@ -3,22 +3,36 @@
     src: url('gunshipcond.ttf') format('truetype');
 }
 
+.butterfly-kids-regular {
+    font-family: "Butterfly Kids", cursive;
+    font-weight: 400;
+    font-style: normal;
+  }
+  .gochi-hand-regular {
+    font-family: "Gochi Hand", cursive;
+    font-weight: 400;
+    font-style: normal;
+  }
+  
+  
+
 @font-face {
     font-family: 'Gunship2';
     src: url('gunshiplaserital.ttf') format('truetype');
 }
 
 p {
-    font-family: 'Gunship', sans-serif;
+    font-family: 'Gochi Hand';
 }
 
 button {
-    font-family: 'Gunship', sans-serif;
+    font-family: 'Gochi Hand';
+    font-size: 20px;
 }
 
 h1 {
-    font-family: 'Gunship2', serif;
-    font-size: 60px;
+    font-family: "Gochi Hand";
+    font-size: 80px;
 }
 
 body{
@@ -48,7 +62,7 @@ body{
 
 .text{
     padding: 13px;
-    font-family: 'Gunship', sans-serif;
+    font-family: 'Gochi Hand';
     background-color: #d9d1d0;
     border-radius: 10px;
 }
