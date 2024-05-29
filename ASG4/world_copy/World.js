@@ -42,7 +42,6 @@ var VSHADER_SOURCE =`
         uniform vec3 u_LightColor;
 
         uniform vec3 u_lightPos2;      // Position of the second light
-        // uniform vec3 u_LightColor2;
 
         
 
@@ -64,62 +63,56 @@ var VSHADER_SOURCE =`
             gl_FragColor = vec4(1,.2,.2,1);              // Error -> Red
          }
    
-     
-         vec3 lightVector = u_lightPos-vec3(v_VertPos);
+         vec3 lightVector = u_lightPos - vec3(v_VertPos);
          float r = length(lightVector);
-
-         vec3 spotlightVector = u_spotlightPos-vec3(v_VertPos);
-   
-         // N dot L
          vec3 L = normalize(lightVector);
          vec3 N = normalize(v_Normal);
-         float nDotL = max(dot(N,L), 0.0);
-   
-         // Reflection
-         vec3 R = reflect(L,N);
-
-         vec3 L2 = normalize(spotlightVector);
-         reflect(L2,N);
-   
-         // eye
-         vec3 E = normalize(u_cameraPos-vec3(v_VertPos));
-   
-         // Specular
-          float specular = pow(max(dot(E, R), 0.0), 64.0) * 0.8;
-
-          vec3 lightColor = u_LightColor;
-
-          vec3 diffuse = vec3(gl_FragColor) * nDotL * 0.7;
-          vec3 ambient = vec3(gl_FragColor) * 0.3;
-
-          // diffuse *= lightColor;
-          ambient *= lightColor;
-
-          if (u_lightOn) {
-               gl_FragColor = vec4(specular + diffuse + ambient, 1.0);
-         }
-        
-
-         if(u_spotlightOn){
-          vec3 lightVector2 = u_lightPos2 - vec3(v_VertPos);
-          vec3 L3 = normalize(lightVector2);
-          float nDotL3 = max(dot(N, L3), 0.0);
-        
-          vec3 diffuse2 = vec3(gl_FragColor) * nDotL3 * 0.7; 
-          vec3 ambient2 = vec3(gl_FragColor) * 0.3;           
-          
-          if (u_spotlightOn) {
-              vec3 totalDiffuse = diffuse + diffuse2;
-              vec3 totalAmbient = ambient + ambient2;
-              gl_FragColor = vec4(specular + totalDiffuse + totalAmbient, 1.0);
-          }
-        }
+         float nDotL = max(dot(N, L), 0.0);
+         vec3 R = reflect(L, N);
+         vec3 E = normalize(u_cameraPos - vec3(v_VertPos));
+         float specular = pow(max(dot(E, R), 0.0), 64.0) * 0.8;
+         vec3 diffuse = vec3(gl_FragColor) * nDotL * 0.7;
+         vec3 ambient = vec3(gl_FragColor) * 0.3;
+         ambient *= u_LightColor;
+     
+         // combine calculations from moving light
+         vec3 totalDiffuse = diffuse;
+         vec3 totalAmbient = ambient;
          
-
-  
+         // If moving light is on, add calculations to the final color
+         if (u_lightOn) {
+             gl_FragColor = vec4(specular + totalDiffuse + totalAmbient, 1.0);
+         }
+         
+     
+         if (u_spotlightOn) {
+             vec3 lightVector2 = u_lightPos2 - vec3(v_VertPos);
+             vec3 L2 = normalize(lightVector2);
+             float nDotL2 = max(dot(N, L2), 0.0);
+             vec3 R2 = reflect(L2, N);
+             float specular2 = pow(max(dot(E, R2), 0.0), 64.0) * 0.8;
+             vec3 diffuse2 = vec3(gl_FragColor) * nDotL2 * 0.7; 
+             vec3 ambient2 = vec3(gl_FragColor) * 0.3;
+             ambient2 *= u_LightColor;
+             
+             // combine calculations from spotlight
+             vec3 totalDiffuse2 = diffuse2;
+             vec3 totalAmbient2 = ambient2;
+             
+             // If spotlight is on, add calculations to the final color
+             gl_FragColor += vec4(specular2 + totalDiffuse2 + totalAmbient2, 1.0);
+         }
+       
         }
     `;
+
+
     
+
+      
+   
+
+
     // Global Variables
     let canvas;
     let gl;
@@ -149,7 +142,7 @@ var VSHADER_SOURCE =`
     let a_Normal;
 
     let u_lightPos2;
-    // let u_LightColor2;
+
 
     
     function setupWebGL(){
@@ -232,11 +225,7 @@ var VSHADER_SOURCE =`
             return;
         }
     
-        /*u_LightColor2 = gl.getUniformLocation(gl.program, 'u_LightColor2');
-        if (!u_LightColor2) {
-            console.log('Fail to get the storage location of u_LightColor2');
-            return;
-        }*/
+ 
 
         u_lightOn = gl.getUniformLocation(gl.program, 'u_lightOn');
         if (!u_lightOn) {
@@ -595,7 +584,7 @@ var VSHADER_SOURCE =`
 
       // g_lightPos[0] = 2.3*Math.cos(g_seconds);
 
-      if(!document.getElementById('lightSlideX').classList.contains('active')) {
+      if(lightOn){
         g_lightPos[0] = 2.3 * Math.cos(g_seconds);
       }
     }
@@ -744,7 +733,6 @@ var VSHADER_SOURCE =`
       gl.uniform1i(u_spotlightOn, g_spotlightOn);
 
       gl.uniform3f(u_lightPos2, 0, 1, -1); // Set the position of the second light source
-      //gl.uniform3f(u_LightColor2, 255, 0, 0); // Set the color of the second light source
       
 
       //drwa the light
