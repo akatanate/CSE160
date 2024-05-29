@@ -26,17 +26,23 @@ var VSHADER_SOURCE =`
         precision mediump float;
         varying vec2 v_UV;
         varying vec3 v_Normal;
+        varying vec4 v_VertPos;
         uniform vec4 u_FragColor;
         uniform sampler2D u_Sampler0;
         uniform sampler2D u_Sampler1;
         uniform sampler2D u_Sampler2;
         uniform int u_whichTexture;
-        uniform vec3 u_lightPos;
-        uniform vec3 u_cameraPos;
-        varying vec4 v_VertPos;
-        uniform bool u_lightOn;
 
+        uniform vec3 u_lightPos;
+        uniform vec3 u_spotlightPos;
+
+        uniform vec3 u_cameraPos;
+        uniform bool u_lightOn;
+        uniform bool u_spotlightOn;
         uniform vec3 u_LightColor;
+
+        uniform vec3 u_lightPos2;      // Position of the second light
+        // uniform vec3 u_LightColor2;
 
         
 
@@ -58,18 +64,11 @@ var VSHADER_SOURCE =`
             gl_FragColor = vec4(1,.2,.2,1);              // Error -> Red
          }
    
+     
          vec3 lightVector = u_lightPos-vec3(v_VertPos);
          float r = length(lightVector);
-   
-         // Red/Green Distance Visualization
-         // if(r<1.0){
-         //    gl_FragColor = vec4(1,0,0,1);
-         // } else if (r<2.0){
-         //    gl_FragColor = vec4(0,1,0,1);
-         // }
-   
-         // Light Falloff Visualization 1/r^2
-         // gl_FragColor = vec4(vec3(gl_FragColor)/(r*r),1);
+
+         vec3 spotlightVector = u_spotlightPos-vec3(v_VertPos);
    
          // N dot L
          vec3 L = normalize(lightVector);
@@ -78,24 +77,18 @@ var VSHADER_SOURCE =`
    
          // Reflection
          vec3 R = reflect(L,N);
+
+         vec3 L2 = normalize(spotlightVector);
+         reflect(L2,N);
    
          // eye
          vec3 E = normalize(u_cameraPos-vec3(v_VertPos));
    
          // Specular
           float specular = pow(max(dot(E, R), 0.0), 64.0) * 0.8;
-        
-         // fixes back light
-         // float specular = 0.0;
-         // if (nDotL > 0.0) {
-         //     specular = pow(max(dot(E, R), 0.0), 64.0) * 0.8;
-          // }
 
-          // gl_FragColor = u_FragColor;
           vec3 lightColor = u_LightColor;
 
-
-          // vec3(1.0, 1.0, 0.0) * 
           vec3 diffuse = vec3(gl_FragColor) * nDotL * 0.7;
           vec3 ambient = vec3(gl_FragColor) * 0.3;
 
@@ -105,6 +98,23 @@ var VSHADER_SOURCE =`
           if (u_lightOn) {
                gl_FragColor = vec4(specular + diffuse + ambient, 1.0);
          }
+        
+
+         if(u_spotlightOn){
+          vec3 lightVector2 = u_lightPos2 - vec3(v_VertPos);
+          vec3 L3 = normalize(lightVector2);
+          float nDotL3 = max(dot(N, L3), 0.0);
+        
+          vec3 diffuse2 = vec3(gl_FragColor) * nDotL3 * 0.7; 
+          vec3 ambient2 = vec3(gl_FragColor) * 0.3;           
+          
+          if (u_spotlightOn) {
+              vec3 totalDiffuse = diffuse + diffuse2;
+              vec3 totalAmbient = ambient + ambient2;
+              gl_FragColor = vec4(specular + totalDiffuse + totalAmbient, 1.0);
+          }
+        }
+         
 
   
         }
@@ -129,10 +139,17 @@ var VSHADER_SOURCE =`
     let u_Sampler1;
     let u_Sampler2;
     let u_whichTexture;
+
     let u_lightPos;
+    let u_spotlightPos;
+
     let u_cameraPos;
     let u_lightOn;
+    let u_spotlightOn;
     let a_Normal;
+
+    let u_lightPos2;
+    // let u_LightColor2;
 
     
     function setupWebGL(){
@@ -203,10 +220,33 @@ var VSHADER_SOURCE =`
             return;
         }
 
+        /*u_spotlightPos = gl.getUniformLocation(gl.program, 'u_spotlightPos');
+        if (!u_spotlightPos) {
+            console.log('Fail to get the storage location of u_spotlightPos');
+            return;
+        }*/
+
+        u_lightPos2 = gl.getUniformLocation(gl.program, 'u_lightPos2');
+        if (!u_lightPos2) {
+            console.log('Fail to get the storage location of u_lightPos2');
+            return;
+        }
+    
+        /*u_LightColor2 = gl.getUniformLocation(gl.program, 'u_LightColor2');
+        if (!u_LightColor2) {
+            console.log('Fail to get the storage location of u_LightColor2');
+            return;
+        }*/
 
         u_lightOn = gl.getUniformLocation(gl.program, 'u_lightOn');
         if (!u_lightOn) {
             console.log('Fail to get the storage location of u_lightOn');
+            return;
+        }
+
+        u_spotlightOn = gl.getUniformLocation(gl.program, 'u_spotlightOn');
+        if (!u_spotlightOn) {
+            console.log('Fail to get the storage location of u_spotlightOn');
             return;
         }
 
@@ -392,7 +432,8 @@ var VSHADER_SOURCE =`
     let g_magentaAnimation = false;
 
     let g_normalOn=false;
-    let g_lightOn=true;
+    let g_lightOn=false;
+    let g_spotlightOn=false;
     let g_lightPos=[0, 1, -2];
     
 
@@ -406,6 +447,9 @@ var VSHADER_SOURCE =`
       
         document.getElementById('lightOn').onclick = function() { g_lightOn=true; } ;
         document.getElementById('lightOff').onclick = function() { g_lightOn=false; } ;
+      
+        document.getElementById('spotlightOn').onclick = function() { g_spotlightOn=true; } ;
+        document.getElementById('spotlightOff').onclick = function() { g_spotlightOn=false; } ;
       
 
         document.getElementById('lightSlideX').addEventListener('mousemove', function(ev) { if(ev.buttons == 1){ g_lightPos[0] = this.value/100; renderAllShapes();}});
@@ -692,10 +736,16 @@ var VSHADER_SOURCE =`
 
       //pass light position to GLSL (DEFINE u_ligjht)
       gl.uniform3f(u_lightPos, g_lightPos[0], g_lightPos[1], g_lightPos[2]);
+      //gl.uniform3f(u_spotlightPos, 0, 1, -2);
       
       gl.uniform3f(u_cameraPos, g_camera.eye.x, g_camera.eye.y, g_camera.eye.z);
 
       gl.uniform1i(u_lightOn, g_lightOn);
+      gl.uniform1i(u_spotlightOn, g_spotlightOn);
+
+      gl.uniform3f(u_lightPos2, 0, 1, -1); // Set the position of the second light source
+      //gl.uniform3f(u_LightColor2, 255, 0, 0); // Set the color of the second light source
+      
 
       //drwa the light
       var light=new Cube();
@@ -704,6 +754,14 @@ var VSHADER_SOURCE =`
       light.matrix.scale(-.1, -.1, -.1);
       light.matrix.translate(-.5, -.5, -.5);
       light.renderfast();
+
+      var spotlight=new Cube();
+      spotlight.color= [2, 2, 0, 1];
+      spotlight.matrix.translate(0, 1, -1);
+      spotlight.matrix.scale(-.1, -.1, -.1);
+      spotlight.renderfast();
+
+      
 
 
       /*var spotlight=new Cube();
