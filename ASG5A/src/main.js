@@ -40,7 +40,7 @@ if (audio.context.state === 'suspended' && typeof audio.context.resume === 'func
             audioLoader.load("interstellar.mp3", function(buffer) {
                 audio.setBuffer(buffer);
                 audio.setLoop(true);
-                audio.setVolume(0.1);
+                audio.setVolume(0.05);
                 audio.play();
             });
         });
