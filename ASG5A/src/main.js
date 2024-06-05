@@ -21,6 +21,9 @@ const uranusRingTexture = textureLoader.load('img/uranus_ring.png');
 const neptuneTexture = textureLoader.load('img/neptune.jpg');
 const asteroidTexture = textureLoader.load('img/asteroid.jpg');
 const planeTexture = textureLoader.load('img/plane.jpg');
+const moonTexture = textureLoader.load('img/moon.jpeg');
+const jMoonTexture = textureLoader.load('img/jMoon.jpeg');
+const nepMoonTexture = textureLoader.load('img/nepMoon.jpeg');
 
 // For background music
 var listener = new THREE.AudioListener();
@@ -31,7 +34,7 @@ var audioLoader = new THREE.AudioLoader();
         audio.setBuffer(buffer);
         audio.setLoop(true);
         audio.setVolume(0.2);
-        audio.play();
+        //audio.play();
     });
 
 // Set renderer
@@ -203,16 +206,44 @@ const earthObj = new THREE.Object3D();
 earthObj.add(earth);
 scene.add(earthObj)
 earth.position.x = 62;
+    // EARTH moon
+    const eMoonGeometry = new THREE.SphereGeometry(1.5, 8, 8);
+    const eMoonMaterial = new THREE.MeshStandardMaterial({ map: moonTexture });
+    const eMoon = new THREE.Mesh(eMoonGeometry, eMoonMaterial);
 
+    const eMoonObj = new THREE.Object3D;
+    eMoonObj.add(eMoon);
+    earth.add(eMoonObj);
+    eMoon.position.x = 10;
+                
 // Create <MARS>---------------------------------------------------------
 const marsGeometry = new THREE.SphereGeometry(4, 32, 32);
-const marsMaterial = new THREE.MeshStandardMaterial({ map: marsTexture });
+const marsMaterial = new THREE.MeshStandardMaterial    ({ map: marsTexture });
 const mars = new THREE.Mesh(marsGeometry, marsMaterial);
 
 const marsObj = new THREE.Object3D();
 marsObj.add(mars);
 scene.add(marsObj)
 mars.position.x = 78;
+    // MARS moon
+    const m1MoonGeometry = new THREE.SphereGeometry(1, 5, 5);
+    const m1MoonMaterial = new THREE.MeshStandardMaterial({ map: moonTexture });
+    const m1Moon = new THREE.Mesh(m1MoonGeometry, m1MoonMaterial);
+
+    const m1MoonObj = new THREE.Object3D;
+    m1MoonObj.add(m1Moon);
+    mars.add(m1MoonObj);
+    m1Moon.position.x = 6;
+    
+    // MARS moon
+    const m2MoonGeometry = new THREE.SphereGeometry(.75, 3, 3);
+    const m2MoonMaterial = new THREE.MeshStandardMaterial({ map: moonTexture });
+    const m2Moon = new THREE.Mesh(m2MoonGeometry, m2MoonMaterial);
+
+    const m2MoonObj = new THREE.Object3D;
+    m2MoonObj.add(m2Moon);
+    mars.add(m2MoonObj);
+    m2Moon.position.x = - 6;
 
 // Create <JUPITER>---------------------------------------------------------
 const jupiterGeometry = new THREE.SphereGeometry(12, 32, 32);
@@ -223,6 +254,58 @@ const jupiterObj = new THREE.Object3D();
 jupiterObj.add(jupiter);
 scene.add(jupiterObj)
 jupiter.position.x = 100;
+    // JUPITER moon
+    /*const j1MoonGeometry = new THREE.SphereGeometry(3, 25, 25);
+    const j1MoonMaterial = new THREE.MeshStandardMaterial({ map: moonTexture });
+    const j1Moon = new THREE.Mesh(j1MoonGeometry, j1MoonMaterial);
+
+    const j1MoonObj = new THREE.Object3D;
+    j1MoonObj.add(j1Moon);
+    jupiter.add(j1MoonObj);
+    j1Moon.position.x = 20;
+    
+    const j2MoonGeometry = new THREE.SphereGeometry(3, 25, 25);
+    const j2MoonMaterial = new THREE.MeshStandardMaterial({ map: moonTexture });
+    const j2Moon = new THREE.Mesh(j2MoonGeometry, j2MoonMaterial);
+
+    const j2MoonObj = new THREE.Object3D;
+    j2MoonObj.add(j2Moon);
+    jupiter.add(j2MoonObj);
+    j2Moon.position.x = - 20;
+
+    const j3MoonGeometry = new THREE.SphereGeometry(3, 25, 25);
+    const j3MoonMaterial = new THREE.MeshStandardMaterial({ map: moonTexture });
+    const j3Moon = new THREE.Mesh(j3MoonGeometry, j3MoonMaterial);
+
+    const j3MoonObj = new THREE.Object3D;
+    j3MoonObj.add(j3Moon);
+    jupiter.add(j3MoonObj);
+    j3Moon.position.x = - 10;*/
+
+    const numMoons = 4; // Number of moons
+    const radius = 15; // Radius of the orbit
+    const tiltAngle = Math.PI / 6; // Tilt angle
+
+    for (let i = 0; i < numMoons; i++) {
+        // calculate position stats
+        const angle = (Math.PI * 2) * (i / numMoons); 
+        const x = radius * Math.cos(angle); 
+        const y = radius * Math.sin(tiltAngle) * Math.sin(angle); 
+        const z = radius * Math.cos(tiltAngle) * Math.sin(angle); 
+        
+        // set base
+        const moonGeometry = new THREE.SphereGeometry(1.5, 10, 10);
+        const moonMaterial = new THREE.MeshStandardMaterial({ map: jMoonTexture });
+        const moon = new THREE.Mesh(moonGeometry, moonMaterial);
+
+        // set 
+        const moonObj = new THREE.Object3D();
+        moonObj.position.set(x, y, z); // Set position relative to Jupiter
+        moonObj.lookAt(jupiter.position); 
+        moonObj.rotateY(angle + Math.PI / 2); 
+        moonObj.add(moon);
+        jupiter.add(moonObj);
+    }
 
 // Create <SATURN>---------------------------------------------------------
 const saturnGeometry = new THREE.SphereGeometry(10, 32, 32);
@@ -245,6 +328,31 @@ saturnObj.add(saturnRing);
 saturnRing.position.x = 138;
 saturnRing.rotation.x = -0.5 * Math.PI;
 
+const SATnumMoons = 4; // Number of moons
+const SATradius = 35; // Radius of the orbit
+const SATtiltAngle = - Math.PI / 6; // Tilt angle
+
+for (let i = 0; i < SATnumMoons; i++) {
+    // calculate position stats
+    const angle = (Math.PI * 2) * (i / SATnumMoons); 
+    const x = SATradius * Math.cos(angle); 
+    const y = SATradius * Math.sin(SATtiltAngle) * Math.sin(angle); 
+    const z = SATradius * Math.cos(SATtiltAngle) * Math.sin(angle); 
+    
+    // set base
+    const moonGeometry = new THREE.SphereGeometry(1.5, 10, 10);
+    const moonMaterial = new THREE.MeshStandardMaterial({ map: jMoonTexture });
+    const moon = new THREE.Mesh(moonGeometry, moonMaterial);
+
+    // set 
+    const moonObj = new THREE.Object3D();
+    moonObj.position.set(x, y, z); // Set position relative to Jupiter
+    moonObj.lookAt(saturn.position); 
+    moonObj.rotateY(angle + Math.PI / 2); 
+    moonObj.add(moon);
+    saturn.add(moonObj);
+}
+
 // Create <URANUS>---------------------------------------------------------
 const uranusGeometry = new THREE.SphereGeometry(7, 32, 32);
 const uranusMaterial = new THREE.MeshStandardMaterial({ map: uranusTexture });
@@ -266,6 +374,31 @@ uranusObj.add(uranusRing);
 uranusRing.position.x = 176
 uranusRing.rotation.x = -0.5 * Math.PI;
 
+const URnumMoons = 4; // Number of moons
+const URradius = 13; // Radius of the orbit
+const URtiltAngle = Math.PI / 6; // Tilt angle
+
+for (let i = 0; i < SATnumMoons; i++) {
+    // calculate position stats
+    const angle = (Math.PI * 2) * (i / URnumMoons); 
+    const x = URradius * Math.cos(angle); 
+    const y = URradius * Math.sin(URtiltAngle) * Math.sin(angle); 
+    const z = URradius * Math.cos(URtiltAngle) * Math.sin(angle); 
+    
+    // set base
+    const moonGeometry = new THREE.SphereGeometry(1, 5, 5);
+    const moonMaterial = new THREE.MeshStandardMaterial({ map: moonTexture });
+    const moon = new THREE.Mesh(moonGeometry, moonMaterial);
+
+    // set 
+    const moonObj = new THREE.Object3D();
+    moonObj.position.set(x, y, z); // Set position relative to Jupiter
+    moonObj.lookAt(uranus.position); 
+    moonObj.rotateY(angle + Math.PI / 2); 
+    moonObj.add(moon);
+    uranus.add(moonObj);
+}
+
 // Create <NEPTUNE>---------------------------------------------------------
 const neptuneGeometry = new THREE.SphereGeometry(7, 32, 32);
 const neptuneMaterial = new THREE.MeshStandardMaterial({ map: neptuneTexture });
@@ -275,6 +408,32 @@ const neptuneObj = new THREE.Object3D();
 neptuneObj.add(neptune);
 scene.add(neptuneObj)
 neptune.position.x = 200;
+
+const NEPnumMoons = 3; // Number of moons
+const NEPradius = 10; // Radius of the orbit
+const NEPtiltAngle = - Math.PI / 6; // Tilt angle
+
+for (let i = 0; i < NEPnumMoons; i++) {
+    // calculate position stats
+    const angle = (Math.PI * 2) * (i / NEPnumMoons); 
+    const x = NEPradius * Math.cos(angle); 
+    const y = NEPradius * Math.sin(NEPtiltAngle) * Math.sin(angle); 
+    const z = NEPradius * Math.cos(NEPtiltAngle) * Math.sin(angle); 
+    
+    // set base
+    const moonGeometry = new THREE.SphereGeometry(1, 5, 5);
+    const moonMaterial = new THREE.MeshStandardMaterial({ map: nepMoonTexture });
+    const moon = new THREE.Mesh(moonGeometry, moonMaterial);
+
+    // set 
+    const moonObj = new THREE.Object3D();
+    moonObj.position.set(x, y, z); // Set position relative to Jupiter
+    moonObj.lookAt(neptune.position); 
+    moonObj.rotateY(angle + Math.PI / 2); 
+    moonObj.add(moon);
+    neptune.add(moonObj);
+}
+
 
 // Animate
 function animate() {
@@ -298,6 +457,7 @@ function animate() {
     saturnObj.rotateY(0.0009);
     uranusObj.rotateY(0.0004);
     neptuneObj.rotateY(0.0001);
+    
     
     renderer.render(scene, camera);
 }
