@@ -1,9 +1,13 @@
 import * as THREE from 'three'; // load three.js
+//import { FontLoader } from 'three/addons/loaders/FontLoader.js'; // Adjusted import path
+
+
 
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
 import { MTLLoader } from 'three/addons/loaders/MTLLoader.js';
+
 
 // Textures
 const textureLoader = new THREE.TextureLoader();
@@ -25,17 +29,31 @@ const moonTexture = textureLoader.load('img/moon.jpeg');
 const jMoonTexture = textureLoader.load('img/jMoon.jpeg');
 const nepMoonTexture = textureLoader.load('img/nepMoon.jpeg');
 
-// For background music
+
 var listener = new THREE.AudioListener();
 var audio = new THREE.Audio(listener);
-var audioLoader = new THREE.AudioLoader(); 
+var audioLoader = new THREE.AudioLoader();
 
+if (audio.context.state === 'suspended' && typeof audio.context.resume === 'function') {
+    document.addEventListener('click', function() {
+        audio.context.resume().then(function() {
+            audioLoader.load("interstellar.mp3", function(buffer) {
+                audio.setBuffer(buffer);
+                audio.setLoop(true);
+                audio.setVolume(0.1);
+                audio.play();
+            });
+        });
+    });
+} else {
     audioLoader.load("interstellar.mp3", function(buffer) {
         audio.setBuffer(buffer);
         audio.setLoop(true);
         audio.setVolume(0.2);
-        //audio.play();
+        audio.play();
     });
+}
+
 
 // Set renderer
 const renderer = new THREE.WebGLRenderer();
@@ -88,6 +106,8 @@ const texture = loader.load(
     texture.colorSpace = THREE.SRGBColorSpace;
     scene.background = texture;
   });
+
+
 
 // special objects (need to fix .mtl/texturing)
 const mtlLoader = new MTLLoader();
@@ -435,6 +455,8 @@ for (let i = 0; i < NEPnumMoons; i++) {
 }
 
 
+
+
 // Animate
 function animate() {
     //self-rotation
@@ -470,3 +492,5 @@ window.addEventListener('resize', function() {
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
 });
+
+
